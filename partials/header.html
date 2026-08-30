@@ -1,0 +1,78 @@
+<!-- ============================================================================
+     Site header — edit this file, then run `npm run partials` to sync it into
+     every page between the @partial:header markers. Never edit the copies.
+     ========================================================================= -->
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header id="site-header"
+        class="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
+  <div class="container-x">
+    <div class="flex h-16 items-center justify-between sm:h-20">
+
+      <!-- Wordmark -->
+      <a href="index.html" class="group flex items-center gap-3" aria-label="Almail Family — home">
+        <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
+                     font-display text-sm font-bold text-invert transition-colors
+                     group-hover:bg-canvas group-hover:text-ink">A</span>
+        <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
+      </a>
+
+      <!-- Desktop navigation -->
+      <nav class="hidden items-center gap-9 md:flex" aria-label="Primary">
+        <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="index.html">Home</a>
+        <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="heritage.html">Heritage</a>
+        <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="directory.html">Directory</a>
+        <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="blog.html">Journal</a>
+        <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="contact.html">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <!-- Light / dark inversion (still strictly monochrome) -->
+        <button type="button" data-theme-toggle
+                class="btn-icon"
+                aria-label="Switch colour scheme">
+          <!-- Sun: shown in light mode -->
+          <svg data-theme-icon="light" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.25"></circle>
+            <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4l1.4-1.4M18 6l1.4-1.4"></path>
+          </svg>
+          <!-- Moon: shown in dark mode -->
+          <svg data-theme-icon="dark" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true" hidden>
+            <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.5 8.5 0 1 0 10.2 10.2z"></path>
+          </svg>
+        </button>
+
+        <a href="contact.html" class="btn-primary btn-sm hidden md:inline-flex">Get in touch</a>
+
+        <!-- Mobile menu trigger -->
+        <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"
+                class="btn-icon md:hidden" aria-label="Open menu">
+          <svg data-menu-icon="closed" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M3.5 7h17M3.5 12h17M3.5 17h17"></path>
+          </svg>
+          <svg data-menu-icon="open" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" hidden>
+            <path d="M5.5 5.5l13 13M18.5 5.5l-13 13"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile navigation panel -->
+  <div id="mobile-menu" hidden
+       class="border-t border-line bg-canvas md:hidden">
+    <nav class="container-x flex flex-col py-2" aria-label="Mobile">
+      <a class="nav-link border-b border-line py-4 text-base font-medium" href="index.html">Home</a>
+      <a class="nav-link border-b border-line py-4 text-base font-medium" href="heritage.html">Heritage</a>
+      <a class="nav-link border-b border-line py-4 text-base font-medium" href="directory.html">Directory</a>
+      <a class="nav-link border-b border-line py-4 text-base font-medium" href="blog.html">Journal</a>
+      <a class="nav-link py-4 text-base font-medium" href="contact.html">Contact</a>
+      <a href="contact.html" class="btn-primary my-4">Get in touch</a>
+    </nav>
+  </div>
+</header>

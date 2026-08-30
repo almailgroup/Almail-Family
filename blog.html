@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journal — The Almail Family</title>
+  <meta name="description" content="Announcements, events, articles and photo highlights from the Almail family in Kuwait.">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="blog.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Journal — The Almail Family">
+  <meta property="og:description" content="Announcements, events, articles and photo highlights from the Almail family in Kuwait.">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+
+  <link rel="stylesheet" href="assets/css/site.css">
+
+  <!-- Set the colour scheme before first paint so the page never flashes. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem("almail-theme");
+        var prefers = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", saved || prefers);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+
+<body class="flex min-h-screen flex-col">
+
+  <!-- @partial:header -->
+  <!-- ============================================================================
+       Site header — edit this file, then run `npm run partials` to sync it into
+       every page between the @partial:header markers. Never edit the copies.
+       ========================================================================= -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header id="site-header"
+          class="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
+    <div class="container-x">
+      <div class="flex h-16 items-center justify-between sm:h-20">
+
+        <!-- Wordmark -->
+        <a href="index.html" class="group flex items-center gap-3" aria-label="Almail Family — home">
+          <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
+                       font-display text-sm font-bold text-invert transition-colors
+                       group-hover:bg-canvas group-hover:text-ink">A</span>
+          <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
+        </a>
+
+        <!-- Desktop navigation -->
+        <nav class="hidden items-center gap-9 md:flex" aria-label="Primary">
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="index.html">Home</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="heritage.html">Heritage</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="directory.html">Directory</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="blog.html">Journal</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="contact.html">Contact</a>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <!-- Light / dark inversion (still strictly monochrome) -->
+          <button type="button" data-theme-toggle
+                  class="btn-icon"
+                  aria-label="Switch colour scheme">
+            <!-- Sun: shown in light mode -->
+            <svg data-theme-icon="light" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4.25"></circle>
+              <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4l1.4-1.4M18 6l1.4-1.4"></path>
+            </svg>
+            <!-- Moon: shown in dark mode -->
+            <svg data-theme-icon="dark" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" hidden>
+              <path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.5 8.5 0 1 0 10.2 10.2z"></path>
+            </svg>
+          </button>
+
+          <a href="contact.html" class="btn-primary btn-sm hidden md:inline-flex">Get in touch</a>
+
+          <!-- Mobile menu trigger -->
+          <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"
+                  class="btn-icon md:hidden" aria-label="Open menu">
+            <svg data-menu-icon="closed" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+              <path d="M3.5 7h17M3.5 12h17M3.5 17h17"></path>
+            </svg>
+            <svg data-menu-icon="open" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" hidden>
+              <path d="M5.5 5.5l13 13M18.5 5.5l-13 13"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile navigation panel -->
+    <div id="mobile-menu" hidden
+         class="border-t border-line bg-canvas md:hidden">
+      <nav class="container-x flex flex-col py-2" aria-label="Mobile">
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="index.html">Home</a>
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="heritage.html">Heritage</a>
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="directory.html">Directory</a>
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="blog.html">Journal</a>
+        <a class="nav-link py-4 text-base font-medium" href="contact.html">Contact</a>
+        <a href="contact.html" class="btn-primary my-4">Get in touch</a>
+      </nav>
+    </div>
+  </header>
+  <!-- @endpartial -->
+
+  <main id="main">
+    <!-- =====================================================================
+         PAGE HEADER
+         ================================================================== -->
+    <section class="border-b border-line">
+      <div class="container-x py-16 sm:py-24">
+        <p class="eyebrow reveal">Journal</p>
+        <h1 class="display-1 reveal mt-6 text-4xl sm:text-5xl lg:text-6xl" data-reveal-delay="80">News, notes<br>and the archive</h1>
+        <p class="lede reveal mt-7 max-w-2xl" data-reveal-delay="160">Announcements from the family council, notes from gatherings, essays drawn from the archive, and photographs as they are digitised.</p>
+
+        <!-- Category filters + search -->
+        <div class="mt-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div id="post-filters" class="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+            <!-- Chips are injected here. -->
+          </div>
+          <div class="relative w-full max-w-xs">
+            <label for="post-search" class="sr-only">Search posts</label>
+            <input id="post-search" type="search" autocomplete="off"
+                   class="field pl-11" placeholder="Search posts">
+            <svg class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         POST GRID — rendered from content/posts.js by assets/js/blog.js
+         ================================================================== -->
+    <section class="section" aria-labelledby="posts-heading">
+      <div class="container-x">
+        <div class="flex items-center justify-between border-b border-line pb-5">
+          <h2 id="posts-heading" class="eyebrow">All posts</h2>
+          <p id="post-count" class="meta" aria-live="polite"></p>
+        </div>
+
+        <div id="post-grid" class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <!-- Cards are injected here. -->
+        </div>
+
+        <p id="post-empty" hidden class="border border-line p-10 text-center text-[15px] text-ink-2">
+          Nothing matches that search yet. Try another word, or clear the filters.
+        </p>
+
+        <noscript>
+          <p class="border border-line p-6 text-[15px] text-ink-2">
+            The journal needs JavaScript to display its posts.
+          </p>
+        </noscript>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- @partial:footer -->
+  <!-- ============================================================================
+       Site footer — edit here, then run `npm run partials`.
+       ========================================================================= -->
+  <footer class="mt-auto border-t border-line bg-surface">
+    <div class="container-x py-16 sm:py-20">
+      <div class="grid gap-12 md:grid-cols-12">
+
+        <div class="md:col-span-5">
+          <a href="index.html" class="flex items-center gap-3" aria-label="Almail Family — home">
+            <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
+                         font-display text-sm font-bold text-invert">A</span>
+            <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
+          </a>
+          <p class="mt-6 max-w-sm text-[15px] leading-relaxed text-ink-2">
+            The private portal of the Almail family — a record of our people, our history
+            and the work we do together. Kuwait City, Kuwait.
+          </p>
+        </div>
+
+        <nav class="md:col-span-3" aria-label="Footer">
+          <h2 class="eyebrow">Explore</h2>
+          <ul class="mt-5 space-y-3 text-[15px]">
+            <li><a class="link-underline" href="heritage.html">Heritage</a></li>
+            <li><a class="link-underline" href="directory.html">Directory</a></li>
+            <li><a class="link-underline" href="blog.html">Journal</a></li>
+            <li><a class="link-underline" href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="md:col-span-4">
+          <h2 class="eyebrow">Reach us</h2>
+          <ul class="mt-5 space-y-3 text-[15px] text-ink-2">
+            <li><a class="link-underline" href="mailto:family@almail.example">family@almail.example</a></li>
+            <li>Kuwait City, State of Kuwait</li>
+          </ul>
+          <div class="mt-6 flex gap-2">
+            <a href="#" aria-label="Instagram"
+               class="flex h-10 w-10 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </a>
+            <a href="#" aria-label="LinkedIn"
+               class="flex h-10 w-10 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.05c.53-.95 1.83-1.95 3.76-1.95 4.02 0 4.76 2.5 4.76 5.76V21h-4v-5.2c0-1.24-.02-2.84-1.86-2.84-1.86 0-2.15 1.36-2.15 2.75V21h-4z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-14 flex flex-col gap-3 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <p class="meta">&copy; <span data-year>2026</span> The Almail Family. All rights reserved.</p>
+        <p class="meta">Made with care in Kuwait.</p>
+      </div>
+    </div>
+  </footer>
+  <!-- @endpartial -->
+
+  <script src="content/posts.js" defer></script>
+  <script src="assets/js/site.js" defer></script>
+  <script src="assets/js/blog.js" defer></script>
+</body>
+</html>

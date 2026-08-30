@@ -1,0 +1,269 @@
+/* =============================================================================
+   Almail Family — Design System
+   -----------------------------------------------------------------------------
+   Tailwind v4 (CSS-first configuration). Build with `npm run build`.
+   Palette is strictly monochrome: black, white and neutral grays only.
+   Every colour is a token so the whole site can be inverted (light/dark) by
+   flipping one attribute on <html>.
+   ============================================================================= */
+
+@import "tailwindcss";
+
+/* Scan every page, script and content file for utility classes. */
+@source "../**/*.{html,js}";
+
+/* -----------------------------------------------------------------------------
+   1. Raw tokens — the only place literal colours are allowed.
+   -------------------------------------------------------------------------- */
+:root {
+  --c-canvas:  #ffffff; /* page background            */
+  --c-surface: #fafafa; /* raised panels, subtle fill */
+  --c-sunken:  #f4f4f4; /* wells, hovers              */
+  --c-line:    #e6e6e6; /* hairline borders           */
+  --c-line-2:  #d4d4d4; /* stronger borders           */
+  --c-ink:     #0a0a0a; /* primary text               */
+  --c-ink-2:   #404040; /* secondary text             */
+  --c-muted:   #737373; /* meta text                  */
+  --c-invert:  #ffffff; /* text on solid black        */
+}
+
+/* Inverted monochrome. Applied by assets/js/site.js via data-theme="dark". */
+[data-theme="dark"] {
+  --c-canvas:  #0a0a0a;
+  --c-surface: #111111;
+  --c-sunken:  #171717;
+  --c-line:    #262626;
+  --c-line-2:  #383838;
+  --c-ink:     #fafafa;
+  --c-ink-2:   #d4d4d4;
+  --c-muted:   #8f8f8f;
+  --c-invert:  #0a0a0a;
+}
+
+/* -----------------------------------------------------------------------------
+   2. Theme mapping — exposes tokens to Tailwind utilities
+      (bg-canvas, text-ink, border-line, font-display, …)
+   -------------------------------------------------------------------------- */
+@theme inline {
+  --color-canvas:  var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-sunken:  var(--c-sunken);
+  --color-line:    var(--c-line);
+  --color-line-2:  var(--c-line-2);
+  --color-ink:     var(--c-ink);
+  --color-ink-2:   var(--c-ink-2);
+  --color-muted:   var(--c-muted);
+  --color-invert:  var(--c-invert);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* -----------------------------------------------------------------------------
+   3. Base
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--c-canvas);
+    color: var(--c-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display headings: tight, confident, high-contrast. */
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  /* Balance the big headings; let smaller card headings simply wrap well. */
+  h1, h2 { text-wrap: balance; }
+  h3, h4 { text-wrap: pretty; }
+
+  p { text-wrap: pretty; }
+
+  ::selection {
+    background-color: var(--c-ink);
+    color: var(--c-invert);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Thin, monochrome scrollbar. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-line-2) transparent;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   4. Button primitives
+   Declared with @utility (not @layer) so other classes can compose them
+   with @apply — Tailwind v4 only allows @apply of core utilities and
+   @utility-declared classes.
+   -------------------------------------------------------------------------- */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 whitespace-nowrap
+         rounded-none border px-6 py-3 text-sm font-medium
+         transition-colors duration-200 select-none;
+}
+
+@utility btn-ghost {
+  @apply btn border-transparent px-3 py-2 text-ink hover:bg-sunken;
+}
+
+/* -----------------------------------------------------------------------------
+   5. Components — reusable primitives shared by every page.
+   -------------------------------------------------------------------------- */
+@layer components {
+
+  /* --- Layout ------------------------------------------------------------- */
+  .container-x   { @apply mx-auto w-full max-w-6xl px-5 sm:px-8 lg:px-10; }
+  .section       { @apply py-20 sm:py-28; }
+  .section-tight { @apply py-14 sm:py-20; }
+  .hairline      { @apply border-line; }
+  /* Editorial column for long-form reading. */
+  .reading       { @apply mx-auto w-full max-w-[44rem]; }
+
+  /* --- Typography --------------------------------------------------------- */
+  .eyebrow {
+    @apply font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-muted;
+  }
+  .display-1 { @apply text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[0.95]; }
+  .display-2 { @apply text-3xl sm:text-4xl lg:text-5xl font-semibold leading-[1.05]; }
+  .display-3 { @apply text-xl sm:text-2xl font-semibold leading-tight; }
+  .lede      { @apply text-lg sm:text-xl leading-relaxed text-ink-2; }
+  .meta      { @apply text-sm text-muted; }
+
+  /* --- Buttons ------------------------------------------------------------ */
+  /* `.btn` and `.btn-ghost` are declared as @utility below the components
+     layer so that the variants here can compose them with @apply. */
+  .btn-primary {
+    @apply btn border-ink bg-ink text-invert hover:bg-canvas hover:text-ink;
+  }
+  .btn-outline {
+    @apply btn border-line-2 bg-transparent text-ink hover:border-ink hover:bg-ink hover:text-invert;
+  }
+  .btn-sm { @apply px-4 py-2 text-[13px]; }
+  /* Square icon button — header toggles. */
+  .btn-icon { @apply btn-ghost h-10 w-10 px-0; }
+
+  /* Text link with an underline that grows on hover. */
+  .link-underline {
+    @apply relative inline-flex items-center gap-1.5 font-medium text-ink no-underline
+           after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full
+           after:origin-right after:scale-x-0 after:bg-ink after:transition-transform
+           after:duration-300 hover:after:origin-left hover:after:scale-x-100;
+  }
+
+  /* --- Surfaces ----------------------------------------------------------- */
+  .card {
+    @apply relative border border-line bg-canvas transition-colors duration-200;
+  }
+  .card-hover { @apply hover:border-ink; }
+
+  /* --- Filter chips (blog categories, directory branches) ------------------ */
+  .chip {
+    @apply inline-flex items-center whitespace-nowrap rounded-full border border-line-2
+           px-4 py-1.5 text-[13px] font-medium text-ink-2
+           transition-colors duration-200 hover:border-ink hover:text-ink;
+  }
+  .chip[aria-pressed="true"] {
+    @apply border-ink bg-ink text-invert;
+  }
+
+  /* Small square category tag used on article cards. */
+  .tag {
+    @apply inline-flex items-center border border-line-2 px-2.5 py-1
+           text-[10px] font-medium uppercase tracking-[0.14em] text-muted;
+  }
+
+  /* --- Forms -------------------------------------------------------------- */
+  .label {
+    @apply mb-2 block text-[11px] font-medium uppercase tracking-[0.18em] text-muted;
+  }
+  .field {
+    @apply block w-full border border-line-2 bg-transparent px-4 py-3 text-[15px]
+           text-ink placeholder:text-muted/70
+           transition-colors duration-200
+           focus:border-ink focus:outline-none focus:ring-0;
+  }
+  .field[aria-invalid="true"] { @apply border-ink; }
+  /* Native select arrow replaced by the chevron in the markup. */
+  .field-select { @apply appearance-none pr-11; }
+  .select-wrap { @apply relative; }
+  .select-wrap > svg {
+    @apply pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted;
+  }
+  .field-error { @apply mt-2 hidden text-[13px] text-ink-2; }
+  .field-error.is-visible { @apply block; }
+
+  /* --- Long-form article body (used by post.html) ------------------------- */
+  .article-body { @apply text-[17px] leading-[1.75] text-ink-2; }
+  .article-body > * + * { @apply mt-6; }
+  .article-body h2 { @apply mt-14 text-2xl font-semibold text-ink; }
+  .article-body h3 { @apply mt-10 text-lg font-semibold text-ink; }
+  .article-body a  { @apply text-ink underline underline-offset-4 hover:no-underline; }
+  .article-body ul { @apply list-disc space-y-2 pl-5 marker:text-muted; }
+  .article-body ol { @apply list-decimal space-y-2 pl-5 marker:text-muted; }
+  .article-body blockquote {
+    @apply border-l-2 border-ink pl-6 text-lg italic text-ink;
+  }
+  .article-body img { @apply w-full border border-line; }
+  .article-body figcaption { @apply mt-3 text-sm text-muted; }
+  .article-body hr { @apply my-12 border-line; }
+
+  /* Current page in the navigation (set by assets/js/site.js). */
+  .nav-link[aria-current="page"] { @apply font-medium text-ink; }
+
+  /* --- Utility ------------------------------------------------------------ */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]
+           focus:border focus:border-ink focus:bg-canvas focus:px-4 focus:py-2 focus:text-sm;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   6. Motion — a single, restrained reveal-on-scroll effect.
+      Driven by IntersectionObserver in assets/js/site.js.
+   -------------------------------------------------------------------------- */
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-visible { opacity: 1; transform: none; }
+
+  /* Hairline grid used behind the hero. */
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, var(--c-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--c-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+  }
+}
+
+/* Respect users who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
