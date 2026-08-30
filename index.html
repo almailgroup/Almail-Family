@@ -14,10 +14,10 @@
   <meta property="og:title" content="The Almail Family — Kuwait">
   <meta property="og:description" content="Heritage, directory and journal of the Almail family, Kuwait.">
 
-  <!-- Typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <!-- Typography — self-hosted (Reem Kufi + IBM Plex Sans Arabic), declared in
+       assets/css/site.css. The two faces above the fold are preloaded. -->
+  <link rel="preload" href="assets/fonts/reem-kufi-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-arabic-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="assets/css/site.css">
 
@@ -50,9 +50,12 @@
         <!-- Wordmark -->
         <a href="index.html" class="group flex items-center gap-3" aria-label="Almail Family — home">
           <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
-                       font-display text-sm font-bold text-invert transition-colors
+                       font-display text-sm font-semibold text-invert transition-colors
                        group-hover:bg-canvas group-hover:text-ink">A</span>
           <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
+          <!-- To set the wordmark bilingually, add the family name in Arabic here —
+               we have deliberately not guessed its spelling:
+               <span class="ar text-lg" lang="ar" dir="rtl">…</span> -->
         </a>
 
         <!-- Desktop navigation -->
@@ -123,13 +126,13 @@
          ================================================================== -->
     <section class="relative overflow-hidden border-b border-line">
       <!-- Hairline grid, masked to fade out toward the bottom -->
-      <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="geo-pattern pointer-events-none absolute inset-0" aria-hidden="true"></div>
 
       <div class="container-x relative">
         <div class="grid items-end gap-14 py-24 sm:py-32 lg:grid-cols-12 lg:py-40">
 
           <div class="lg:col-span-8">
-            <p class="eyebrow reveal">Kuwait City &nbsp;·&nbsp; Est. record since 1938</p>
+            <p class="eyebrow reveal"><span class="ar-lead" lang="ar" dir="rtl">الكويت</span>Kuwait City &nbsp;·&nbsp; Est. record since 1938</p>
             <h1 class="display-1 reveal mt-7" data-reveal-delay="80">
               The Almail<br>Family Portal
             </h1>
@@ -175,7 +178,7 @@
         <div class="grid gap-px border border-line bg-line md:grid-cols-3">
 
           <a href="heritage.html" class="group flex flex-col bg-canvas p-8 transition-colors hover:bg-surface sm:p-10 reveal">
-            <span class="eyebrow">01 — History</span>
+            <span class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">التراث</span>01 — History</span>
             <span class="display-3 mt-5">Heritage &amp; roots</span>
             <span class="mt-3 text-[15px] leading-relaxed text-ink-2">
               A dated timeline of the family in Kuwait, from the earliest written record to today.
@@ -187,7 +190,7 @@
           </a>
 
           <a href="directory.html" class="group flex flex-col bg-canvas p-8 transition-colors hover:bg-surface sm:p-10 reveal" data-reveal-delay="80">
-            <span class="eyebrow">02 — People</span>
+            <span class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الدليل</span>02 — People</span>
             <span class="display-3 mt-5">Member directory</span>
             <span class="mt-3 text-[15px] leading-relaxed text-ink-2">
               Who we are and what we do — searchable by name, profession and family branch.
@@ -199,7 +202,7 @@
           </a>
 
           <a href="blog.html" class="group flex flex-col bg-canvas p-8 transition-colors hover:bg-surface sm:p-10 reveal" data-reveal-delay="160">
-            <span class="eyebrow">03 — Now</span>
+            <span class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الأخبار</span>03 — Now</span>
             <span class="display-3 mt-5">The journal</span>
             <span class="mt-3 text-[15px] leading-relaxed text-ink-2">
               Announcements, gatherings, essays from the archive and photo highlights.
@@ -222,7 +225,7 @@
 
         <div class="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-8">
           <div>
-            <p class="eyebrow">Latest updates</p>
+            <p class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">آخر الأخبار</span>Latest updates</p>
             <h2 id="latest-heading" class="display-2 mt-4">News from the family</h2>
           </div>
           <a href="blog.html" class="link-underline text-sm">
@@ -272,7 +275,7 @@
       <div class="container-x">
         <div class="grid items-center gap-10 border border-line p-8 sm:p-12 lg:grid-cols-2 lg:p-16">
           <div>
-            <p class="eyebrow">Get involved</p>
+            <p class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">شارِكنا</span>Get involved</p>
             <h2 class="display-2 mt-5">Add to the record</h2>
             <p class="lede mt-5 max-w-lg">
               A correction, a photograph, a name we have spelled wrong, a profile that
@@ -300,7 +303,7 @@
         <div class="md:col-span-5">
           <a href="index.html" class="flex items-center gap-3" aria-label="Almail Family — home">
             <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
-                         font-display text-sm font-bold text-invert">A</span>
+                         font-display text-sm font-semibold text-invert">A</span>
             <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
           </a>
           <p class="mt-6 max-w-sm text-[15px] leading-relaxed text-ink-2">
@@ -323,6 +326,7 @@
           <h2 class="eyebrow">Reach us</h2>
           <ul class="mt-5 space-y-3 text-[15px] text-ink-2">
             <li><a class="link-underline" href="mailto:family@almail.example">family@almail.example</a></li>
+            <li><span class="ar" lang="ar" dir="rtl">مدينة الكويت، دولة الكويت</span></li>
             <li>Kuwait City, State of Kuwait</li>
           </ul>
           <div class="mt-6 flex gap-2">

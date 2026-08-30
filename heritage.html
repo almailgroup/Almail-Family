@@ -14,10 +14,10 @@
   <meta property="og:title" content="Heritage — The Almail Family">
   <meta property="og:description" content="The history of the Almail family in Kuwait, told as a dated timeline from the earliest written record to the present day.">
 
-  <!-- Typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <!-- Typography — self-hosted (Reem Kufi + IBM Plex Sans Arabic), declared in
+       assets/css/site.css. The two faces above the fold are preloaded. -->
+  <link rel="preload" href="assets/fonts/reem-kufi-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/plex-arabic-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="assets/css/site.css">
 
@@ -50,9 +50,12 @@
         <!-- Wordmark -->
         <a href="index.html" class="group flex items-center gap-3" aria-label="Almail Family — home">
           <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
-                       font-display text-sm font-bold text-invert transition-colors
+                       font-display text-sm font-semibold text-invert transition-colors
                        group-hover:bg-canvas group-hover:text-ink">A</span>
           <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
+          <!-- To set the wordmark bilingually, add the family name in Arabic here —
+               we have deliberately not guessed its spelling:
+               <span class="ar text-lg" lang="ar" dir="rtl">…</span> -->
         </a>
 
         <!-- Desktop navigation -->
@@ -122,7 +125,7 @@
          ================================================================== -->
     <section class="border-b border-line">
       <div class="container-x py-16 sm:py-24">
-        <p class="eyebrow reveal">Heritage</p>
+        <p class="eyebrow reveal"><span class="ar-lead" lang="ar" dir="rtl">التراث</span>Heritage</p>
         <h1 class="display-1 reveal mt-6 text-4xl sm:text-5xl lg:text-6xl" data-reveal-delay="80">Where the family<br>comes from</h1>
         <p class="lede reveal mt-7 max-w-2xl" data-reveal-delay="160">A dated record of the Almail family in Kuwait — what we can document, what we have inherited, and what is still uncertain.</p>
       </div>
@@ -160,7 +163,7 @@
       <div class="container-x py-20 sm:py-28">
         <div class="grid gap-12 lg:grid-cols-12">
           <div class="lg:col-span-5">
-            <p class="eyebrow">The archive</p>
+            <p class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الأرشيف</span>The archive</p>
             <h2 class="display-2 mt-5">Held, catalogued,<br>and open to the family</h2>
           </div>
           <div class="lg:col-span-7">
@@ -202,7 +205,7 @@
         <div class="md:col-span-5">
           <a href="index.html" class="flex items-center gap-3" aria-label="Almail Family — home">
             <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
-                         font-display text-sm font-bold text-invert">A</span>
+                         font-display text-sm font-semibold text-invert">A</span>
             <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
           </a>
           <p class="mt-6 max-w-sm text-[15px] leading-relaxed text-ink-2">
@@ -225,6 +228,7 @@
           <h2 class="eyebrow">Reach us</h2>
           <ul class="mt-5 space-y-3 text-[15px] text-ink-2">
             <li><a class="link-underline" href="mailto:family@almail.example">family@almail.example</a></li>
+            <li><span class="ar" lang="ar" dir="rtl">مدينة الكويت، دولة الكويت</span></li>
             <li>Kuwait City, State of Kuwait</li>
           </ul>
           <div class="mt-6 flex gap-2">

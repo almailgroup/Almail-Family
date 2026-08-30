@@ -40,6 +40,7 @@ Almail-Family/
 │   │   ├── directory.js    Directory grid, search, branch filter
 │   │   ├── heritage.js     Timeline renderer
 │   │   └── contact.js      Form validation + submission
+│   ├── fonts/              Self-hosted WOFF2 subsets + LICENSE.md
 │   └── img/
 │       └── favicon.svg     Add photographs and covers here
 │
@@ -103,9 +104,55 @@ first visit).
 Use them as ordinary Tailwind utilities: `bg-canvas`, `text-ink-2`,
 `border-line`.
 
-**Typography.** Space Grotesk for display headings, Inter for everything else,
-each with a full system fallback stack so the page reads correctly before (or
-without) the webfonts.
+**Typography.** Two families, both self-hosted from `assets/fonts/` — the site
+makes no third-party request, so it renders identically offline and on a host
+with no outbound network.
+
+| | Family | Where |
+|---|---|---|
+| Display | **Reem Kufi** — Khaled Hosny / Alif Type | Headings, wordmark, section labels, figures, and every line of Arabic |
+| Text | **IBM Plex Sans Arabic** — Bold Monday for IBM | Body copy, UI, forms |
+
+Reem Kufi is a modern Kufic: flat terminals, geometric joins, squared counters.
+Its Latin is drawn from the same skeleton as its Arabic, so a headline reads as
+one voice in both scripts — which is what gives the pages their Gulf character
+without a single decorative flourish. IBM Plex Sans Arabic is engineered and
+low-contrast, built for long reading at small sizes, and sits naturally beside
+Kufi. Both are SIL OFL 1.1; see `assets/fonts/LICENSE.md`.
+
+Only the subsets actually used are downloaded — the `unicode-range` on each
+`@font-face` means the Arabic cut is fetched only by pages that set Arabic. A
+page pulls roughly 100 KB of type in six files.
+
+**Swapping a face.** Both are single tokens in `src/input.css`:
+
+```css
+--font-display: "Reem Kufi", …;         /* headings */
+--font-sans: "IBM Plex Sans Arabic", …; /* text */
+```
+
+To change one, download the WOFF2 subsets into `assets/fonts/`, add matching
+`@font-face` blocks at the top of `src/input.css`, point the token at the new
+name and run `npm run build`. Nothing else in the codebase names a font.
+
+**Arabic alongside Latin.** Section labels are set bilingually — `الدليل`
+before `DIRECTORY`, `التراث` before `HERITAGE`. Arabic is a joined script, so
+letter-spacing and `text-transform` would break the joins; the `.ar` and
+`.ar-lead` classes reset both and bump the optical size. Always pair them with
+`lang="ar" dir="rtl"`:
+
+```html
+<p class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">التراث</span>Heritage</p>
+```
+
+The wordmark is deliberately Latin-only: we did not want to guess the spelling
+of the family name in Arabic. `partials/header.html` carries a commented line
+showing exactly where to add it.
+
+**Ornament.** The hero carries a hairline eight-point star tessellation
+(`.geo-pattern`). It is applied as a CSS *mask* rather than a background image,
+so its colour comes from the theme's own `--c-line` token and it inverts
+correctly in dark mode. Delete the one `<div>` in `index.html` to remove it.
 
 **Components** (defined once in `src/input.css`, used everywhere):
 `container-x`, `section`, `reading`, `eyebrow`, `display-1/2/3`, `lede`, `meta`,
@@ -116,8 +163,8 @@ without) the webfonts.
 **Accessibility & performance.** Skip link, visible focus rings, `aria-current`
 on the active nav item, live regions on the result counts, labelled icon links,
 `prefers-reduced-motion` respected, and semantic landmarks throughout. The page
-loads one 40 KB stylesheet and three small scripts — no framework, no runtime
-dependency.
+loads one 46 KB stylesheet, six font subsets and three small scripts — no
+framework, no runtime dependency, no third-party request.
 
 ---
 
