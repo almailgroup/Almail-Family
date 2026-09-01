@@ -128,11 +128,38 @@ resolves each character against the stack in order, so Arabic glyphs land on it
 and Latin glyphs fall straight through to Reem Kufi or Plex. One declaration, no
 `[lang]` rules, and a line mixing both scripts sets correctly.
 
+### The face albayan.ae uses
+
+That site sets its Arabic in **Mizan** (its CSS declares `MizanAR-LT-Medium`).
+Mizan Arabic is a **commercial** typeface — the `LT` is the Linotype cut, now
+sold through Monotype — so it is deliberately not bundled with this repository:
+putting it on a public site needs a webfont licence bought in the family's name.
+
+`src/input.css` carries a ready-to-enable declaration for it. Once you hold the
+licence and have the webfont file:
+
+1. Put it in `assets/fonts/` as `mizan-ar-medium.woff2`
+2. Delete the two marked lines around the `@font-face` block
+3. Set `--font-arabic: "Mizan AR"`
+4. `npm run build`
+
+Keep that block's `unicode-range` as written — it is what confines Mizan to
+Arabic so the Latin keeps falling through to Reem Kufi and Plex, and it also
+stops a visitor who has Mizan installed on their own machine from having it take
+over the Latin as well.
+
+Until then the site ships **Noto Sans Arabic**, which is the closest freely
+licensed stand-in: compared against Mizan at matched size it shares the wide,
+open, low-contrast proportions, where Almarai (the first choice here) turned out
+noticeably narrower and more compact. Readex Pro is the other close option if
+you want something rounder; it is a one-line change either way.
+
 **Changing the Arabic face is one line.** Near the top of `src/input.css`:
 
 ```css
 :root {
-  --font-arabic: "Noto Sans Arabic";   /* alternative on hand: "Almarai" */
+  /* "Noto Sans Arabic" (shipped) · "Almarai" (bundled) · "Mizan AR" (licensed) */
+  --font-arabic: "Noto Sans Arabic";
 }
 ```
 

@@ -27,11 +27,46 @@
    Almarai (Boutros) — kept alongside as a ready alternative: switch between
      them by changing --font-arabic alone. Its files are not fetched unless it
      is the named face.
+   Mizan AR — the licensed face albayan.ae uses. Not bundled (commercial); a
+     ready-to-uncomment declaration for it sits above the Noto block.
 
    All are licensed under the SIL Open Font License 1.1 — see
    assets/fonts/LICENSE.md. Files are subset by script, and the unicode-range
    below means a browser downloads the Arabic cut only on pages that set Arabic.
    -------------------------------------------------------------------------- */
+
+/* -----------------------------------------------------------------------------
+   MIZAN — the face albayan.ae uses (declared there as MizanAR-LT-Medium).
+   -----------------------------------------------------------------------------
+   Mizan Arabic is a COMMERCIAL typeface (the "LT" is the Linotype cut, now sold
+   through Monotype). It is deliberately NOT bundled here: putting it on a
+   public site needs a webfont licence bought in the family's name.
+
+   Once you hold that licence and have the webfont file:
+     1. Put it in assets/fonts/ as mizan-ar-medium.woff2
+     2. Delete the two marked lines below so the @font-face becomes live
+     3. Set --font-arabic to "Mizan AR" (a few lines further down)
+     4. npm run build
+
+   Keep the unicode-range exactly as written. It is what confines Mizan to
+   Arabic, so the Latin keeps falling through to Reem Kufi and Plex — and it
+   also stops a visitor who happens to have Mizan installed on their own machine
+   from having it take over the Latin text as well.
+
+   If you have a second weight, copy the rule and give it font-weight: 700.
+   -------------------------------------------------------------------------- */
+
+/* DELETE THIS LINE to enable Mizan
+@font-face {
+  font-family: "Mizan AR";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../fonts/mizan-ar-medium.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+200C-200F, U+2010-2011, U+204F,
+    U+2E41, U+FDF2, U+FDFD, U+FEFF;
+}
+   AND DELETE THIS LINE TOO */
 
 @font-face {
   font-family: "Noto Sans Arabic";
@@ -134,7 +169,9 @@
      4. npm run build
    -------------------------------------------------------------------------- */
 :root {
-  --font-arabic: "Noto Sans Arabic";   /* alternative on hand: "Almarai" */
+  /* Options: "Noto Sans Arabic" (shipped) · "Almarai" (bundled, ready)
+     · "Mizan AR" (the licensed face — see the block above first). */
+  --font-arabic: "Noto Sans Arabic";
 }
 
 [data-theme="dark"] {
