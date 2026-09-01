@@ -114,24 +114,47 @@ with no outbound network.
 |---|---|---|
 | Display | **Reem Kufi** — Khaled Hosny / Alif Type | Latin headings, wordmark, section labels, figures |
 | Text | **IBM Plex Sans Arabic** — Bold Monday for IBM | Latin body copy, UI, forms |
-| Arabic | **Almarai** — Boutros | Every line of Arabic, at any size and in either language mode |
+| Arabic | **Noto Sans Arabic** — Google | Every line of Arabic, at any size and in either language mode |
 
 Reem Kufi is a modern Kufic: flat terminals, geometric joins, squared counters —
 which is what gives the Latin pages their Gulf character without a single
 decorative flourish. IBM Plex Sans Arabic is engineered and low-contrast, built
-for long reading at small sizes. Almarai carries all the Arabic.
+for long reading at small sizes. Noto Sans Arabic carries all the Arabic — open,
+wide and low-contrast, the register Gulf news sites read in.
 
-**How the Arabic face wins without any conditional CSS.** Almarai is declared
+**How the Arabic face wins without any conditional CSS.** It is declared
 with an Arabic-only `unicode-range` and listed *first* in both stacks. A browser
-resolves each character against the stack in order, so Arabic glyphs land on
-Almarai and Latin glyphs fall straight through to Reem Kufi or Plex. One
-declaration, no `[lang]` rules, and a line mixing both scripts sets correctly.
+resolves each character against the stack in order, so Arabic glyphs land on it
+and Latin glyphs fall straight through to Reem Kufi or Plex. One declaration, no
+`[lang]` rules, and a line mixing both scripts sets correctly.
 
-All three are SIL OFL 1.1; see `assets/fonts/LICENSE.md`.
+**Changing the Arabic face is one line.** Near the top of `src/input.css`:
+
+```css
+:root {
+  --font-arabic: "Noto Sans Arabic";   /* alternative on hand: "Almarai" */
+}
+```
+
+Almarai is already bundled, so switching between those two is that line and
+`npm run build` — its files are never fetched unless it is the named face. To
+use a face that is not bundled: put its Arabic-subset `.woff2` in
+`assets/fonts/`, copy an existing `@font-face` block, and name it here. That
+works for a licensed commercial face too — drop in the file you are entitled to
+use and nothing else changes.
+
+All are SIL OFL 1.1; see `assets/fonts/LICENSE.md`.
 
 Only the subsets actually used are downloaded — the `unicode-range` on each
-`@font-face` means the Arabic cut is fetched only by pages that set Arabic. A
-page pulls roughly 100 KB of type in six files.
+`@font-face` means the Arabic cut is fetched only where Arabic is actually set.
+An English page pulls 39 KB of type in five files; an Arabic page 63 KB in six.
+
+Two details keep that number down. Reem Kufi is a **variable** font, so a single
+file covers every weight the site uses — request two weights from Google Fonts
+and it hands you the same whole-axis file twice. And the Arabic faces are
+**re-subset** with `pyftsubset` to the Arabic block, dropping the legacy
+presentation forms (U+FB50–FDFF, U+FE70–FEFF) that a font with proper shaping
+never needs; that alone took Noto Sans Arabic from 162 KB to 23 KB per weight.
 
 **Swapping a face.** Both are single tokens in `src/input.css`:
 
@@ -172,8 +195,8 @@ correctly in dark mode. Delete the one `<div>` in `index.html` to remove it.
 **Accessibility & performance.** Skip link, visible focus rings, `aria-current`
 on the active nav item, live regions on the result counts, labelled icon links,
 `prefers-reduced-motion` respected, and semantic landmarks throughout. The page
-loads one 46 KB stylesheet, six font subsets and three small scripts — no
-framework, no runtime dependency, no third-party request.
+loads one 47 KB stylesheet, five or six font subsets (39–63 KB) and four small
+scripts — no framework, no runtime dependency, no third-party request.
 
 ---
 
