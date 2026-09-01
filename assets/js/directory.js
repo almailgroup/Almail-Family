@@ -8,6 +8,8 @@
   "use strict";
 
   var u = ALMAIL.utils;
+  var i18n = ALMAIL.i18n;
+  var t = i18n.t;
 
   /* Social / contact icons, drawn inline so the page makes no extra requests.
      `fill: true` marks a solid glyph (brand marks); the rest are stroked. */
@@ -35,6 +37,10 @@
     email: "Email", linkedin: "LinkedIn", x: "X", instagram: "Instagram", website: "Website",
   };
 
+  function linkLabel(kind) {
+    return t("link." + kind, LABELS[kind]);
+  }
+
   function iconLink(kind, value, name) {
     var icon = ICONS[kind];
     if (!icon) return "";
@@ -44,7 +50,7 @@
       : 'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"';
     return (
       '<a href="' + u.escape(href) + '" ' +
-      'aria-label="' + LABELS[kind] + " — " + u.escape(name) + '" ' +
+      'aria-label="' + u.escape(linkLabel(kind) + " — " + name) + '" ' +
       'class="flex h-9 w-9 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">' +
         '<svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" ' + paint + ' aria-hidden="true">' +
         icon.d + "</svg>" +
@@ -56,7 +62,7 @@
   function portrait(member) {
     if (member.photo) {
       return (
-        '<img src="' + u.escape(member.photo) + '" alt="' + u.escape(member.name) + '" loading="lazy" ' +
+        '<img src="' + u.escape(member.photo) + '" alt="' + u.escape(i18n.field(member, "name")) + '" loading="lazy" ' +
         'class="h-16 w-16 shrink-0 border border-line object-cover">'
       );
     }
@@ -79,14 +85,20 @@
         '<div class="flex items-start gap-5">' +
           portrait(member) +
           "<div>" +
-            '<h3 class="display-3">' + u.escape(member.name) + "</h3>" +
-            '<p class="mt-1 text-[15px] text-ink-2">' + u.escape(member.role) + "</p>" +
-            (member.location ? '<p class="meta mt-1">' + u.escape(member.location) + "</p>" : "") +
+            '<h3 class="display-3"' + i18n.markup(member, "name") + ">" +
+              u.escape(i18n.field(member, "name")) + "</h3>" +
+            '<p class="mt-1 text-[15px] text-ink-2"' + i18n.markup(member, "role") + ">" +
+              u.escape(i18n.field(member, "role")) + "</p>" +
+            (member.location
+              ? '<p class="meta mt-1"' + i18n.markup(member, "location") + ">" +
+                u.escape(i18n.field(member, "location")) + "</p>"
+              : "") +
           "</div>" +
         "</div>" +
-        '<p class="mt-6 text-[15px] leading-relaxed text-ink-2">' + u.escape(member.bio) + "</p>" +
+        '<p class="mt-6 text-[15px] leading-relaxed text-ink-2"' + i18n.markup(member, "bio") + ">" +
+          u.escape(i18n.field(member, "bio")) + "</p>" +
         '<div class="mt-auto flex items-center justify-between gap-4 pt-7">' +
-          '<span class="tag">' + u.escape(member.branch) + "</span>" +
+          '<span class="tag">' + u.escape(i18n.field(member, "branch")) + "</span>" +
           (linkHtml ? '<div class="flex gap-2">' + linkHtml + "</div>" : "") +
         "</div>" +
       "</article>"
@@ -110,13 +122,20 @@
       return acc;
     }, []);
 
+    /** Branch label in the current language — taken from the member data. */
+    function branchLabel(branch) {
+      if (branch === "All") return t("directory.all", "All");
+      var m = all.filter(function (x) { return x.branch === branch; })[0];
+      return m ? i18n.field(m, "branch") : branch;
+    }
+
     var state = { branch: "All", query: "" };
 
     if (filterBar) {
       filterBar.innerHTML = ["All"].concat(branches).map(function (b) {
         return (
           '<button type="button" class="chip" data-branch="' + u.escape(b) + '" ' +
-          'aria-pressed="' + (b === "All") + '">' + u.escape(b) + "</button>"
+          'aria-pressed="' + (b === state.branch) + '">' + u.escape(branchLabel(b)) + "</button>"
         );
       }).join("");
 
@@ -141,21 +160,22 @@
     function matches(m) {
       if (state.branch !== "All" && m.branch !== state.branch) return false;
       if (!state.query) return true;
-      return (m.name + " " + m.role + " " + (m.location || "") + " " + m.bio)
-        .toLowerCase().indexOf(state.query) !== -1;
+      // Search both languages, so an Arabic query finds an untranslated entry too.
+      return [
+        m.name, m.nameAr, m.role, m.roleAr, m.location, m.locationAr,
+        m.bio, m.bioAr, m.branch, m.branchAr,
+      ].join(" ").toLowerCase().indexOf(state.query) !== -1;
     }
 
     function render() {
       var results = all.filter(matches);
       grid.innerHTML = results.map(card).join("");
-      if (countEl) {
-        countEl.textContent = results.length + (results.length === 1 ? " member" : " members");
-      }
+      if (countEl) countEl.textContent = i18n.count("members", results.length);
       if (emptyEl) emptyEl.hidden = results.length > 0;
       u.observeReveal(grid);
     }
 
-    render();
+    i18n.onChange(render);
   }
 
   if (document.readyState === "loading") {

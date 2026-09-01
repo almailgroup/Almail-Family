@@ -25,7 +25,8 @@ Almail-Family/
 ├── content/                ← THE ONLY FILES MOST EDITORS NEED TO TOUCH
 │   ├── posts.js            Blog posts      (see §4)
 │   ├── members.js          Directory entries
-│   └── timeline.js         Heritage timeline entries
+│   ├── timeline.js         Heritage timeline entries
+│   └── i18n.js             Arabic string table  (see §5)
 │
 ├── partials/               Shared markup, injected into every page at build time
 │   ├── header.html         Navigation
@@ -35,6 +36,7 @@ Almail-Family/
 │   ├── css/site.css        Built stylesheet — generated, do not edit by hand
 │   ├── js/
 │   │   ├── site.js         Theme, mobile menu, active nav, reveal, shared helpers
+│   │   ├── i18n.js         English ⇄ Arabic switching and RTL
 │   │   ├── blog.js         Journal listing + homepage feed
 │   │   ├── post.js         Single-article renderer
 │   │   ├── directory.js    Directory grid, search, branch filter
@@ -110,15 +112,22 @@ with no outbound network.
 
 | | Family | Where |
 |---|---|---|
-| Display | **Reem Kufi** — Khaled Hosny / Alif Type | Headings, wordmark, section labels, figures, and every line of Arabic |
-| Text | **IBM Plex Sans Arabic** — Bold Monday for IBM | Body copy, UI, forms |
+| Display | **Reem Kufi** — Khaled Hosny / Alif Type | Latin headings, wordmark, section labels, figures |
+| Text | **IBM Plex Sans Arabic** — Bold Monday for IBM | Latin body copy, UI, forms |
+| Arabic | **Almarai** — Boutros | Every line of Arabic, at any size and in either language mode |
 
-Reem Kufi is a modern Kufic: flat terminals, geometric joins, squared counters.
-Its Latin is drawn from the same skeleton as its Arabic, so a headline reads as
-one voice in both scripts — which is what gives the pages their Gulf character
-without a single decorative flourish. IBM Plex Sans Arabic is engineered and
-low-contrast, built for long reading at small sizes, and sits naturally beside
-Kufi. Both are SIL OFL 1.1; see `assets/fonts/LICENSE.md`.
+Reem Kufi is a modern Kufic: flat terminals, geometric joins, squared counters —
+which is what gives the Latin pages their Gulf character without a single
+decorative flourish. IBM Plex Sans Arabic is engineered and low-contrast, built
+for long reading at small sizes. Almarai carries all the Arabic.
+
+**How the Arabic face wins without any conditional CSS.** Almarai is declared
+with an Arabic-only `unicode-range` and listed *first* in both stacks. A browser
+resolves each character against the stack in order, so Arabic glyphs land on
+Almarai and Latin glyphs fall straight through to Reem Kufi or Plex. One
+declaration, no `[lang]` rules, and a line mixing both scripts sets correctly.
+
+All three are SIL OFL 1.1; see `assets/fonts/LICENSE.md`.
 
 Only the subsets actually used are downloaded — the `unicode-range` on each
 `@font-face` means the Arabic cut is fetched only by pages that set Arabic. A
@@ -222,7 +231,76 @@ Publish a living family member's details only with their agreement.
 
 ---
 
-## 5. Connecting the contact form
+## 5. Language — English and Arabic
+
+Every page is bilingual. The button in the header switches between them; the
+choice is remembered, and `?lang=ar` on any URL is shareable.
+
+**English is the source language.** It lives in the HTML and in the scripts,
+exactly where you would look for it. `content/i18n.js` holds *only* the Arabic.
+Switching to Arabic replaces the content of every `data-i18n` element, swaps the
+attributes named by `data-i18n-attr`, and sets `<html lang="ar" dir="rtl">`;
+the original English is cached in memory, so switching back needs no second
+dictionary and nothing is ever duplicated.
+
+**Check `brand.family` first.** It is at the top of `content/i18n.js` and holds
+our best transliteration of the family name into Arabic — we could not verify
+how the family actually spells it. Every Arabic string that names the family
+uses the `{family}` token rather than spelling it out, so correcting that one
+line updates the whole site. The surname also appears in the `nameAr` fields in
+`content/members.js`, which is a find-and-replace.
+
+### Adding a string
+
+```html
+<p data-i18n="home.heroLede">The English text, as normal.</p>
+<input data-i18n-attr="placeholder:directory.searchPh" placeholder="Search…">
+```
+```js
+t("blog.read", "Read")            // English default is the second argument
+```
+
+Then add the key to `content/i18n.js`. Nothing else is needed.
+
+### Translating content
+
+Posts, members and timeline entries take an `Ar` field beside each English one —
+`titleAr`, `excerptAr`, `bodyAr`, `nameAr`, `roleAr`, `bioAr`, and so on. A
+partly translated file still renders correctly: anything without an `Ar` field
+falls back to English and is marked `lang="en" dir="ltr"` so the bidirectional
+layout stays right. Search covers both languages, so an Arabic query still finds
+an untranslated post.
+
+### How the layout mirrors
+
+Every direction-sensitive style uses CSS logical properties — `ps-*`/`pe-*`,
+`ms-*`/`me-*`, `start-*`/`end-*`, `border-s`/`border-e`, `text-end` — so the
+whole page mirrors from the one `dir="rtl"` attribute, including the timeline
+rail and the article body. Arrows carry `rtl:rotate-180`. Arabic also resets the
+Latin tracking, word spacing and uppercasing (which damage a joined script) and
+takes more leading; that is the `:root[lang="ar"]` block in `src/input.css`.
+
+Counts read as proper Arabic — one, two, a few, many are all different forms
+(`منشوران` for two, not "2 منشور"); see `arCount` at the bottom of
+`content/i18n.js`. Dates use Arabic month names with Western digits, as Gulf
+publications do.
+
+**No flash, and no JavaScript required.** The language is resolved by the inline
+snippet in each page's `<head>`, before first paint. It sets `data-i18n-pending`
+only for Arabic and only from that script, which hides translatable text for the
+one frame before the swap — so with JavaScript disabled nothing is hidden and
+the page simply reads in English.
+
+### A note on the Arabic
+
+The Arabic throughout — interface, page copy and the sample content — was
+written for this build and reads as standard MSA, but it has not been reviewed
+by a native speaker. Have someone in the family read it before you publish,
+particularly the family name.
+
+---
+
+## 6. Connecting the contact form
 
 Out of the box the form validates in the browser, then opens the visitor's mail
 client with everything pre-filled — so it works on a purely static host with no
@@ -241,7 +319,7 @@ success or failure in place. A honeypot field filters out basic bots. Also updat
 
 ---
 
-## 6. A note on the current content
+## 7. A note on the current content
 
 The posts, member profiles and timeline entries shipped in `content/` are
 **sample placeholders**, written to demonstrate the layouts. Replace them with the

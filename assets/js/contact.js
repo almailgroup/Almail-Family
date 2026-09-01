@@ -18,15 +18,22 @@
   var FALLBACK_EMAIL = "family@almail.example"; // ← used when ENDPOINT is empty
 
   /* Validation rules, one per field name. Return an error string or "". */
+  var t = ALMAIL.i18n.t;
+
   var RULES = {
-    name: function (v) { return v.trim().length >= 2 ? "" : "Please enter your name."; },
+    name: function (v) {
+      return v.trim().length >= 2 ? "" : t("contact.errName", "Please enter your name.");
+    },
     email: function (v) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())
-        ? "" : "Please enter a valid email address.";
+        ? "" : t("contact.errEmail", "Please enter a valid email address.");
     },
-    subject: function (v) { return v.trim() ? "" : "Please choose a subject."; },
+    subject: function (v) {
+      return v.trim() ? "" : t("contact.errSubject", "Please choose a subject.");
+    },
     message: function (v) {
-      return v.trim().length >= 20 ? "" : "Please write at least 20 characters.";
+      return v.trim().length >= 20
+        ? "" : t("contact.errMessage", "Please write at least 20 characters.");
     },
   };
 
@@ -85,7 +92,7 @@
       if (form.elements.company && form.elements.company.value) return;
 
       if (!validate(form)) {
-        say("Please check the highlighted fields and try again.", "error");
+        say(t("contact.errSummary", "Please check the highlighted fields and try again."), "error");
         var firstBad = form.querySelector('[aria-invalid="true"]');
         if (firstBad) firstBad.focus();
         return;
@@ -106,13 +113,13 @@
           "mailto:" + FALLBACK_EMAIL +
           "?subject=" + encodeURIComponent("[" + data.subject + "] " + data.name) +
           "&body=" + encodeURIComponent(body);
-        say("Opening your email app with the message ready to send.");
+        say(t("contact.mailto", "Opening your email app with the message ready to send."));
         return;
       }
 
       submit.disabled = true;
       var original = submit.textContent;
-      submit.textContent = "Sending…";
+      submit.textContent = t("contact.sending", "Sending…");
 
       fetch(ENDPOINT, {
         method: "POST",
@@ -122,14 +129,12 @@
         .then(function (res) {
           if (!res.ok) throw new Error("Request failed: " + res.status);
           form.reset();
-          say("Thank you — your message has been sent. We'll be in touch shortly.");
+          say(t("contact.sent", "Thank you — your message has been sent. We'll be in touch shortly."));
         })
         .catch(function () {
-          say(
-            "Something went wrong sending your message. Please email us directly at " +
-            FALLBACK_EMAIL + ".",
-            "error"
-          );
+          say(t("contact.failed",
+            "Something went wrong sending your message. Please email us directly at {email}.",
+            { email: FALLBACK_EMAIL }), "error");
         })
         .finally(function () {
           submit.disabled = false;

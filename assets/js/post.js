@@ -9,15 +9,21 @@
   "use strict";
 
   var u = ALMAIL.utils;
+  var i18n = ALMAIL.i18n;
+  var t = i18n.t;
 
   function notFound(host) {
     host.innerHTML =
       '<div class="container-x section text-center">' +
         '<p class="eyebrow">404</p>' +
-        '<h1 class="display-2 mt-4">We couldn\'t find that post</h1>' +
-        '<p class="lede mx-auto mt-5 max-w-md">It may have been renamed or removed. ' +
-        "The Journal has everything we've published.</p>" +
-        '<a href="blog.html" class="btn-primary mt-10">Back to the Journal</a>' +
+        '<h1 class="display-2 mt-4">' +
+          u.escape(t("post.nfTitle", "We couldn't find that post")) + "</h1>" +
+        '<p class="lede mx-auto mt-5 max-w-md">' +
+          u.escape(t("post.nfBody",
+            "It may have been renamed or removed. The Journal has everything we've published.")) +
+        "</p>" +
+        '<a href="blog.html" class="btn-primary mt-10">' +
+          u.escape(t("post.nfCta", "Back to the Journal")) + "</a>" +
       "</div>";
   }
 
@@ -39,9 +45,10 @@
     var older = posts[index + 1];
 
     /* Document metadata --------------------------------------------------- */
-    document.title = post.title + " — Almail Family";
+    document.title = i18n.field(post, "title") + " — " +
+      t("brand.family", "Almail") + (i18n.lang === "ar" ? "" : " Family");
     var desc = document.querySelector('meta[name="description"]');
-    if (desc) desc.setAttribute("content", post.excerpt);
+    if (desc) desc.setAttribute("content", i18n.field(post, "excerpt"));
 
     /* Cover ---------------------------------------------------------------- */
     var cover = post.image
@@ -56,8 +63,9 @@
       return (
         '<a href="post.html?p=' + encodeURIComponent(post.slug) + '" ' +
         'class="group block p-6 sm:p-8 ' + align + '">' +
-          '<span class="eyebrow">' + label + "</span>" +
-          '<span class="display-3 mt-3 block">' + u.escape(post.title) + "</span>" +
+          '<span class="eyebrow">' + u.escape(label) + "</span>" +
+          '<span class="display-3 mt-3 block"' + i18n.markup(post, "title") + ">" +
+            u.escape(i18n.field(post, "title")) + "</span>" +
         "</a>"
       );
     }
@@ -65,39 +73,45 @@
     host.innerHTML =
       /* --- Header --- */
       '<div class="container-x pt-14 sm:pt-20">' +
-        '<a href="blog.html" class="meta link-underline">&larr; All posts</a>' +
+        '<a href="blog.html" class="meta link-underline">' +
+          '<span class="rtl:rotate-180 inline-block">&larr;</span> ' +
+          u.escape(t("post.allPosts", "All posts")) + "</a>" +
         '<div class="reading mt-10">' +
           '<div class="flex flex-wrap items-center gap-x-3 gap-y-2">' +
-            '<span class="tag">' + u.escape(post.category) + "</span>" +
+            '<span class="tag">' + u.escape(t("cat." + post.category, post.category)) + "</span>" +
             '<span class="meta">' + u.formatDate(post.date) + "</span>" +
             '<span class="meta">·</span>' +
-            '<span class="meta">' + u.readingTime(post.body) + " min read</span>" +
+            '<span class="meta">' + u.readingTime(i18n.field(post, "body")) + " " +
+              u.escape(t("post.minRead", "min read")) + "</span>" +
           "</div>" +
-          '<h1 class="display-1 mt-6 text-4xl sm:text-5xl">' + u.escape(post.title) + "</h1>" +
-          '<p class="meta mt-6 border-t border-line pt-6">By ' + u.escape(post.author) + "</p>" +
+          '<h1 class="display-1 mt-6 text-4xl sm:text-5xl"' + i18n.markup(post, "title") + ">" +
+            u.escape(i18n.field(post, "title")) + "</h1>" +
+          '<p class="meta mt-6 border-t border-line pt-6">' +
+            u.escape(t("post.by", "By")) + " " + u.escape(i18n.field(post, "author")) + "</p>" +
         "</div>" +
         cover +
       "</div>" +
 
       /* --- Body --- */
       '<div class="container-x">' +
-        '<div class="article-body reading py-12 sm:py-16">' +
-          post.body +
+        '<div class="article-body reading py-12 sm:py-16"' + i18n.markup(post, "body") + ">" +
+          i18n.field(post, "body") +
         "</div>" +
 
         /* --- Share --- */
         '<div class="reading flex flex-wrap items-center justify-between gap-4 border-t border-line py-8">' +
-          '<p class="meta">Share this post</p>' +
-          '<button type="button" class="btn-outline btn-sm" data-copy-link>Copy link</button>' +
+          '<p class="meta">' + u.escape(t("post.share", "Share this post")) + "</p>" +
+          '<button type="button" class="btn-outline btn-sm" data-copy-link>' +
+            u.escape(t("post.copy", "Copy link")) + "</button>" +
         "</div>" +
       "</div>" +
 
       /* --- Pager --- */
-      '<nav class="border-t border-line" aria-label="More posts">' +
+      '<nav class="border-t border-line" aria-label="' + u.escape(t("post.moreNav", "More posts")) + '">' +
         '<div class="container-x">' +
           '<div class="grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0">' +
-            pager(older, "Previous", "") +
-            pager(newer, "Next", "sm:text-right") +
+            pager(older, t("post.prev", "Previous"), "") +
+            pager(newer, t("post.next", "Next"), "sm:text-end") +
           "</div>" +
         "</div>" +
       "</nav>";
@@ -107,8 +121,10 @@
     if (copyBtn) {
       copyBtn.addEventListener("click", function () {
         var done = function () {
-          copyBtn.textContent = "Link copied";
-          setTimeout(function () { copyBtn.textContent = "Copy link"; }, 2000);
+          copyBtn.textContent = t("post.copied", "Link copied");
+          setTimeout(function () {
+            copyBtn.textContent = t("post.copy", "Copy link");
+          }, 2000);
         };
         if (navigator.clipboard) {
           navigator.clipboard.writeText(location.href).then(done, function () {});
@@ -126,8 +142,8 @@
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", function () { i18n.onChange(init); });
   } else {
-    init();
+    i18n.onChange(init);
   }
 })();

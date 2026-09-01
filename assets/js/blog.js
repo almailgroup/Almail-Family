@@ -10,7 +10,17 @@
   "use strict";
 
   var u = ALMAIL.utils;
+  var i18n = ALMAIL.i18n;
+  var t = i18n.t;
+
+  // Add a category here and its filter chip appears as soon as a post uses it.
+  // Its Arabic label goes in content/i18n.js under "cat.<name>".
   var CATEGORIES = ["Events", "Announcements", "Articles", "Photo Highlights"];
+
+  /** Category label in the current language. */
+  function categoryLabel(name) {
+    return t("cat." + name, name);
+  }
 
   /* ---------------------------------------------------------------------------
      Card media — a real cover image when one is supplied, otherwise a clean
@@ -27,13 +37,15 @@
     }
     return (
       '<div class="' + ratio + ' grid place-items-center border-b border-line bg-surface" aria-hidden="true">' +
-        '<span class="font-display text-[11px] font-medium uppercase tracking-[0.45em] text-muted">Almail</span>' +
+        '<span class="font-display text-[11px] font-medium uppercase tracking-[0.45em] text-muted">' +
+          u.escape(t("brand.family", "Almail")) + "</span>" +
       "</div>"
     );
   }
 
   var ARROW =
-    '<svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" ' +
+    '<svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 ' +
+    'rtl:rotate-180 rtl:group-hover:-translate-x-1" ' +
     'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
     '<path d="M5 12h14M13 6l6 6-6 6"></path></svg>';
@@ -48,13 +60,15 @@
           media(post, "aspect-[16/10]") +
           '<div class="flex flex-1 flex-col p-6 sm:p-7">' +
             '<div class="flex flex-wrap items-center gap-x-3 gap-y-2">' +
-              '<span class="tag">' + u.escape(post.category) + "</span>" +
+              '<span class="tag">' + u.escape(categoryLabel(post.category)) + "</span>" +
               '<span class="meta">' + u.formatDate(post.date) + "</span>" +
             "</div>" +
-            '<h3 class="display-3 mt-4">' + u.escape(post.title) + "</h3>" +
-            '<p class="mt-3 text-[15px] leading-relaxed text-ink-2">' + u.escape(post.excerpt) + "</p>" +
+            '<h3 class="display-3 mt-4"' + i18n.markup(post, "title") + ">" +
+              u.escape(i18n.field(post, "title")) + "</h3>" +
+            '<p class="mt-3 text-[15px] leading-relaxed text-ink-2"' + i18n.markup(post, "excerpt") + ">" +
+              u.escape(i18n.field(post, "excerpt")) + "</p>" +
             '<span class="mt-auto flex items-center gap-2 pt-6 text-sm font-medium">' +
-              "Read" + ARROW +
+              u.escape(t("blog.read", "Read")) + ARROW +
             "</span>" +
           "</div>" +
         "</a>" +
@@ -70,19 +84,21 @@
     return (
       '<article class="card card-hover group reveal md:col-span-2 lg:col-span-3">' +
         '<a href="post.html?p=' + encodeURIComponent(post.slug) + '" class="grid md:grid-cols-2">' +
-          '<div class="md:border-b-0 md:border-r md:border-line">' +
+          '<div class="md:border-b-0 md:border-e md:border-line">' +
             media(post, "aspect-[16/10] md:aspect-auto md:h-full md:min-h-[20rem]") +
           "</div>" +
           '<div class="flex flex-col justify-center p-7 sm:p-10">' +
             '<div class="flex flex-wrap items-center gap-x-3 gap-y-2">' +
-              '<span class="tag">' + u.escape(post.category) + "</span>" +
+              '<span class="tag">' + u.escape(categoryLabel(post.category)) + "</span>" +
               '<span class="meta">' + u.formatDate(post.date) + "</span>" +
             "</div>" +
-            '<h3 class="display-2 mt-5">' + u.escape(post.title) + "</h3>" +
-            '<p class="mt-4 max-w-prose text-[15px] leading-relaxed text-ink-2 sm:text-base">' +
-              u.escape(post.excerpt) +
+            '<h3 class="display-2 mt-5"' + i18n.markup(post, "title") + ">" +
+              u.escape(i18n.field(post, "title")) + "</h3>" +
+            '<p class="mt-4 max-w-prose text-[15px] leading-relaxed text-ink-2 sm:text-base"' +
+              i18n.markup(post, "excerpt") + ">" + u.escape(i18n.field(post, "excerpt")) +
             "</p>" +
-            '<span class="mt-8 flex items-center gap-2 text-sm font-medium">Read the full post' + ARROW + "</span>" +
+            '<span class="mt-8 flex items-center gap-2 text-sm font-medium">' +
+              u.escape(t("blog.readFull", "Read the full post")) + ARROW + "</span>" +
           "</div>" +
         "</a>" +
       "</article>"
@@ -95,7 +111,10 @@
   function renderLatest() {
     var host = document.querySelector("[data-latest-posts]");
     if (!host) return;
+    i18n.onChange(function () { drawLatest(host); });
+  }
 
+  function drawLatest(host) {
     var limit = parseInt(host.dataset.latestPosts || "3", 10);
     var posts = u.sortedPosts();
 
@@ -140,9 +159,10 @@
     /* Filter chips */
     if (filterBar) {
       filterBar.innerHTML = ["All"].concat(used).map(function (cat) {
+        var label = cat === "All" ? t("blog.all", "All") : categoryLabel(cat);
         return (
           '<button type="button" class="chip" data-category="' + u.escape(cat) + '" ' +
-          'aria-pressed="' + (cat === state.category) + '">' + u.escape(cat) + "</button>"
+          'aria-pressed="' + (cat === state.category) + '">' + u.escape(label) + "</button>"
         );
       }).join("");
 
@@ -173,23 +193,22 @@
     function matches(post) {
       if (state.category !== "All" && post.category !== state.category) return false;
       if (!state.query) return true;
-      return (
-        post.title + " " + post.excerpt + " " + post.author + " " + post.category
-      ).toLowerCase().indexOf(state.query) !== -1;
+      // Search both languages, so an Arabic query finds an English post too.
+      return [
+        post.title, post.titleAr, post.excerpt, post.excerptAr,
+        post.author, post.authorAr, post.category, categoryLabel(post.category),
+      ].join(" ").toLowerCase().indexOf(state.query) !== -1;
     }
 
     function render() {
       var results = all.filter(matches);
       grid.innerHTML = results.map(card).join("");
-      if (countEl) {
-        countEl.textContent =
-          results.length + (results.length === 1 ? " post" : " posts");
-      }
+      if (countEl) countEl.textContent = i18n.count("posts", results.length);
       if (emptyEl) emptyEl.hidden = results.length > 0;
       u.observeReveal(grid);
     }
 
-    render();
+    i18n.onChange(render);
   }
 
   /* ------------------------------------------------------------------------ */

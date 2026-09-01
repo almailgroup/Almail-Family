@@ -25,14 +25,18 @@
      ------------------------------------------------------------------------ */
   var THEME_KEY = "almail-theme";
 
+  /* Short helper: i18n.js is loaded before this file, so ALMAIL.i18n exists. */
+  function t(key, en) {
+    return ALMAIL.i18n ? ALMAIL.i18n.t(key, en) : en;
+  }
+
   function setTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* private mode */ }
     document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
-      btn.setAttribute(
-        "aria-label",
-        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
-      );
+      btn.setAttribute("aria-label", theme === "dark"
+        ? t("theme.toLight", "Switch to light theme")
+        : t("theme.toDark", "Switch to dark theme"));
       // Show the icon for the theme the button switches *to*, matching the label.
       btn.querySelectorAll("[data-theme-icon]").forEach(function (icon) {
         icon.hidden = icon.dataset.themeIcon === theme;
@@ -61,7 +65,8 @@
     function setOpen(open) {
       menu.hidden = !open;
       toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      toggle.setAttribute("aria-label",
+        open ? t("nav.menuClose", "Close menu") : t("nav.menuOpen", "Open menu"));
       // Hamburger ↔ cross
       toggle.querySelectorAll("[data-menu-icon]").forEach(function (icon) {
         icon.hidden = (icon.dataset.menuIcon === "open") !== open;
@@ -152,11 +157,13 @@
         .replace(/'/g, "&#39;");
     },
 
-    /** "2026-08-14" -> "14 August 2026" */
+    /** "2026-08-14" -> "14 August 2026" / "14 أغسطس 2026" */
     formatDate: function (iso) {
       var d = new Date(iso + "T00:00:00");
       if (isNaN(d)) return iso;
-      return d.toLocaleDateString("en-GB", {
+      // -u-nu-latn keeps Western digits in Arabic, as Gulf publications do.
+      var locale = ALMAIL.i18n && ALMAIL.i18n.lang === "ar" ? "ar-KW-u-nu-latn" : "en-GB";
+      return d.toLocaleDateString(locale, {
         day: "numeric", month: "long", year: "numeric",
       });
     },
@@ -200,6 +207,19 @@
     initActiveNav();
     initReveal();
     initYear();
+
+    // Re-label the icon buttons when the language changes.
+    if (ALMAIL.i18n) {
+      ALMAIL.i18n.onChange(function () {
+        setTheme(document.documentElement.getAttribute("data-theme") || "light");
+        var toggle = document.querySelector("[data-menu-toggle]");
+        if (toggle) {
+          var open = toggle.getAttribute("aria-expanded") === "true";
+          toggle.setAttribute("aria-label",
+            open ? t("nav.menuClose", "Close menu") : t("nav.menuOpen", "Open menu"));
+        }
+      });
+    }
   }
 
   if (document.readyState === "loading") {

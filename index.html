@@ -21,13 +21,29 @@
 
   <link rel="stylesheet" href="assets/css/site.css">
 
-  <!-- Set the colour scheme before first paint so the page never flashes. -->
+  <!-- Resolve theme AND language before first paint, so neither ever flashes.
+       data-i18n-pending hides translatable text for the frame between this
+       running and i18n.js swapping it; it is only ever set for Arabic, and only
+       by this script — so with JavaScript off nothing is hidden. -->
   <script>
     (function () {
+      var root = document.documentElement;
       try {
-        var saved = localStorage.getItem("almail-theme");
-        var prefers = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", saved || prefers);
+        var savedTheme = localStorage.getItem("almail-theme");
+        var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        root.setAttribute("data-theme", savedTheme || (prefersDark ? "dark" : "light"));
+      } catch (e) {}
+      try {
+        var param = new URLSearchParams(location.search).get("lang");
+        var stored = localStorage.getItem("almail-lang");
+        var browser = (navigator.language || "").slice(0, 2) === "ar" ? "ar" : "en";
+        var lang = (param === "ar" || param === "en") ? param : (stored || browser);
+        if (param) localStorage.setItem("almail-lang", lang);
+        if (lang === "ar") {
+          root.setAttribute("lang", "ar");
+          root.setAttribute("dir", "rtl");
+          root.setAttribute("data-i18n-pending", "");
+        }
       } catch (e) {}
     })();
   </script>
@@ -39,8 +55,11 @@
   <!-- ============================================================================
        Site header — edit this file, then run `npm run partials` to sync it into
        every page between the @partial:header markers. Never edit the copies.
+
+       data-i18n="key" swaps the element's content for the Arabic in
+       content/i18n.js; data-i18n-attr does the same for named attributes.
        ========================================================================= -->
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
 
   <header id="site-header"
           class="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
@@ -48,37 +67,42 @@
       <div class="flex h-16 items-center justify-between sm:h-20">
 
         <!-- Wordmark -->
-        <a href="index.html" class="group flex items-center gap-3" aria-label="Almail Family — home">
+        <a href="index.html" class="group flex items-center gap-3"
+           data-i18n-attr="aria-label:nav.home.aria" aria-label="Almail Family — home">
           <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
                        font-display text-sm font-semibold text-invert transition-colors
                        group-hover:bg-canvas group-hover:text-ink">A</span>
-          <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
-          <!-- To set the wordmark bilingually, add the family name in Arabic here —
-               we have deliberately not guessed its spelling:
-               <span class="ar text-lg" lang="ar" dir="rtl">…</span> -->
+          <span class="wordmark font-display text-[15px] font-semibold uppercase tracking-[0.2em]"
+                data-i18n="brand.family">Almail</span>
         </a>
 
         <!-- Desktop navigation -->
-        <nav class="hidden items-center gap-9 md:flex" aria-label="Primary">
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="index.html">Home</a>
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="heritage.html">Heritage</a>
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="directory.html">Directory</a>
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="blog.html">Journal</a>
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="contact.html">Contact</a>
+        <nav class="hidden items-center gap-9 md:flex"
+             data-i18n-attr="aria-label:nav.primary" aria-label="Primary">
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="index.html" data-i18n="nav.home">Home</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="heritage.html" data-i18n="nav.heritage">Heritage</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="directory.html" data-i18n="nav.directory">Directory</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="blog.html" data-i18n="nav.journal">Journal</a>
+          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="contact.html" data-i18n="nav.contact">Contact</a>
         </nav>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 sm:gap-2">
+          <!-- Language: the button always shows the language it switches TO -->
+          <button type="button" data-lang-toggle
+                  class="btn-ghost min-w-16 justify-center text-[13px] font-medium"
+                  lang="ar" aria-label="Switch language">العربية</button>
+
           <!-- Light / dark inversion (still strictly monochrome) -->
           <button type="button" data-theme-toggle
                   class="btn-icon"
                   aria-label="Switch colour scheme">
-            <!-- Sun: shown in light mode -->
+            <!-- Sun: shown when the button switches to light -->
             <svg data-theme-icon="light" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
               <circle cx="12" cy="12" r="4.25"></circle>
               <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4l1.4-1.4M18 6l1.4-1.4"></path>
             </svg>
-            <!-- Moon: shown in dark mode -->
+            <!-- Moon: shown when the button switches to dark -->
             <svg data-theme-icon="dark" class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
                  aria-hidden="true" hidden>
@@ -86,7 +110,8 @@
             </svg>
           </button>
 
-          <a href="contact.html" class="btn-primary btn-sm hidden md:inline-flex">Get in touch</a>
+          <a href="contact.html" class="btn-primary btn-sm hidden md:inline-flex"
+             data-i18n="nav.cta">Get in touch</a>
 
           <!-- Mobile menu trigger -->
           <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"
@@ -107,13 +132,14 @@
     <!-- Mobile navigation panel -->
     <div id="mobile-menu" hidden
          class="border-t border-line bg-canvas md:hidden">
-      <nav class="container-x flex flex-col py-2" aria-label="Mobile">
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="index.html">Home</a>
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="heritage.html">Heritage</a>
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="directory.html">Directory</a>
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="blog.html">Journal</a>
-        <a class="nav-link py-4 text-base font-medium" href="contact.html">Contact</a>
-        <a href="contact.html" class="btn-primary my-4">Get in touch</a>
+      <nav class="container-x flex flex-col py-2"
+           data-i18n-attr="aria-label:nav.mobile" aria-label="Mobile">
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="index.html" data-i18n="nav.home">Home</a>
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="heritage.html" data-i18n="nav.heritage">Heritage</a>
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="directory.html" data-i18n="nav.directory">Directory</a>
+        <a class="nav-link border-b border-line py-4 text-base font-medium" href="blog.html" data-i18n="nav.journal">Journal</a>
+        <a class="nav-link py-4 text-base font-medium" href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="contact.html" class="btn-primary my-4" data-i18n="nav.cta">Get in touch</a>
       </nav>
     </div>
   </header>
@@ -132,17 +158,17 @@
         <div class="grid items-end gap-14 py-24 sm:py-32 lg:grid-cols-12 lg:py-40">
 
           <div class="lg:col-span-8">
-            <p class="eyebrow reveal"><span class="ar-lead" lang="ar" dir="rtl">الكويت</span>Kuwait City &nbsp;·&nbsp; Est. record since 1938</p>
-            <h1 class="display-1 reveal mt-7" data-reveal-delay="80">
+            <p class="eyebrow reveal" data-i18n="home.heroEyebrow"><span class="ar-lead" lang="ar" dir="rtl">الكويت</span>Kuwait City &nbsp;·&nbsp; Est. record since 1938</p>
+            <h1 class="display-1 reveal mt-7" data-reveal-delay="80" data-i18n="home.heroTitle">
               The Almail<br>Family Portal
             </h1>
-            <p class="lede reveal mt-8 max-w-xl" data-reveal-delay="160">
+            <p class="lede reveal mt-8 max-w-xl" data-reveal-delay="160" data-i18n="home.heroLede">
               A record of our people, our history and the work we do together —
               kept plainly, and kept for the generation that comes next.
             </p>
             <div class="reveal mt-11 flex flex-wrap gap-3" data-reveal-delay="240">
-              <a href="directory.html" class="btn-primary">Browse the directory</a>
-              <a href="heritage.html" class="btn-outline">Our heritage</a>
+              <a href="directory.html" class="btn-primary" data-i18n="home.ctaDirectory">Browse the directory</a>
+              <a href="heritage.html" class="btn-outline" data-i18n="home.ctaHeritage">Our heritage</a>
             </div>
           </div>
 
@@ -150,15 +176,15 @@
           <div class="reveal lg:col-span-4" data-reveal-delay="320">
             <dl class="grid grid-cols-3 gap-px border border-line bg-line lg:grid-cols-1">
               <div class="bg-canvas p-5 lg:p-6">
-                <dt class="eyebrow">Members listed</dt>
+                <dt class="eyebrow" data-i18n="home.statMembers">Members listed</dt>
                 <dd class="font-display mt-2 text-3xl font-semibold">8</dd>
               </div>
               <div class="bg-canvas p-5 lg:p-6">
-                <dt class="eyebrow">Years recorded</dt>
+                <dt class="eyebrow" data-i18n="home.statYears">Years recorded</dt>
                 <dd class="font-display mt-2 text-3xl font-semibold">88</dd>
               </div>
               <div class="bg-canvas p-5 lg:p-6">
-                <dt class="eyebrow">Images archived</dt>
+                <dt class="eyebrow" data-i18n="home.statImages">Images archived</dt>
                 <dd class="font-display mt-2 text-3xl font-semibold">1,400</dd>
               </div>
             </dl>
@@ -173,43 +199,43 @@
          ================================================================== -->
     <section class="section-tight border-b border-line" aria-labelledby="explore-heading">
       <div class="container-x">
-        <h2 id="explore-heading" class="sr-only">Explore the portal</h2>
+        <h2 id="explore-heading" class="sr-only" data-i18n="home.exploreHeading">Explore the portal</h2>
 
         <div class="grid gap-px border border-line bg-line md:grid-cols-3">
 
           <a href="heritage.html" class="group flex flex-col bg-canvas p-8 transition-colors hover:bg-surface sm:p-10 reveal">
-            <span class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">التراث</span>01 — History</span>
-            <span class="display-3 mt-5">Heritage &amp; roots</span>
-            <span class="mt-3 text-[15px] leading-relaxed text-ink-2">
+            <span class="eyebrow" data-i18n="home.c1eyebrow"><span class="ar-lead" lang="ar" dir="rtl">التراث</span>01 — History</span>
+            <span class="display-3 mt-5" data-i18n="home.c1title">Heritage &amp; roots</span>
+            <span class="mt-3 text-[15px] leading-relaxed text-ink-2" data-i18n="home.c1body">
               A dated timeline of the family in Kuwait, from the earliest written record to today.
             </span>
             <span class="mt-8 flex items-center gap-2 text-sm font-medium">
-              View the timeline
-              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <span data-i18n="home.c1link">View the timeline</span>
+              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
             </span>
           </a>
 
           <a href="directory.html" class="group flex flex-col bg-canvas p-8 transition-colors hover:bg-surface sm:p-10 reveal" data-reveal-delay="80">
-            <span class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الدليل</span>02 — People</span>
-            <span class="display-3 mt-5">Member directory</span>
-            <span class="mt-3 text-[15px] leading-relaxed text-ink-2">
+            <span class="eyebrow" data-i18n="home.c2eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الدليل</span>02 — People</span>
+            <span class="display-3 mt-5" data-i18n="home.c2title">Member directory</span>
+            <span class="mt-3 text-[15px] leading-relaxed text-ink-2" data-i18n="home.c2body">
               Who we are and what we do — searchable by name, profession and family branch.
             </span>
             <span class="mt-8 flex items-center gap-2 text-sm font-medium">
-              Open the directory
-              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <span data-i18n="home.c2link">Open the directory</span>
+              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
             </span>
           </a>
 
           <a href="blog.html" class="group flex flex-col bg-canvas p-8 transition-colors hover:bg-surface sm:p-10 reveal" data-reveal-delay="160">
-            <span class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الأخبار</span>03 — Now</span>
-            <span class="display-3 mt-5">The journal</span>
-            <span class="mt-3 text-[15px] leading-relaxed text-ink-2">
+            <span class="eyebrow" data-i18n="home.c3eyebrow"><span class="ar-lead" lang="ar" dir="rtl">الأخبار</span>03 — Now</span>
+            <span class="display-3 mt-5" data-i18n="home.c3title">The journal</span>
+            <span class="mt-3 text-[15px] leading-relaxed text-ink-2" data-i18n="home.c3body">
               Announcements, gatherings, essays from the archive and photo highlights.
             </span>
             <span class="mt-8 flex items-center gap-2 text-sm font-medium">
-              Read the journal
-              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <span data-i18n="home.c3link">Read the journal</span>
+              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
             </span>
           </a>
 
@@ -225,12 +251,12 @@
 
         <div class="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-8">
           <div>
-            <p class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">آخر الأخبار</span>Latest updates</p>
-            <h2 id="latest-heading" class="display-2 mt-4">News from the family</h2>
+            <p class="eyebrow" data-i18n="home.latestEyebrow"><span class="ar-lead" lang="ar" dir="rtl">آخر الأخبار</span>Latest updates</p>
+            <h2 id="latest-heading" class="display-2 mt-4" data-i18n="home.latestTitle">News from the family</h2>
           </div>
           <a href="blog.html" class="link-underline text-sm">
-            All posts
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            <span data-i18n="home.allPosts">All posts</span>
+            <svg class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
         </div>
 
@@ -242,7 +268,7 @@
              class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <!-- Cards are injected here. -->
           <noscript>
-            <p class="text-[15px] text-ink-2">
+            <p class="text-[15px] text-ink-2" data-i18n="home.noscript">
               Enable JavaScript to read the latest posts, or
               <a class="link-underline" href="blog.html">visit the journal</a>.
             </p>
@@ -258,12 +284,12 @@
     <section class="border-y border-line bg-ink text-invert">
       <div class="container-x py-24 sm:py-32">
         <div class="reading text-center">
-          <p class="text-[11px] font-medium uppercase tracking-[0.22em] text-invert/60">Why this exists</p>
-          <blockquote class="font-display mt-8 text-2xl font-medium leading-snug tracking-tight sm:text-3xl">
+          <p class="text-[11px] font-medium uppercase tracking-[0.22em] text-invert/60" data-i18n="home.quoteEyebrow">Why this exists</p>
+          <blockquote class="font-display mt-8 text-2xl font-medium leading-snug tracking-tight sm:text-3xl" data-i18n="home.quote">
             “We are not writing for ourselves. We are writing for someone who will
             open this in 2070 and want to know what actually happened.”
           </blockquote>
-          <p class="mt-8 text-sm text-invert/60">The Almail Family Council</p>
+          <p class="mt-8 text-sm text-invert/60" data-i18n="home.quoteAttr">The Almail Family Council</p>
         </div>
       </div>
     </section>
@@ -275,16 +301,16 @@
       <div class="container-x">
         <div class="grid items-center gap-10 border border-line p-8 sm:p-12 lg:grid-cols-2 lg:p-16">
           <div>
-            <p class="eyebrow"><span class="ar-lead" lang="ar" dir="rtl">شارِكنا</span>Get involved</p>
-            <h2 class="display-2 mt-5">Add to the record</h2>
-            <p class="lede mt-5 max-w-lg">
+            <p class="eyebrow" data-i18n="home.ctaEyebrow"><span class="ar-lead" lang="ar" dir="rtl">شارِكنا</span>Get involved</p>
+            <h2 class="display-2 mt-5" data-i18n="home.ctaTitle">Add to the record</h2>
+            <p class="lede mt-5 max-w-lg" data-i18n="home.ctaLede">
               A correction, a photograph, a name we have spelled wrong, a profile that
               should be listed — all of it is welcome, and all of it helps.
             </p>
           </div>
           <div class="flex flex-wrap gap-3 lg:justify-end">
-            <a href="contact.html" class="btn-primary">Contact the council</a>
-            <a href="blog.html?category=Announcements" class="btn-outline">Read announcements</a>
+            <a href="contact.html" class="btn-primary" data-i18n="home.ctaContact">Contact the council</a>
+            <a href="blog.html?category=Announcements" class="btn-outline" data-i18n="home.ctaAnnouncements">Read announcements</a>
           </div>
         </div>
       </div>
@@ -301,43 +327,44 @@
       <div class="grid gap-12 md:grid-cols-12">
 
         <div class="md:col-span-5">
-          <a href="index.html" class="flex items-center gap-3" aria-label="Almail Family — home">
+          <a href="index.html" class="flex items-center gap-3"
+             data-i18n-attr="aria-label:nav.home.aria" aria-label="Almail Family — home">
             <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
                          font-display text-sm font-semibold text-invert">A</span>
-            <span class="font-display text-[15px] font-semibold uppercase tracking-[0.2em]">Almail</span>
+            <span class="wordmark font-display text-[15px] font-semibold uppercase tracking-[0.2em]"
+                  data-i18n="brand.family">Almail</span>
           </a>
-          <p class="mt-6 max-w-sm text-[15px] leading-relaxed text-ink-2">
+          <p class="mt-6 max-w-sm text-[15px] leading-relaxed text-ink-2" data-i18n="footer.about">
             The private portal of the Almail family — a record of our people, our history
             and the work we do together. Kuwait City, Kuwait.
           </p>
         </div>
 
-        <nav class="md:col-span-3" aria-label="Footer">
-          <h2 class="eyebrow">Explore</h2>
+        <nav class="md:col-span-3" data-i18n-attr="aria-label:footer.nav" aria-label="Footer">
+          <h2 class="eyebrow" data-i18n="footer.explore">Explore</h2>
           <ul class="mt-5 space-y-3 text-[15px]">
-            <li><a class="link-underline" href="heritage.html">Heritage</a></li>
-            <li><a class="link-underline" href="directory.html">Directory</a></li>
-            <li><a class="link-underline" href="blog.html">Journal</a></li>
-            <li><a class="link-underline" href="contact.html">Contact</a></li>
+            <li><a class="link-underline" href="heritage.html" data-i18n="nav.heritage">Heritage</a></li>
+            <li><a class="link-underline" href="directory.html" data-i18n="nav.directory">Directory</a></li>
+            <li><a class="link-underline" href="blog.html" data-i18n="nav.journal">Journal</a></li>
+            <li><a class="link-underline" href="contact.html" data-i18n="nav.contact">Contact</a></li>
           </ul>
         </nav>
 
         <div class="md:col-span-4">
-          <h2 class="eyebrow">Reach us</h2>
+          <h2 class="eyebrow" data-i18n="footer.reach">Reach us</h2>
           <ul class="mt-5 space-y-3 text-[15px] text-ink-2">
             <li><a class="link-underline" href="mailto:family@almail.example">family@almail.example</a></li>
-            <li><span class="ar" lang="ar" dir="rtl">مدينة الكويت، دولة الكويت</span></li>
-            <li>Kuwait City, State of Kuwait</li>
+            <li data-i18n="footer.address">Kuwait City, State of Kuwait</li>
           </ul>
           <div class="mt-6 flex gap-2">
-            <a href="#" aria-label="Instagram"
+            <a href="#" data-i18n-attr="aria-label:link.instagram" aria-label="Instagram"
                class="flex h-10 w-10 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="5"></rect>
                 <circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
               </svg>
             </a>
-            <a href="#" aria-label="LinkedIn"
+            <a href="#" data-i18n-attr="aria-label:link.linkedin" aria-label="LinkedIn"
                class="flex h-10 w-10 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">
               <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.05c.53-.95 1.83-1.95 3.76-1.95 4.02 0 4.76 2.5 4.76 5.76V21h-4v-5.2c0-1.24-.02-2.84-1.86-2.84-1.86 0-2.15 1.36-2.15 2.75V21h-4z"></path>
@@ -348,8 +375,8 @@
       </div>
 
       <div class="mt-14 flex flex-col gap-3 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
-        <p class="meta">&copy; <span data-year>2026</span> The Almail Family. All rights reserved.</p>
-        <p class="meta">Made with care in Kuwait.</p>
+        <p class="meta" data-i18n="footer.rights">&copy; <span data-year>2026</span> The Almail Family. All rights reserved.</p>
+        <p class="meta" data-i18n="footer.made">Made with care in Kuwait.</p>
       </div>
     </div>
   </footer>
@@ -357,6 +384,8 @@
 
   <!-- Content data first, then behaviour. `defer` keeps execution order. -->
   <script src="content/posts.js" defer></script>
+  <script src="content/i18n.js" defer></script>
+  <script src="assets/js/i18n.js" defer></script>
   <script src="assets/js/site.js" defer></script>
   <script src="assets/js/blog.js" defer></script>
 </body>
