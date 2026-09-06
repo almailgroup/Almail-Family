@@ -62,7 +62,9 @@
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
 
   <header id="site-header"
-          class="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
+          class="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas/90 backdrop-blur-md
+                 after:absolute after:inset-x-0 after:top-full after:mt-px after:border-t
+                 after:border-ink">
     <div class="container-x">
       <div class="flex h-16 items-center justify-between sm:h-20">
 
@@ -79,9 +81,7 @@
         <!-- Desktop navigation -->
         <nav class="hidden items-center gap-9 md:flex"
              data-i18n-attr="aria-label:nav.primary" aria-label="Primary">
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="index.html" data-i18n="nav.home">Home</a>
           <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="heritage.html" data-i18n="nav.heritage">Heritage</a>
-          <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="directory.html" data-i18n="nav.directory">Directory</a>
           <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="blog.html" data-i18n="nav.journal">Journal</a>
           <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="contact.html" data-i18n="nav.contact">Contact</a>
         </nav>
@@ -110,9 +110,6 @@
             </svg>
           </button>
 
-          <a href="contact.html" class="btn-primary btn-sm hidden md:inline-flex"
-             data-i18n="nav.cta">Get in touch</a>
-
           <!-- Mobile menu trigger -->
           <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"
                   class="btn-icon md:hidden" aria-label="Open menu">
@@ -134,12 +131,9 @@
          class="border-t border-line bg-canvas md:hidden">
       <nav class="container-x flex flex-col py-2"
            data-i18n-attr="aria-label:nav.mobile" aria-label="Mobile">
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="index.html" data-i18n="nav.home">Home</a>
         <a class="nav-link border-b border-line py-4 text-base font-medium" href="heritage.html" data-i18n="nav.heritage">Heritage</a>
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="directory.html" data-i18n="nav.directory">Directory</a>
         <a class="nav-link border-b border-line py-4 text-base font-medium" href="blog.html" data-i18n="nav.journal">Journal</a>
         <a class="nav-link py-4 text-base font-medium" href="contact.html" data-i18n="nav.contact">Contact</a>
-        <a href="contact.html" class="btn-primary my-4" data-i18n="nav.cta">Get in touch</a>
       </nav>
     </div>
   </header>
@@ -249,7 +243,7 @@
     <section class="section" aria-labelledby="latest-heading">
       <div class="container-x">
 
-        <div class="flex flex-wrap items-end justify-between gap-6 border-b border-line pb-8">
+        <div class="flex flex-wrap items-end justify-between gap-6 pb-6">
           <div>
             <p class="eyebrow" data-i18n="home.latestEyebrow"><span class="ar-lead" lang="ar" dir="rtl">آخر الأخبار</span>Latest updates</p>
             <h2 id="latest-heading" class="display-2 mt-4" data-i18n="home.latestTitle">News from the family</h2>
@@ -259,6 +253,7 @@
             <svg class="h-4 w-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
           </a>
         </div>
+        <hr class="rule-double mb-10">
 
         <!-- data-feature → newest featured post gets the wide slot.
              data-latest-posts → how many standard cards follow it. -->
@@ -278,6 +273,15 @@
       </div>
     </section>
 
+
+    <!-- Printer's ornament between sections -->
+    <div class="container-x" aria-hidden="true">
+      <div class="ornament py-14">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+          <path d="M6 6h12v12H6z"></path><path d="M12 2l10 10-10 10L2 12z"></path>
+        </svg>
+      </div>
+    </div>
     <!-- =====================================================================
          STATEMENT — full-bleed inverted band
          ================================================================== -->
@@ -294,6 +298,15 @@
       </div>
     </section>
 
+
+    <!-- Printer's ornament between sections -->
+    <div class="container-x" aria-hidden="true">
+      <div class="ornament py-14">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+          <path d="M6 6h12v12H6z"></path><path d="M12 2l10 10-10 10L2 12z"></path>
+        </svg>
+      </div>
+    </div>
     <!-- =====================================================================
          CALL TO ACTION
          ================================================================== -->

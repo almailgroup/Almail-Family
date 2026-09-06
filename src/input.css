@@ -142,15 +142,17 @@
    1. Raw tokens — the only place literal colours are allowed.
    -------------------------------------------------------------------------- */
 :root {
-  --c-canvas:  #ffffff; /* page background            */
-  --c-surface: #fafafa; /* raised panels, subtle fill */
-  --c-sunken:  #f4f4f4; /* wells, hovers              */
-  --c-line:    #e6e6e6; /* hairline borders           */
-  --c-line-2:  #d4d4d4; /* stronger borders           */
-  --c-ink:     #0a0a0a; /* primary text               */
-  --c-ink-2:   #404040; /* secondary text             */
-  --c-muted:   #737373; /* meta text                  */
-  --c-invert:  #ffffff; /* text on solid black        */
+  --c-canvas:  #fbf2e6; /* the paper                       */
+  --c-surface: #f5e8d5; /* a second, slightly deeper stock */
+  --c-sunken:  #efdfc8; /* wells, hovers                   */
+  --c-line:    #d9c8ac; /* hairline rules                  */
+  --c-line-2:  #bfa886; /* heavier rules                   */
+  --c-ink:     #1e1913; /* letterpress ink — warm, not black */
+  --c-ink-2:   #4b3f31; /* body text                       */
+  --c-muted:   #7f6c56; /* meta text                       */
+  --c-invert:  #fbf2e6; /* paper, on solid ink             */
+  --c-accent:  #7d2b28; /* oxblood — rules, marks, marginalia */
+  --grain:     0.055;   /* strength of the paper grain     */
 }
 
 /* Inverted monochrome. Applied by assets/js/site.js via data-theme="dark". */
@@ -174,16 +176,19 @@
   --font-arabic: "Noto Sans Arabic";
 }
 
+/* The same press, printed at night: warm dark stock, ink becomes the paper. */
 [data-theme="dark"] {
-  --c-canvas:  #0a0a0a;
-  --c-surface: #111111;
-  --c-sunken:  #171717;
-  --c-line:    #262626;
-  --c-line-2:  #383838;
-  --c-ink:     #fafafa;
-  --c-ink-2:   #d4d4d4;
-  --c-muted:   #8f8f8f;
-  --c-invert:  #0a0a0a;
+  --c-canvas:  #16110c;
+  --c-surface: #1d1710;
+  --c-sunken:  #241d14;
+  --c-line:    #3a2e21;
+  --c-line-2:  #55442f;
+  --c-ink:     #f6ecdb;
+  --c-ink-2:   #d8c8ae;
+  --c-muted:   #9c8768;
+  --c-invert:  #16110c;
+  --c-accent:  #c2635c;
+  --grain:     0.05;
 }
 
 /* -----------------------------------------------------------------------------
@@ -200,6 +205,7 @@
   --color-ink-2:   var(--c-ink-2);
   --color-muted:   var(--c-muted);
   --color-invert:  var(--c-invert);
+  --color-accent:  var(--c-accent);
 
   /* --font-arabic is Arabic-only (see its unicode-range) — listing it first
      means Arabic glyphs resolve to it and Latin glyphs fall through to the
@@ -244,6 +250,21 @@
   }
 
   p { text-wrap: pretty; }
+
+  /* Paper grain. A fixed overlay of fine noise, multiplied into the stock, so
+     flat colour never reads as screen-flat. Purely decorative and inert. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: var(--grain);
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+  [data-theme="dark"] body::after { mix-blend-mode: screen; }
 
   ::selection {
     background-color: var(--c-ink);
@@ -292,9 +313,50 @@
   /* Editorial column for long-form reading. */
   .reading       { @apply mx-auto w-full max-w-[44rem]; }
 
+  /* --- Press furniture ---------------------------------------------------- */
+  /* The compositor's rule: one heavy line over one hairline, the way a 1960s
+     paper separated a masthead or a section head from its column. */
+  .rule-double {
+    border: 0;
+    border-top: 3px solid var(--c-ink);
+    position: relative;
+    height: 5px;
+  }
+  .rule-double::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 3px;
+    border-top: 1px solid var(--c-ink);
+  }
+
+  /* Thin accent rule, used to mark a label. */
+  .rule-accent {
+    border: 0;
+    border-top: 2px solid var(--c-accent);
+    width: 2.5rem;
+  }
+
+  /* An eight-point star between two rules — the divider a printer would set
+     between sections. Decorative, so it is hidden from assistive tech. */
+  .ornament {
+    @apply flex items-center justify-center gap-5 text-accent;
+  }
+  .ornament::before,
+  .ornament::after {
+    content: "";
+    @apply h-px max-w-32 flex-1 bg-line-2;
+  }
+
   /* --- Typography --------------------------------------------------------- */
+  /* Section label. The small oxblood square before it is the period tell —
+     a printer's mark leading the standfirst. */
   .eyebrow {
     @apply font-display text-[11px] font-medium uppercase tracking-[0.2em] text-muted;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply me-2.5 inline-block h-[6px] w-[6px] translate-y-[-1px] bg-accent align-middle;
   }
 
   /* Arabic set alongside Latin.
@@ -345,14 +407,15 @@
   .link-underline {
     @apply relative inline-flex items-center gap-1.5 font-medium text-ink no-underline
            after:absolute after:-bottom-0.5 after:start-0 after:h-px after:w-full
-           after:origin-right after:scale-x-0 after:bg-ink after:transition-transform
+           after:origin-right after:scale-x-0 after:bg-accent after:transition-transform
            after:duration-300 hover:after:origin-left hover:after:scale-x-100
            rtl:after:origin-left rtl:hover:after:origin-right;
   }
 
   /* --- Surfaces ----------------------------------------------------------- */
   .card {
-    @apply relative border border-line bg-canvas transition-colors duration-200;
+    @apply relative border border-line border-t-2 border-t-ink bg-canvas
+           transition-colors duration-200;
   }
   .card-hover { @apply hover:border-ink; }
 
@@ -401,14 +464,29 @@
   .article-body ul { @apply list-disc space-y-2 ps-5 marker:text-muted; }
   .article-body ol { @apply list-decimal space-y-2 ps-5 marker:text-muted; }
   .article-body blockquote {
-    @apply border-s-2 border-ink ps-6 text-lg italic text-ink;
+    @apply border-s-2 border-accent ps-6 text-lg italic text-ink;
   }
   .article-body img { @apply w-full border border-line; }
   .article-body figcaption { @apply mt-3 text-sm text-muted; }
   .article-body hr { @apply my-12 border-line; }
 
+  /* Drop cap on the opening paragraph, as a paper of the period would set it.
+     Latin only — Arabic is a joined script and cannot take an initial. */
+  :root[lang="en"] .article-body > p.lede:first-child::first-letter {
+    float: left;
+    margin: 0.02em 0.08em 0 0;
+    font-family: var(--font-display);
+    font-size: 3.4em;
+    line-height: 0.82;
+    font-weight: 600;
+    color: var(--c-ink);
+  }
+
   /* Current page in the navigation (set by assets/js/site.js). */
-  .nav-link[aria-current="page"] { @apply font-medium text-ink; }
+  .nav-link[aria-current="page"] {
+    @apply font-medium text-ink;
+    box-shadow: inset 0 -2px 0 0 var(--c-accent);
+  }
 
   /* --- Utility ------------------------------------------------------------ */
   .skip-link {

@@ -87,21 +87,27 @@ Any static host works. For GitHub Pages: push, then set
 
 ## 3. Design system
 
-**Palette — strictly monochrome.** Every colour is a token in `src/input.css`;
-no literal colour appears anywhere else. The whole site inverts to a dark
-monochrome scheme by setting `data-theme="dark"` on `<html>`, which the toggle in
-the header does (and remembers, and honours the visitor's system preference on
-first visit).
+**Palette — paper and ink, Kuwait in the 1960s.** Every colour is a token in
+`src/input.css`; no literal colour appears anywhere else. The whole site inverts
+by setting `data-theme="dark"` on `<html>`, which the toggle in the header does
+(and remembers, and honours the visitor's system preference on first visit).
+Dark is not a monochrome flip but the same press printed at night: warm dark
+stock, ink becoming the paper.
 
 | Token | Light | Purpose |
 |---|---|---|
-| `canvas` | `#ffffff` | Page background |
-| `surface` | `#fafafa` | Raised panels |
-| `sunken` | `#f4f4f4` | Wells and hovers |
-| `line` / `line-2` | `#e6e6e6` / `#d4d4d4` | Hairlines and stronger borders |
-| `ink` | `#0a0a0a` | Primary text |
-| `ink-2` | `#404040` | Body text |
-| `muted` | `#737373` | Meta text |
+| `canvas` | `#fbf2e6` | The paper |
+| `surface` | `#f5e8d5` | A second, slightly deeper stock |
+| `sunken` | `#efdfc8` | Wells and hovers |
+| `line` / `line-2` | `#d9c8ac` / `#bfa886` | Hairline and heavier rules |
+| `ink` | `#1e1913` | Letterpress ink — warm, never pure black |
+| `ink-2` | `#4b3f31` | Body text |
+| `muted` | `#7f6c56` | Meta text |
+| `accent` | `#7d2b28` | Oxblood: rules, marks, marginalia |
+
+The accent is deliberately rationed — the small square leading each section
+label, the growing underline on links, the pulled-quote rule, the ornament, and
+the mark under the current nav item. Nothing else.
 
 Use them as ordinary Tailwind utilities: `bg-canvas`, `text-ink-2`,
 `border-line`.
@@ -208,7 +214,22 @@ The wordmark is deliberately Latin-only: we did not want to guess the spelling
 of the family name in Arabic. `partials/header.html` carries a commented line
 showing exactly where to add it.
 
-**Ornament.** The hero carries a hairline eight-point star tessellation
+**Press furniture.** The period reads through a handful of print devices rather
+than decoration:
+
+- `.rule-double` — one heavy line over one hairline, the way a paper of the era
+  separated a masthead or a section head from its columns. The site header and
+  each page header carry it.
+- `.ornament` — an eight-point star between two rules, set between sections.
+- `.card` — a heavy rule across the top, like a column head.
+- A drop cap on the opening paragraph of an article. Latin only: Arabic is a
+  joined script and cannot take an initial, so the rule is scoped to
+  `:root[lang="en"]`.
+- Paper grain — a fixed overlay of fine SVG noise multiplied into the stock at
+  `--grain` opacity, so flat colour never reads as screen-flat. Inert and
+  decorative; set `--grain: 0` to remove it.
+
+**Pattern.** The hero carries a hairline eight-point star tessellation
 (`.geo-pattern`). It is applied as a CSS *mask* rather than a background image,
 so its colour comes from the theme's own `--c-line` token and it inverts
 correctly in dark mode. Delete the one `<div>` in `index.html` to remove it.
