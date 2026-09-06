@@ -51,7 +51,7 @@ async function tag(relPath) {
       the HTML preload ask for byte-identical URLs.
    -------------------------------------------------------------------------- */
 const CSS_FILE = "assets/css/site.css";
-const CSS_REF = /url\((["']?)\.\.\/fonts\/([^"')?#]+)(\?v=[a-f0-9]+)?\1\)/g;
+const CSS_REF = /url\((["']?)\.\.\/(fonts|img)\/([^"')?#]+)(\?v=[a-f0-9]+)?\1\)/g;
 
 {
   const cssPath = join(root, CSS_FILE);
@@ -60,18 +60,18 @@ const CSS_REF = /url\((["']?)\.\.\/fonts\/([^"')?#]+)(\?v=[a-f0-9]+)?\1\)/g;
   let last = 0, m;
   CSS_REF.lastIndex = 0;
   while ((m = CSS_REF.exec(before)) !== null) {
-    const [whole, quote, file] = m;
-    const v = await tag(`assets/fonts/${file}`);
-    if (v === null) missing.add(`assets/fonts/${file}`);
+    const [whole, quote, dir, file] = m;
+    const v = await tag(`assets/${dir}/${file}`);
+    if (v === null) missing.add(`assets/${dir}/${file}`);
     parts.push(before.slice(last, m.index),
-      v ? `url(${quote}../fonts/${file}?v=${v}${quote})` : whole);
+      v ? `url(${quote}../${dir}/${file}?v=${v}${quote})` : whole);
     last = m.index + whole.length;
   }
   parts.push(before.slice(last));
   const after = parts.join("");
   if (after !== before) await writeFile(cssPath, after, "utf8");
   hashes.delete(CSS_FILE); // its contents just changed — re-hash from disk
-  console.log(`stamp: ${(after.match(/\?v=/g) || []).length} font url() in the stylesheet`);
+  console.log(`stamp: ${(after.match(/\?v=/g) || []).length} asset url() in the stylesheet`);
 }
 
 /* -----------------------------------------------------------------------------

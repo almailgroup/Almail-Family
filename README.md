@@ -286,6 +286,24 @@ than decoration:
   `--grain` opacity, so flat colour never reads as screen-flat. Inert and
   decorative; set `--grain: 0` to remove it.
 
+**The homepage banner.** `assets/img/AlmailFamilyBack.png` is set as the hero's
+background through the `.hero-banner` class in `src/input.css`. Its own cream is
+`#fcf3e8` against the page's `#fbf2e6` — one point apart, so the edges of the
+image disappear into the page and it needs no framing.
+
+It is served as WebP (26 KB) with the PNG kept as both the source file and the
+fallback for anything that cannot read `image-set()`. The conversion mattered:
+the PNG is 1.2 MB, which would have been more than four times the weight of the
+whole rest of the page, and a soft gradient image compresses to nothing in WebP
+(mean difference under 1/255 — no visible loss).
+
+Below 768px `cover` would crop away both palms and leave only the empty middle,
+so the banner switches to sitting full-width along the bottom. In dark mode it
+is hidden: a cream photograph has no place on the night stock, and the star
+tessellation carries the hero there instead. To swap the picture, replace the
+file and run `npm run build` — the fingerprint changes with it, so no one gets
+a cached copy of the old one.
+
 **Pattern.** The hero carries a hairline eight-point star tessellation
 (`.geo-pattern`). It is applied as a CSS *mask* rather than a background image,
 so its colour comes from the theme's own `--c-line` token and it inverts
