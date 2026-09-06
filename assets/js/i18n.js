@@ -162,7 +162,10 @@
     document.querySelectorAll("[data-lang-toggle]").forEach(function (btn) {
       var target = lang === "ar" ? "en" : "ar";
       btn.setAttribute("lang", target);
-      btn.textContent = target === "ar" ? "العربية" : "English";
+      // Full name where there is room; a compact one in the narrow masthead.
+      btn.innerHTML =
+        '<span class="sm:hidden">' + (target === "ar" ? "ع" : "EN") + "</span>" +
+        '<span class="hidden sm:inline">' + (target === "ar" ? "العربية" : "English") + "</span>";
       btn.setAttribute("aria-label", t("lang.switch", "Switch language"));
       btn.setAttribute("data-target-lang", target);
     });

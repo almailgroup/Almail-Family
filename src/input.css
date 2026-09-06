@@ -176,19 +176,22 @@
   --font-arabic: "Noto Sans Arabic";
 }
 
-/* The same press, printed at night: warm dark stock, ink becomes the paper. */
+/* The night edition. Not the light theme inverted — a darker stock with its own
+   values. The base is a deep neutral with only a trace of warmth (a browner one
+   goes muddy and swallows the cream), and each surface is a clear step above the
+   last so panels separate without needing a shadow. */
 [data-theme="dark"] {
-  --c-canvas:  #16110c;
-  --c-surface: #1d1710;
-  --c-sunken:  #241d14;
-  --c-line:    #3a2e21;
-  --c-line-2:  #55442f;
-  --c-ink:     #f6ecdb;
-  --c-ink-2:   #d8c8ae;
-  --c-muted:   #9c8768;
-  --c-invert:  #16110c;
-  --c-accent:  #c2635c;
-  --grain:     0.05;
+  --c-canvas:  #14120f; /* the stock                         */
+  --c-surface: #1c1916; /* panels, lifted a clear step       */
+  --c-sunken:  #232019; /* the quote band, deeper still      */
+  --c-line:    #383029; /* hairline — visible, not guesswork */
+  --c-line-2:  #514639;
+  --c-ink:     #f7efe3; /* warm cream                        */
+  --c-ink-2:   #cec2b2;
+  --c-muted:   #948a7c;
+  --c-invert:  #14120f;
+  --c-accent:  #cc6a5f; /* oxblood lifted until it reads on the dark */
+  --grain:     0.03;    /* less: noise on a dark ground reads as haze */
 }
 
 /* -----------------------------------------------------------------------------
@@ -264,7 +267,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 160px 160px;
   }
-  [data-theme="dark"] body::after { mix-blend-mode: screen; }
+  [data-theme="dark"] body::after { mix-blend-mode: soft-light; }
 
   ::selection {
     background-color: var(--c-ink);
@@ -312,6 +315,22 @@
   .hairline      { @apply border-line; }
   /* Editorial column for long-form reading. */
   .reading       { @apply mx-auto w-full max-w-[44rem]; }
+
+  /* Reverse panel — ink block, paper text. Inverting it in dark mode would put
+     a glaring cream slab mid-page, so there it becomes a sunken panel instead,
+     held by accent rules. */
+  .band-reverse {
+    @apply border-y-[3px] border-ink bg-ink text-invert;
+  }
+  .band-reverse .on-band {
+    color: color-mix(in srgb, var(--c-invert) 62%, transparent);
+  }
+  [data-theme="dark"] .band-reverse {
+    background-color: var(--c-sunken);
+    color: var(--c-ink);
+    border-color: var(--c-accent);
+  }
+  [data-theme="dark"] .band-reverse .on-band { color: var(--c-muted); }
 
   /* --- Press furniture ---------------------------------------------------- */
   /* The compositor's rule: one heavy line over one hairline, the way a 1960s
@@ -417,6 +436,7 @@
     @apply relative border border-line border-t-2 border-t-ink bg-canvas
            transition-colors duration-200;
   }
+  [data-theme="dark"] .card { background-color: var(--c-surface); }
   .card-hover { @apply hover:border-ink; }
 
   /* --- Filter chips (blog categories, directory branches) ------------------ */

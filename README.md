@@ -122,8 +122,16 @@ Any static host works. For GitHub Pages: push, then set
 `src/input.css`; no literal colour appears anywhere else. The whole site inverts
 by setting `data-theme="dark"` on `<html>`, which the toggle in the header does
 (and remembers, and honours the visitor's system preference on first visit).
-Dark is not a monochrome flip but the same press printed at night: warm dark
-stock, ink becoming the paper.
+Dark is not the light theme inverted — it is a night edition with its own
+values. The base is a deep neutral carrying only a trace of warmth (a browner
+one goes muddy and swallows the cream), and each surface sits a clear step above
+the last so panels separate without needing a shadow: `canvas` `#14120f`,
+`surface` `#1c1916`, `sunken` `#232019`, with the accent lifted to `#cc6a5f` so
+it still reads. Two rules follow from it — cards take `surface` at night (they
+share the page colour on paper, where a rule is enough), and the reverse panel
+`.band-reverse` sinks instead of inverting, because a solid ink block flipped to
+cream would put a glaring slab mid-page. Headings land at 16.4:1 against the
+stock, body text at 10.7:1.
 
 | Token | Light | Purpose |
 |---|---|---|
@@ -244,6 +252,14 @@ letter-spacing and `text-transform` would break the joins; the `.ar` and
 The wordmark is deliberately Latin-only: we did not want to guess the spelling
 of the family name in Arabic. `partials/header.html` carries a commented line
 showing exactly where to add it.
+
+**The masthead.** The header is set the way a paper of the period set its
+nameplate: navigation on one side, the name centred, language and colour scheme
+on the other, over a compositor's double rule. It is a three-column grid, so the
+name is centred against the page rather than against whatever happens to flank
+it, and the whole thing mirrors in Arabic from the one `dir="rtl"`. On a narrow
+screen the menu trigger takes the navigation's place and the language button
+shortens to `ع` / `EN`.
 
 **Press furniture.** The period reads through a handful of print devices rather
 than decoration:
