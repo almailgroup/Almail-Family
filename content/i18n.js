@@ -33,11 +33,23 @@ window.ALMAIL.ar = {
   "brand.family": "الميل",
 
   /* ------------------------------------------------------------ interface */
+  /* The nine sections, in the order they sit in the masthead. */
+  "nav.article": "مقالات",
+  "nav.history": "التاريخ",
+  "nav.characters": "الشخصيات",
+  "nav.pictures": "الصور",
+  "nav.resources": "المصادر",
+  "nav.tree": "شجرة العائلة",
+  "nav.news": "الأخبار",
+  "nav.location": "الموقع",
+  "nav.contactUs": "اتصل بنا",
+  "nav.sections": "أقسام الموقع",
+
   "nav.home": "الرئيسية",
   "nav.heritage": "التراث",
-  "nav.directory": "الدليل",
+  "nav.directory": "الشخصيات",
   "nav.journal": "الأخبار",
-  "nav.contact": "تواصل",
+  "nav.contact": "اتصل بنا",
   "nav.cta": "تواصل معنا",
   "nav.skip": "تخطَّ إلى المحتوى",
   "nav.menuOpen": "فتح القائمة",
@@ -201,6 +213,43 @@ window.ALMAIL.ar = {
   "contact.c2": "<span class=\"text-ink\">التعليم</span> &mdash; صندوق العائلة",
   "contact.c3": "<span class=\"text-ink\">المجلس</span> &mdash; البيت واللقاءات وكل ما عدا ذلك",
   "contact.privacy": "من فضلك لا ترسل بيانات أفراد آخرين من العائلة دون موافقتهم.",
+
+  /* ------------------------------------------------------------- pictures */
+  "pictures.eyebrow": "الصور",
+  "pictures.title": "أرشيف<br>الصور",
+  "pictures.lede": "صورٌ من مجموعة العائلة، تُضاف تباعًا كلما جرت رقمنة دفعة جديدة.",
+  "pictures.heading": "المجموعة",
+  "pictures.empty": "لم تُضف صورٌ إلى المعرض بعد. تجد في content/gallery.js شرحًا لكيفية إضافتها.",
+  "pictures.noscript": "يحتاج المعرض إلى جافاسكربت لعرضه.",
+
+  /* ------------------------------------------------------------- resources */
+  "resources.eyebrow": "المصادر",
+  "resources.title": "المصادر<br>والمراجع",
+  "resources.lede": "الوثائق والدفاتر والمراجع التي يقوم عليها هذا السجل، وأين يمكن الاطّلاع عليها.",
+  "resources.heading": "القائمة",
+  "resources.empty": "لم تُضف مصادر بعد. تجد في content/resources.js شرحًا لكيفية إضافتها.",
+  "resources.noscript": "تحتاج قائمة المصادر إلى جافاسكربت لعرضها.",
+
+  /* ------------------------------------------------------------ family tree */
+  "tree.eyebrow": "شجرة العائلة",
+  "tree.title": "شجرة<br>العائلة",
+  "tree.lede": "الأجيال كما نستطيع توثيقها اليوم. ما زال في الشجرة نقصٌ وفراغات، وكل تصحيح مُرحَّبٌ به.",
+  "tree.heading": "الأجيال",
+  "tree.note": "الأسماء المُدرجة هنا نموذجية إلى أن تحلّ محلّها بيانات العائلة الفعلية.",
+  "tree.empty": "لم تُضف بيانات للشجرة بعد. تجد في content/tree.js شرحًا لكيفية إضافتها.",
+  "tree.noscript": "تحتاج شجرة العائلة إلى جافاسكربت لعرضها.",
+
+  /* -------------------------------------------------------------- location */
+  "location.eyebrow": "الموقع",
+  "location.title": "أين<br>تجدنا",
+  "location.lede": "بيت العائلة في مدينة الكويت، ومكان اللقاءات والمناسبات.",
+  "location.houseTitle": "بيت العائلة",
+  "location.houseNote": "الزيارات بالتنسيق المسبق مع مجلس العائلة.",
+  "location.directionsTitle": "الوصول",
+  "location.directions": "يقع البيت في مدينة الكويت. يُرجى التواصل مع المجلس للحصول على العنوان التفصيلي وترتيب الزيارة.",
+  "location.openMap": "افتح في الخرائط",
+  "location.gatheringsTitle": "اللقاءات",
+  "location.gatherings": "يُقام اللقاء السنوي في الجمعة الثانية من أغسطس، في فناء البيت.",
 
   /* ------------------------------------------------------------------- 404 */
   "nf.title": "هذه الصفحة غير موجودة",

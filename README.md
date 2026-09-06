@@ -15,10 +15,14 @@ plain web server by uploading the folder as-is.
 ```
 Almail-Family/
 ├── index.html              Homepage — hero, quick links, latest updates, CTA
-├── heritage.html           Family history as a dated timeline
-├── directory.html          Member directory — searchable, filterable by branch
-├── blog.html               Journal — category filters + search
+├── heritage.html           History — the dated timeline
+├── directory.html          Characters — member profiles, searchable by branch
+├── blog.html               News, and Article via ?category=Articles
 ├── post.html               Single-article view  (post.html?p=<slug>)
+├── pictures.html           The picture archive
+├── resources.html          Sources and references
+├── family-tree.html        The generations
+├── location.html           Where to find the family house
 ├── contact.html            Contact form + details
 ├── 404.html                Not-found page
 │
@@ -26,6 +30,9 @@ Almail-Family/
 │   ├── posts.js            Blog posts      (see §4)
 │   ├── members.js          Directory entries
 │   ├── timeline.js         Heritage timeline entries
+│   ├── gallery.js          Pictures
+│   ├── resources.js        Sources and references
+│   ├── tree.js             The family tree (one nested object)
 │   └── i18n.js             Arabic string table  (see §5)
 │
 ├── partials/               Shared markup, injected into every page at build time
@@ -41,6 +48,9 @@ Almail-Family/
 │   │   ├── post.js         Single-article renderer
 │   │   ├── directory.js    Directory grid, search, branch filter
 │   │   ├── heritage.js     Timeline renderer
+│   │   ├── gallery.js      Picture grid
+│   │   ├── resources.js    Grouped resource list
+│   │   ├── tree.js         Family tree renderer
 │   │   └── contact.js      Form validation + submission
 │   ├── fonts/              Self-hosted WOFF2 subsets + LICENSE.md
 │   └── img/

@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Journal — The Almail Family</title>
-  <meta name="description" content="An article from the Almail family journal.">
+  <title>Family tree — The Almail Family</title>
+  <meta name="description" content="The generations of the Almail family as far as they can be documented, gaps included.">
 
   <link rel="icon" href="assets/img/favicon.svg?v=035641ad" type="image/svg+xml">
-  <link rel="canonical" href="post.html">
+  <link rel="canonical" href="family-tree.html">
 
   <!-- Open Graph -->
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Journal — The Almail Family">
-  <meta property="og:description" content="An article from the Almail family journal.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Family tree — The Almail Family">
+  <meta property="og:description" content="The generations of the Almail family as far as they can be documented, gaps included.">
 
   <!-- Typography — self-hosted (Reem Kufi + IBM Plex Sans Arabic), declared in
        assets/css/site.css. The two faces above the fold are preloaded. -->
@@ -152,20 +152,46 @@
 
   <main id="main">
     <!-- =====================================================================
-         ARTICLE — rendered from content/posts.js by assets/js/post.js
-         The slug comes from the query string: post.html?p=<slug>
+         PAGE HEADER
          ================================================================== -->
-    <article id="article-root">
-      <!-- The article is injected here. -->
-      <noscript>
-        <div class="container-x section">
-          <p class="text-[15px] text-ink-2">
-            This article needs JavaScript to display.
-            <a class="link-underline" href="blog.html">Back to the journal</a>.
-          </p>
+    <section class="border-b-[3px] border-ink">
+      <div class="container-x py-16 sm:py-24">
+        <p class="eyebrow reveal" data-i18n="tree.eyebrow">Family tree</p>
+        <h1 class="display-1 reveal mt-6 text-4xl sm:text-5xl lg:text-6xl"
+            data-reveal-delay="80" data-i18n="tree.title">The family<br>tree</h1>
+        <p class="lede reveal mt-7 max-w-2xl" data-reveal-delay="160" data-i18n="tree.lede">The generations as far as we can document them today. There are still gaps, and every correction is welcome.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         TREE — rendered from content/tree.js by assets/js/tree.js
+         ================================================================== -->
+    <section class="section" aria-labelledby="tree-heading">
+      <div class="container-x">
+        <h2 id="tree-heading" class="eyebrow" data-i18n="tree.heading">The generations</h2>
+        <hr class="rule-double mb-10 mt-6">
+
+        <div id="tree-root" class="max-w-3xl">
+          <!-- The tree is injected here. -->
         </div>
-      </noscript>
-    </article>
+
+        <p id="tree-empty" hidden
+           class="border border-line p-10 text-center text-[15px] text-ink-2"
+           data-i18n="tree.empty">
+          No tree data has been added yet. content/tree.js explains how to add it.
+        </p>
+
+        <p class="meta mt-12 max-w-3xl border-t border-line pt-6" data-i18n="tree.note">
+          The names listed here are samples until the family's own record replaces them.
+        </p>
+
+        <noscript>
+          <p class="border border-line p-6 text-[15px] text-ink-2" data-i18n="tree.noscript">
+            The family tree needs JavaScript to display.
+          </p>
+        </noscript>
+      </div>
+    </section>
 
   </main>
 
@@ -238,10 +264,10 @@
   </footer>
   <!-- @endpartial -->
 
-  <script src="content/posts.js?v=4489e4cd" defer></script>
+  <script src="content/tree.js?v=cc55794c" defer></script>
   <script src="content/i18n.js?v=360c82c9" defer></script>
   <script src="assets/js/i18n.js?v=5e52d576" defer></script>
   <script src="assets/js/site.js?v=d6e9a36e" defer></script>
-  <script src="assets/js/post.js?v=54ffd0b2" defer></script>
+  <script src="assets/js/tree.js?v=d4c5e3aa" defer></script>
 </body>
 </html>

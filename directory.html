@@ -19,7 +19,7 @@
   <link rel="preload" href="assets/fonts/reem-kufi-latin.woff2?v=99554d52" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/plex-arabic-400-latin.woff2?v=9ed8dcb0" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="assets/css/site.css?v=83c58794">
+  <link rel="stylesheet" href="assets/css/site.css?v=13c72960">
 
   <!-- Resolve theme AND language before first paint, so neither ever flashes.
        data-i18n-pending hides translatable text for the frame between this
@@ -56,8 +56,8 @@
        Site header — edit this file, then run `npm run partials` to sync it into
        every page between the @partial:header markers. Never edit the copies.
 
-       data-i18n="key" swaps the element's content for the Arabic in
-       content/i18n.js; data-i18n-attr does the same for named attributes.
+       Two tiers, the way a paper of the period set a page with this many
+       sections: the nameplate on top, the section bar beneath a rule.
        ========================================================================= -->
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
 
@@ -65,20 +65,12 @@
           class="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas/90 backdrop-blur-md
                  after:absolute after:inset-x-0 after:top-full after:mt-px after:border-t
                  after:border-ink">
+
+    <!-- ---------------------------------------------------------- nameplate -->
     <div class="container-x">
-      <!-- Masthead: navigation left, the name centred, utilities right — the way
-           a paper of the period set its nameplate. -->
-      <div class="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4 sm:h-20">
+      <div class="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4 sm:h-[4.5rem]">
 
-        <!-- LEFT — navigation, and the menu trigger on small screens -->
         <div class="flex items-center justify-self-start">
-          <nav class="hidden items-center gap-8 md:flex"
-               data-i18n-attr="aria-label:nav.primary" aria-label="Primary">
-            <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="heritage.html" data-i18n="nav.heritage">Heritage</a>
-            <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="blog.html" data-i18n="nav.journal">Journal</a>
-            <a class="nav-link meta text-ink-2 transition-colors hover:text-ink" href="contact.html" data-i18n="nav.contact">Contact</a>
-          </nav>
-
           <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"
                   class="btn-icon -ms-2 md:hidden" aria-label="Open menu">
             <svg data-menu-icon="closed" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
@@ -92,7 +84,6 @@
           </button>
         </div>
 
-        <!-- CENTRE — the nameplate -->
         <a href="index.html" class="group flex items-center gap-2.5 justify-self-center sm:gap-3"
            data-i18n-attr="aria-label:nav.home.aria" aria-label="Almail Family — home">
           <span class="flex h-7 w-7 items-center justify-center border border-ink bg-ink
@@ -102,7 +93,6 @@
                        sm:text-[17px]" data-i18n="brand.family">Almail</span>
         </a>
 
-        <!-- RIGHT — language and colour scheme -->
         <div class="flex items-center justify-self-end gap-1 sm:gap-2">
           <button type="button" data-lang-toggle
                   class="btn-ghost min-w-14 justify-center px-2 text-[13px] font-medium sm:min-w-16 sm:px-3"
@@ -124,14 +114,37 @@
       </div>
     </div>
 
-    <!-- Mobile navigation panel -->
-    <div id="mobile-menu" hidden
-         class="border-t border-line bg-canvas md:hidden">
-      <nav class="container-x flex flex-col py-2"
-           data-i18n-attr="aria-label:nav.mobile" aria-label="Mobile">
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="heritage.html" data-i18n="nav.heritage">Heritage</a>
-        <a class="nav-link border-b border-line py-4 text-base font-medium" href="blog.html" data-i18n="nav.journal">Journal</a>
-        <a class="nav-link py-4 text-base font-medium" href="contact.html" data-i18n="nav.contact">Contact</a>
+    <!-- -------------------------------------------------------- section bar -->
+    <div class="hidden border-t border-line md:block">
+      <div class="container-x">
+        <nav class="flex flex-wrap items-center gap-x-7 gap-y-1 py-2.5"
+             data-i18n-attr="aria-label:nav.sections" aria-label="Sections">
+          <a class="nav-link section-link" href="blog.html?category=Articles" data-i18n="nav.article">Article</a>
+          <a class="nav-link section-link" href="heritage.html" data-i18n="nav.history">History</a>
+          <a class="nav-link section-link" href="directory.html" data-i18n="nav.characters">Characters</a>
+          <a class="nav-link section-link" href="pictures.html" data-i18n="nav.pictures">Pictures</a>
+          <a class="nav-link section-link" href="resources.html" data-i18n="nav.resources">Resources</a>
+          <a class="nav-link section-link" href="family-tree.html" data-i18n="nav.tree">Family tree</a>
+          <a class="nav-link section-link" href="blog.html" data-i18n="nav.news">News</a>
+          <a class="nav-link section-link" href="location.html" data-i18n="nav.location">Location</a>
+          <a class="nav-link section-link" href="contact.html" data-i18n="nav.contactUs">Contact us</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------- mobile section list -->
+    <div id="mobile-menu" hidden class="border-t border-line bg-canvas md:hidden">
+      <nav class="container-x grid grid-cols-2 gap-x-6 py-2"
+           data-i18n-attr="aria-label:nav.sections" aria-label="Sections">
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="blog.html?category=Articles" data-i18n="nav.article">Article</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="heritage.html" data-i18n="nav.history">History</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="directory.html" data-i18n="nav.characters">Characters</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="pictures.html" data-i18n="nav.pictures">Pictures</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="resources.html" data-i18n="nav.resources">Resources</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="family-tree.html" data-i18n="nav.tree">Family tree</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="blog.html" data-i18n="nav.news">News</a>
+        <a class="nav-link border-b border-line py-3.5 text-[15px] font-medium" href="location.html" data-i18n="nav.location">Location</a>
+        <a class="nav-link py-3.5 text-[15px] font-medium" href="contact.html" data-i18n="nav.contactUs">Contact us</a>
       </nav>
     </div>
   </header>
@@ -222,7 +235,7 @@
     <div class="container-x py-16 sm:py-20">
       <div class="grid gap-12 md:grid-cols-12">
 
-        <div class="md:col-span-5">
+        <div class="md:col-span-4">
           <a href="index.html" class="flex items-center gap-3"
              data-i18n-attr="aria-label:nav.home.aria" aria-label="Almail Family — home">
             <span class="flex h-8 w-8 items-center justify-center border border-ink bg-ink
@@ -236,13 +249,18 @@
           </p>
         </div>
 
-        <nav class="md:col-span-3" data-i18n-attr="aria-label:footer.nav" aria-label="Footer">
+        <nav class="md:col-span-4" data-i18n-attr="aria-label:footer.nav" aria-label="Footer">
           <h2 class="eyebrow" data-i18n="footer.explore">Explore</h2>
-          <ul class="mt-5 space-y-3 text-[15px]">
-            <li><a class="link-underline" href="heritage.html" data-i18n="nav.heritage">Heritage</a></li>
-            <li><a class="link-underline" href="directory.html" data-i18n="nav.directory">Directory</a></li>
-            <li><a class="link-underline" href="blog.html" data-i18n="nav.journal">Journal</a></li>
-            <li><a class="link-underline" href="contact.html" data-i18n="nav.contact">Contact</a></li>
+          <ul class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 text-[15px]">
+            <li><a class="link-underline" href="blog.html?category=Articles" data-i18n="nav.article">Article</a></li>
+            <li><a class="link-underline" href="heritage.html" data-i18n="nav.history">History</a></li>
+            <li><a class="link-underline" href="directory.html" data-i18n="nav.characters">Characters</a></li>
+            <li><a class="link-underline" href="pictures.html" data-i18n="nav.pictures">Pictures</a></li>
+            <li><a class="link-underline" href="resources.html" data-i18n="nav.resources">Resources</a></li>
+            <li><a class="link-underline" href="family-tree.html" data-i18n="nav.tree">Family tree</a></li>
+            <li><a class="link-underline" href="blog.html" data-i18n="nav.news">News</a></li>
+            <li><a class="link-underline" href="location.html" data-i18n="nav.location">Location</a></li>
+            <li><a class="link-underline" href="contact.html" data-i18n="nav.contactUs">Contact us</a></li>
           </ul>
         </nav>
 
@@ -279,7 +297,7 @@
   <!-- @endpartial -->
 
   <script src="content/members.js?v=d600d201" defer></script>
-  <script src="content/i18n.js?v=03b62661" defer></script>
+  <script src="content/i18n.js?v=360c82c9" defer></script>
   <script src="assets/js/i18n.js?v=5e52d576" defer></script>
   <script src="assets/js/site.js?v=d6e9a36e" defer></script>
   <script src="assets/js/directory.js?v=6fccfbff" defer></script>

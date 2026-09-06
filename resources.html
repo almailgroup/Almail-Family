@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Journal — The Almail Family</title>
-  <meta name="description" content="An article from the Almail family journal.">
+  <title>Resources — The Almail Family</title>
+  <meta name="description" content="The documents, ledgers and references this record rests on, and where they can be consulted.">
 
   <link rel="icon" href="assets/img/favicon.svg?v=035641ad" type="image/svg+xml">
-  <link rel="canonical" href="post.html">
+  <link rel="canonical" href="resources.html">
 
   <!-- Open Graph -->
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Journal — The Almail Family">
-  <meta property="og:description" content="An article from the Almail family journal.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Resources — The Almail Family">
+  <meta property="og:description" content="The documents, ledgers and references this record rests on, and where they can be consulted.">
 
   <!-- Typography — self-hosted (Reem Kufi + IBM Plex Sans Arabic), declared in
        assets/css/site.css. The two faces above the fold are preloaded. -->
@@ -152,20 +152,41 @@
 
   <main id="main">
     <!-- =====================================================================
-         ARTICLE — rendered from content/posts.js by assets/js/post.js
-         The slug comes from the query string: post.html?p=<slug>
+         PAGE HEADER
          ================================================================== -->
-    <article id="article-root">
-      <!-- The article is injected here. -->
-      <noscript>
-        <div class="container-x section">
-          <p class="text-[15px] text-ink-2">
-            This article needs JavaScript to display.
-            <a class="link-underline" href="blog.html">Back to the journal</a>.
-          </p>
+    <section class="border-b-[3px] border-ink">
+      <div class="container-x py-16 sm:py-24">
+        <p class="eyebrow reveal" data-i18n="resources.eyebrow">Resources</p>
+        <h1 class="display-1 reveal mt-6 text-4xl sm:text-5xl lg:text-6xl"
+            data-reveal-delay="80" data-i18n="resources.title">Sources<br>and references</h1>
+        <p class="lede reveal mt-7 max-w-2xl" data-reveal-delay="160" data-i18n="resources.lede">The documents, ledgers and references this record rests on, and where they can be consulted.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         RESOURCES — rendered from content/resources.js
+         ================================================================== -->
+    <section class="section" aria-labelledby="resources-heading">
+      <div class="container-x">
+        <h2 id="resources-heading" class="sr-only" data-i18n="resources.heading">The list</h2>
+
+        <div id="resource-list" class="max-w-3xl">
+          <!-- Grouped entries are injected here. -->
         </div>
-      </noscript>
-    </article>
+
+        <p id="resource-empty" hidden
+           class="border border-line p-10 text-center text-[15px] text-ink-2"
+           data-i18n="resources.empty">
+          No resources have been added yet. content/resources.js explains how to add them.
+        </p>
+
+        <noscript>
+          <p class="border border-line p-6 text-[15px] text-ink-2" data-i18n="resources.noscript">
+            The resource list needs JavaScript to display.
+          </p>
+        </noscript>
+      </div>
+    </section>
 
   </main>
 
@@ -238,10 +259,10 @@
   </footer>
   <!-- @endpartial -->
 
-  <script src="content/posts.js?v=4489e4cd" defer></script>
+  <script src="content/resources.js?v=135ccb91" defer></script>
   <script src="content/i18n.js?v=360c82c9" defer></script>
   <script src="assets/js/i18n.js?v=5e52d576" defer></script>
   <script src="assets/js/site.js?v=d6e9a36e" defer></script>
-  <script src="assets/js/post.js?v=54ffd0b2" defer></script>
+  <script src="assets/js/resources.js?v=c03b6fa9" defer></script>
 </body>
 </html>

@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Journal — The Almail Family</title>
-  <meta name="description" content="An article from the Almail family journal.">
+  <title>Pictures — The Almail Family</title>
+  <meta name="description" content="Photographs from the Almail family collection, added as each batch is digitised.">
 
   <link rel="icon" href="assets/img/favicon.svg?v=035641ad" type="image/svg+xml">
-  <link rel="canonical" href="post.html">
+  <link rel="canonical" href="pictures.html">
 
   <!-- Open Graph -->
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Journal — The Almail Family">
-  <meta property="og:description" content="An article from the Almail family journal.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pictures — The Almail Family">
+  <meta property="og:description" content="Photographs from the Almail family collection, added as each batch is digitised.">
 
   <!-- Typography — self-hosted (Reem Kufi + IBM Plex Sans Arabic), declared in
        assets/css/site.css. The two faces above the fold are preloaded. -->
@@ -152,20 +152,45 @@
 
   <main id="main">
     <!-- =====================================================================
-         ARTICLE — rendered from content/posts.js by assets/js/post.js
-         The slug comes from the query string: post.html?p=<slug>
+         PAGE HEADER
          ================================================================== -->
-    <article id="article-root">
-      <!-- The article is injected here. -->
-      <noscript>
-        <div class="container-x section">
-          <p class="text-[15px] text-ink-2">
-            This article needs JavaScript to display.
-            <a class="link-underline" href="blog.html">Back to the journal</a>.
-          </p>
+    <section class="border-b-[3px] border-ink">
+      <div class="container-x py-16 sm:py-24">
+        <p class="eyebrow reveal" data-i18n="pictures.eyebrow">Pictures</p>
+        <h1 class="display-1 reveal mt-6 text-4xl sm:text-5xl lg:text-6xl"
+            data-reveal-delay="80" data-i18n="pictures.title">The picture<br>archive</h1>
+        <p class="lede reveal mt-7 max-w-2xl" data-reveal-delay="160" data-i18n="pictures.lede">Photographs from the family collection, added as each batch is digitised.</p>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         GALLERY — rendered from content/gallery.js by assets/js/gallery.js
+         ================================================================== -->
+    <section class="section" aria-labelledby="gallery-heading">
+      <div class="container-x">
+        <div class="flex items-center justify-between pb-6">
+          <h2 id="gallery-heading" class="eyebrow" data-i18n="pictures.heading">The collection</h2>
+          <p id="gallery-count" class="meta" aria-live="polite"></p>
         </div>
-      </noscript>
-    </article>
+        <hr class="rule-double mb-10">
+
+        <div id="gallery-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Figures are injected here. -->
+        </div>
+
+        <p id="gallery-empty" hidden
+           class="border border-line p-10 text-center text-[15px] text-ink-2"
+           data-i18n="pictures.empty">
+          No pictures have been added to the gallery yet. content/gallery.js explains how to add them.
+        </p>
+
+        <noscript>
+          <p class="border border-line p-6 text-[15px] text-ink-2" data-i18n="pictures.noscript">
+            The gallery needs JavaScript to display.
+          </p>
+        </noscript>
+      </div>
+    </section>
 
   </main>
 
@@ -238,10 +263,10 @@
   </footer>
   <!-- @endpartial -->
 
-  <script src="content/posts.js?v=4489e4cd" defer></script>
+  <script src="content/gallery.js?v=6d67535d" defer></script>
   <script src="content/i18n.js?v=360c82c9" defer></script>
   <script src="assets/js/i18n.js?v=5e52d576" defer></script>
   <script src="assets/js/site.js?v=d6e9a36e" defer></script>
-  <script src="assets/js/post.js?v=54ffd0b2" defer></script>
+  <script src="assets/js/gallery.js?v=987a8b48" defer></script>
 </body>
 </html>
