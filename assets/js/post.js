@@ -81,8 +81,7 @@
             '<span class="tag">' + u.escape(t("cat." + post.category, post.category)) + "</span>" +
             '<span class="meta">' + u.formatDate(post.date) + "</span>" +
             '<span class="meta">·</span>' +
-            '<span class="meta">' + u.readingTime(i18n.field(post, "body")) + " " +
-              u.escape(t("post.minRead", "min read")) + "</span>" +
+            '<span class="meta">' + u.escape(i18n.minutes(u.readingTime(i18n.field(post, "body")))) + "</span>" +
           "</div>" +
           '<h1 class="display-1 mt-6 text-4xl sm:text-5xl"' + i18n.markup(post, "title") + ">" +
             u.escape(i18n.field(post, "title")) + "</h1>" +

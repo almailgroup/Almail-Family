@@ -84,6 +84,12 @@
     return n + " " + word + (n === 1 ? "" : "s");
   }
 
+  /** Reading time. Arabic changes the noun with the number, English does not. */
+  function minutes(n) {
+    if (lang === "ar" && COUNT.minutes) return COUNT.minutes(n);
+    return n + " min read";
+  }
+
   /* ---------------------------------------------------------------------------
      Applying the language to the document
      ------------------------------------------------------------------------ */
@@ -180,6 +186,7 @@
     isFallback: isFallback,
     markup: markup,
     count: count,
+    minutes: minutes,
     setLang: setLang,
     /** Run `fn` now and again whenever the language changes. */
     onChange: function (fn) {

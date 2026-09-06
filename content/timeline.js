@@ -67,7 +67,7 @@ window.ALMAIL.timeline = [
     title: "A new state, a new scale",
     body: "With independence, the family's businesses widen into construction supply and services. The third ledger closes as formal accounts begin.",
     yearAr: "1961",
-    titleAr: "دولة جديدة ومقياس جديد",
+    titleAr: "دولة جديدة واتّساعٌ جديد",
     bodyAr:
       "مع الاستقلال، تتّسع أعمال العائلة إلى توريد مواد البناء والخدمات. ويُغلق الدفتر الثالث مع بدء الحسابات النظامية.",
   },
@@ -114,6 +114,6 @@ window.ALMAIL.timeline = [
     yearAr: "2026",
     titleAr: "هذه البوابة",
     bodyAr:
-      "ينتقل سجلّ العائلة إلى الإنترنت: دليلٌ للأعضاء، ومدوّنةٌ لما نقوم به، وأرشيفٌ تراثيّ يستطيع أي أحد تصحيحه.",
+      "ينتقل سجلّ العائلة إلى الإنترنت: دليلٌ للأعضاء، وسجلٌّ لما نقوم به، وأرشيفٌ تراثيّ يستطيع أي أحد تصحيحه.",
   },
 ];
