@@ -95,6 +95,12 @@ and it **fails the build** if a page references a file that no longer exists —
 which is exactly the mistake that leaves a deleted font 404-ing in the console
 of anyone holding an old page.
 
+The stylesheet is fingerprinted *first*, including the `url()` inside its
+`@font-face` rules, so the CSS and the HTML `<link rel="preload">` ask for
+byte-identical URLs. If those two disagree the browser fetches each preloaded
+font twice — once for a preload it then cannot match, once for the CSS — and
+warns that the preload went unused.
+
 One thing this cannot reach: GitHub Pages serves the HTML itself with
 `Cache-Control: max-age=600`, so a visitor who loaded a page in the last ten
 minutes may still be on the old HTML. A hard reload (⌘⇧R / Ctrl-Shift-R) skips

@@ -11,6 +11,11 @@
  * so it changes only when that file changes — an unchanged asset keeps its URL
  * and stays cached, which is the point.
  *
+ * The built stylesheet is fingerprinted FIRST, so the url() inside its
+ * @font-face rules carries the same tag the HTML preload does. If those two
+ * URLs disagree the browser fetches the font twice — once for the preload it
+ * then cannot match, once for the CSS — and warns that the preload went unused.
+ *
  * Run after the CSS is built (npm run build does this in order). Idempotent:
  * any existing ?v= is stripped before the current one is applied.
  */
@@ -25,6 +30,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REF = /\b(href|src)="((?:assets|content)\/[^"?#]+)(\?v=[a-f0-9]+)?"/g;
 
 const hashes = new Map();
+const missing = new Set();
 async function tag(relPath) {
   if (hashes.has(relPath)) return hashes.get(relPath);
   let value = null;
@@ -40,9 +46,39 @@ async function tag(relPath) {
   return value;
 }
 
+/* -----------------------------------------------------------------------------
+   1. Fingerprint the font URLs inside the built stylesheet, so that the CSS and
+      the HTML preload ask for byte-identical URLs.
+   -------------------------------------------------------------------------- */
+const CSS_FILE = "assets/css/site.css";
+const CSS_REF = /url\((["']?)\.\.\/fonts\/([^"')?#]+)(\?v=[a-f0-9]+)?\1\)/g;
+
+{
+  const cssPath = join(root, CSS_FILE);
+  const before = await readFile(cssPath, "utf8");
+  const parts = [];
+  let last = 0, m;
+  CSS_REF.lastIndex = 0;
+  while ((m = CSS_REF.exec(before)) !== null) {
+    const [whole, quote, file] = m;
+    const v = await tag(`assets/fonts/${file}`);
+    if (v === null) missing.add(`assets/fonts/${file}`);
+    parts.push(before.slice(last, m.index),
+      v ? `url(${quote}../fonts/${file}?v=${v}${quote})` : whole);
+    last = m.index + whole.length;
+  }
+  parts.push(before.slice(last));
+  const after = parts.join("");
+  if (after !== before) await writeFile(cssPath, after, "utf8");
+  hashes.delete(CSS_FILE); // its contents just changed — re-hash from disk
+  console.log(`stamp: ${(after.match(/\?v=/g) || []).length} font url() in the stylesheet`);
+}
+
+/* -----------------------------------------------------------------------------
+   2. Fingerprint every asset the pages reference.
+   -------------------------------------------------------------------------- */
 const pages = (await readdir(root)).filter((f) => f.endsWith(".html"));
 let stamped = 0, changed = 0;
-const missing = new Set();
 
 for (const page of pages) {
   const path = join(root, page);
