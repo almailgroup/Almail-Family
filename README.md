@@ -48,7 +48,8 @@ Almail-Family/
 │
 ├── src/input.css           Design system source — tokens, components, motion
 ├── scripts/
-│   └── build-partials.mjs  Copies partials/ into every page (≈40 lines)
+│   ├── build-partials.mjs  Copies partials/ into every page (≈40 lines)
+│   └── stamp-assets.mjs    Fingerprints assets so caches can't go stale
 ├── package.json
 └── README.md
 ```
@@ -72,8 +73,32 @@ npm run serve   # serve the folder at http://localhost:3000
 Before committing a change to `src/input.css` or `partials/`:
 
 ```bash
-npm run build   # sync partials + build the minified stylesheet
+npm run build   # sync partials, build the stylesheet, fingerprint the assets
 ```
+
+The three steps run in that order for a reason: the fingerprints are taken from
+the *built* stylesheet, so the CSS has to exist first.
+
+### Why the asset URLs carry `?v=`
+
+`npm run stamp` rewrites every local reference to carry a fingerprint:
+
+```html
+<link rel="stylesheet" href="assets/css/site.css?v=82209628">
+```
+
+The tag is the first 8 characters of the SHA-256 of that file's own contents. A
+changed file gets a new URL, so a browser cannot serve a stale copy after a
+deploy; an unchanged file keeps its URL and stays cached, which is the point of
+hashing the contents rather than stamping a build time. The step is idempotent,
+and it **fails the build** if a page references a file that no longer exists —
+which is exactly the mistake that leaves a deleted font 404-ing in the console
+of anyone holding an old page.
+
+One thing this cannot reach: GitHub Pages serves the HTML itself with
+`Cache-Control: max-age=600`, so a visitor who loaded a page in the last ten
+minutes may still be on the old HTML. A hard reload (⌘⇧R / Ctrl-Shift-R) skips
+it; after that, the fingerprints keep everything in step.
 
 `assets/css/site.css` is committed so the site can be deployed straight from the
 repository without a build step on the host.

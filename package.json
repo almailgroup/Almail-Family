@@ -7,9 +7,10 @@
     "partials": "node scripts/build-partials.mjs",
     "css": "tailwindcss -i ./src/input.css -o ./assets/css/site.css --minify",
     "css:watch": "tailwindcss -i ./src/input.css -o ./assets/css/site.css --watch",
-    "build": "npm run partials && npm run css",
-    "dev": "npm run partials && npm run css:watch",
-    "serve": "npx --yes serve . -l 3000"
+    "build": "npm run partials && npm run css && npm run stamp",
+    "dev": "npm run partials && npm run stamp && npm run css:watch",
+    "serve": "npx --yes serve . -l 3000",
+    "stamp": "node scripts/stamp-assets.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
