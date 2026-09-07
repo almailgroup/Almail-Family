@@ -475,7 +475,7 @@
   .field-error { @apply mt-2 hidden text-[13px] text-ink-2; }
   .field-error.is-visible { @apply block; }
 
-  /* --- Long-form article body (used by post.html) ------------------------- */
+  /* --- Long-form article body (used by /post/) ------------------------- */
   .article-body { @apply text-[17px] leading-[1.75] text-ink-2; }
   .article-body > * + * { @apply mt-6; }
   .article-body h2 { @apply mt-14 text-2xl font-semibold text-ink; }

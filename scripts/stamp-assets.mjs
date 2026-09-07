@@ -27,7 +27,7 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 // Matches href/src pointing at our own assets/ or content/ files.
-const REF = /\b(href|src)="((?:assets|content)\/[^"?#]+)(\?v=[a-f0-9]+)?"/g;
+const REF = /\b(href|src)="\/((?:assets|content)\/[^"?#]+)(\?v=[a-f0-9]+)?"/g;
 
 const hashes = new Map();
 const missing = new Set();
@@ -77,7 +77,19 @@ const CSS_REF = /url\((["']?)\.\.\/(fonts|img)\/([^"')?#]+)(\?v=[a-f0-9]+)?\1\)/
 /* -----------------------------------------------------------------------------
    2. Fingerprint every asset the pages reference.
    -------------------------------------------------------------------------- */
-const pages = (await readdir(root)).filter((f) => f.endsWith(".html"));
+async function findPages(dir, prefix = "") {
+  const out = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".") || entry.name === "node_modules") continue;
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isFile() && entry.name.endsWith(".html")) out.push(rel);
+    else if (entry.isDirectory() && !prefix && !["assets", "content", "partials", "scripts", "src"].includes(entry.name)) {
+      out.push(...(await findPages(join(dir, entry.name), rel)));
+    }
+  }
+  return out;
+}
+const pages = await findPages(root);
 let stamped = 0, changed = 0;
 
 for (const page of pages) {
@@ -91,7 +103,7 @@ for (const page of pages) {
     const [whole, attr, ref] = match;
     const v = await tag(ref);
     if (v === null) missing.add(ref);
-    parts.push(before.slice(last, match.index), v ? `${attr}="${ref}?v=${v}"` : `${attr}="${ref}"`);
+    parts.push(before.slice(last, match.index), v ? `${attr}="/${ref}?v=${v}"` : `${attr}="/${ref}"`);
     last = match.index + whole.length;
     if (v) stamped++;
   }

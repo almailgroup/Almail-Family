@@ -14,16 +14,17 @@ plain web server by uploading the folder as-is.
 
 ```
 Almail-Family/
-├── index.html              Homepage — hero, quick links, latest updates, CTA
-├── heritage.html           History — the dated timeline
-├── directory.html          Characters — member profiles, searchable by branch
-├── blog.html               News, and Article via ?category=Articles
-├── post.html               Single-article view  (post.html?p=<slug>)
-├── pictures.html           The picture archive
-├── resources.html          Sources and references
-├── family-tree.html        The generations
-├── location.html           Where to find the family house
-├── contact.html            Contact form + details
+├── index.html              Redirect only — sends / to /home/
+├── home/index.html         Homepage — hero, quick links, latest updates, CTA
+├── heritage/index.html     History — the dated timeline
+├── directory/index.html    Characters — member profiles, searchable by branch
+├── blog/index.html         News, and Article via ?category=Articles
+├── post/index.html         Single-article view  (/post/?p=<slug>)
+├── pictures/index.html     The picture archive
+├── resources/index.html    Sources and references
+├── family-tree/index.html  The generations
+├── location/index.html     Where to find the family house
+├── contact/index.html      Contact form + details
 ├── 404.html                Not-found page
 │
 ├── content/                ← THE ONLY FILES MOST EDITORS NEED TO TOUCH
@@ -119,10 +120,44 @@ it; after that, the fingerprints keep everything in step.
 `assets/css/site.css` is committed so the site can be deployed straight from the
 repository without a build step on the host.
 
+### URLs
+
+No page ends in `.html`. Each page is an `index.html` inside a folder named for
+its route, which every static host — GitHub Pages included, with no rewrite
+rules — serves as a directory index:
+
+| URL | File |
+| --- | --- |
+| `/` | `index.html` — redirects to `/home/` |
+| `/home/` | `home/index.html` |
+| `/heritage/`, `/directory/`, `/contact/`, … | `<name>/index.html` |
+| `/blog/?category=Articles` | `blog/index.html` |
+| `/post/?p=<slug>` | `post/index.html` |
+
+The homepage lives at `/home/`, not at `/`, because the family asked for the
+address bar to read `/home`. Root is therefore a redirect-only file: `noindex`,
+a `<meta http-equiv="refresh">` for the no-JavaScript case, a `location.replace`
+that carries the query string and hash across, and a visible link if both are
+disabled. `/home/` is the canonical URL.
+
+**To add a page**, create `<name>/index.html` — copy an existing one — and link
+to it as `/<name>/`. The build scripts walk the tree, so no list needs updating.
+
+Links between pages and to assets are **root-relative** (`/blog/`,
+`/assets/js/site.js`). That keeps every link identical at every depth, and it
+assumes the site is served from the root of its domain — true for
+`almailfamily.com`. If you ever host it under a sub-path, such as a
+`username.github.io/repo/` preview, the leading slashes need a prefix.
+
+Requesting `/home` without the trailing slash works: hosts redirect it to
+`/home/`. Internal links already carry the slash, so no visitor pays for that
+hop.
+
 ### Deploying
 
 Any static host works. For GitHub Pages: push, then set
 **Settings → Pages → Deploy from branch** and pick the branch and `/ (root)`.
+The `.nojekyll` file at the root keeps Pages from reprocessing the output.
 
 ---
 
@@ -329,7 +364,7 @@ Open **`content/posts.js`** and add one block to the top of the array:
 
 ```js
 {
-  slug: "eid-lunch-2027",                    // URL id → post.html?p=eid-lunch-2027
+  slug: "eid-lunch-2027",                    // URL id → /post/?p=eid-lunch-2027
   title: "Notes from the Eid lunch",
   category: "Events",                        // Events | Announcements | Articles | Photo Highlights
   date: "2027-04-12",                        // YYYY-MM-DD — drives the ordering
@@ -352,7 +387,7 @@ beyond pushing the file. The post appears automatically:
 
 - on the **homepage** feed (newest first),
 - in the **Journal**, under its category filter and in search,
-- at its own URL, `post.html?p=<slug>`,
+- at its own URL, `/post/?p=<slug>`,
 - and in the previous/next links of its neighbouring posts.
 
 **Writing the body.** Plain HTML between the backticks. `<p>`, `<h2>`, `<h3>`,

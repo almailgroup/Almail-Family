@@ -46,9 +46,6 @@ window.ALMAIL.ar = {
   "nav.sections": "أقسام الموقع",
 
   "nav.home": "الرئيسية",
-  "nav.heritage": "التراث",
-  "nav.directory": "الشخصيات",
-  "nav.journal": "الأخبار",
   "nav.contact": "اتصل بنا",
   "nav.cta": "تواصل معنا",
   "nav.skip": "تخطَّ إلى المحتوى",
@@ -99,7 +96,7 @@ window.ALMAIL.ar = {
   "home.latestEyebrow": "آخر الأخبار",
   "home.latestTitle": "أخبار العائلة",
   "home.allPosts": "كل المنشورات",
-  "home.noscript": "فعِّل جافاسكربت لقراءة آخر المنشورات، أو <a class=\"link-underline\" href=\"blog.html\">زُر صفحة الأخبار</a>.",
+  "home.noscript": "فعِّل جافاسكربت لقراءة آخر المنشورات، أو <a class=\"link-underline\" href=\"/blog/\">زُر صفحة الأخبار</a>.",
   "home.quoteEyebrow": "لماذا هذه البوابة",
   "home.quote": "«نحن لا نكتب لأنفسنا. نكتب لمن سيفتح هذا في عام 2070 ويريد أن يعرف ما الذي حدث فعلًا.»",
   "home.quoteAttr": "مجلس عائلة {family}",

@@ -1,5 +1,5 @@
 /* =============================================================================
-   post.js — renders a single article at post.html?p=<slug>
+   post.js — renders a single article at /post/?p=<slug>
    -----------------------------------------------------------------------------
    The `body` field of a post is authored by the family in content/posts.js and
    is therefore trusted HTML; every other field is escaped before insertion.
@@ -22,7 +22,7 @@
           u.escape(t("post.nfBody",
             "It may have been renamed or removed. The Journal has everything we've published.")) +
         "</p>" +
-        '<a href="blog.html" class="btn-primary mt-10">' +
+        '<a href="/blog/" class="btn-primary mt-10">' +
           u.escape(t("post.nfCta", "Back to the Journal")) + "</a>" +
       "</div>";
   }
@@ -61,7 +61,7 @@
     function pager(post, label, align) {
       if (!post) return '<div class="hidden sm:block"></div>';
       return (
-        '<a href="post.html?p=' + encodeURIComponent(post.slug) + '" ' +
+        '<a href="/post/?p=' + encodeURIComponent(post.slug) + '" ' +
         'class="group block p-6 sm:p-8 ' + align + '">' +
           '<span class="eyebrow">' + u.escape(label) + "</span>" +
           '<span class="display-3 mt-3 block"' + i18n.markup(post, "title") + ">" +
@@ -73,7 +73,7 @@
     host.innerHTML =
       /* --- Header --- */
       '<div class="container-x pt-14 sm:pt-20">' +
-        '<a href="blog.html" class="meta link-underline">' +
+        '<a href="/blog/" class="meta link-underline">' +
           '<span class="rtl:rotate-180 inline-block">&larr;</span> ' +
           u.escape(t("post.allPosts", "All posts")) + "</a>" +
         '<div class="reading mt-10">' +

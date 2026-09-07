@@ -56,7 +56,7 @@
   function card(post, index) {
     return (
       '<article class="card card-hover group reveal" data-reveal-delay="' + (index % 3) * 80 + '">' +
-        '<a href="post.html?p=' + encodeURIComponent(post.slug) + '" class="flex h-full flex-col">' +
+        '<a href="/post/?p=' + encodeURIComponent(post.slug) + '" class="flex h-full flex-col">' +
           media(post, "aspect-[16/10]") +
           '<div class="flex flex-1 flex-col p-6 sm:p-7">' +
             '<div class="flex flex-wrap items-center gap-x-3 gap-y-2">' +
@@ -83,7 +83,7 @@
   function featureCard(post) {
     return (
       '<article class="card card-hover group reveal md:col-span-2 lg:col-span-3">' +
-        '<a href="post.html?p=' + encodeURIComponent(post.slug) + '" class="grid md:grid-cols-2">' +
+        '<a href="/post/?p=' + encodeURIComponent(post.slug) + '" class="grid md:grid-cols-2">' +
           '<div class="md:border-b-0 md:border-e md:border-line">' +
             media(post, "aspect-[16/10] md:aspect-auto md:h-full md:min-h-[20rem]") +
           "</div>" +

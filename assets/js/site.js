@@ -94,14 +94,25 @@
   /* ---------------------------------------------------------------------------
      3. Active navigation state
      ------------------------------------------------------------------------ */
-  function initActiveNav() {
-    var here = location.pathname.split("/").pop() || "index.html";
-    // Article pages should light up the Journal link.
-    if (here === "post.html") here = "blog.html";
+  /**
+   * Reduce a URL to the section it belongs to. Two sections share /blog/ —
+   * Article is /blog/?category=Articles and News is /blog/ — so the category
+   * is part of the key, and only the one you are actually on gets marked.
+   */
+  function sectionKey(url) {
+    var noHash = String(url).split("#")[0];
+    var first = noHash.split("?")[0].replace(/^\/+/, "").split("/")[0] || "home";
+    if (first === "post") first = "blog";   // an article belongs under News
+    var category = noHash.match(/[?&]category=([^&]*)/);
+    return first + (category ? "?category=" + decodeURIComponent(category[1]) : "");
+  }
 
+  function initActiveNav() {
+    var here = sectionKey(location.pathname + location.search);
     document.querySelectorAll(".nav-link").forEach(function (link) {
-      var target = link.getAttribute("href").split("/").pop().split("?")[0];
-      if (target === here) link.setAttribute("aria-current", "page");
+      if (sectionKey(link.getAttribute("href")) === here) {
+        link.setAttribute("aria-current", "page");
+      }
     });
   }
 

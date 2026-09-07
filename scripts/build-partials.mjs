@@ -15,7 +15,7 @@
  *
  * The contents of partials/header.html are written between the markers.
  */
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile, stat } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -30,7 +30,21 @@ for (const file of await readdir(partialsDir)) {
   }
 }
 
-const pages = (await readdir(root)).filter((f) => f.endsWith(".html"));
+/* Pages live at the root (404) and one level down (home/, heritage/, …), each
+   as index.html so the URL needs no .html. Walk both. */
+async function findPages(dir, prefix = "") {
+  const out = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".") || entry.name === "node_modules") continue;
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isFile() && entry.name.endsWith(".html")) out.push(rel);
+    else if (entry.isDirectory() && !prefix && !["assets", "content", "partials", "scripts", "src"].includes(entry.name)) {
+      out.push(...(await findPages(join(dir, entry.name), rel)));
+    }
+  }
+  return out;
+}
+const pages = await findPages(root);
 let changed = 0;
 
 for (const page of pages) {

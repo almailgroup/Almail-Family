@@ -8,7 +8,7 @@
       (order in the file doesn't matter — posts are sorted by `date` — but
       keeping newest first makes the file easy to scan).
    2. Fill in the fields. `slug` must be unique: it becomes the URL,
-      e.g. post.html?p=your-slug
+      e.g. /post/?p=your-slug
    3. Write the article in `body` using plain HTML between the backticks
       (<h2>, <p>, <ul>, <blockquote>, <figure>, <img> are all styled already).
    4. Save. That's it — no build step, no rebuild, no database.
@@ -75,7 +75,7 @@ window.ALMAIL.posts = [
       <h2>Next year</h2>
       <p>The date is already set for the second Friday of August. If you would like to help
       with hosting, catering or the archive table, write to the family council through the
-      <a href="contact.html">contact page</a>.</p>
+      <a href="/contact/">contact page</a>.</p>
     `,
     titleAr: "لقاء العائلة السنوي 2026: ملاحظات من أمسية جمعتنا",
     excerptAr:
@@ -109,7 +109,7 @@ window.ALMAIL.posts = [
       <h2>العام المقبل</h2>
       <p>التاريخ محدَّد سلفًا: الجمعة الثانية من أغسطس. وإن رغبت في المساعدة في الاستضافة
       أو الضيافة أو طاولة الأرشيف، فراسل مجلس العائلة عبر
-      <a href="contact.html">صفحة التواصل</a>.</p>
+      <a href="/contact/">صفحة التواصل</a>.</p>
     `,
   },
   {
@@ -140,7 +140,7 @@ window.ALMAIL.posts = [
       <p>Send a short letter of intent, your enrolment or offer letter, and a summary of
       costs to the education committee. Applications are reviewed in October and decisions
       are sent before the end of that month.</p>
-      <p>Questions are welcome at any time through the <a href="contact.html">contact page</a>.</p>
+      <p>Questions are welcome at any time through the <a href="/contact/">contact page</a>.</p>
     `,
     titleAr: "فتح باب التقديم لصندوق العائلة للتعليم",
     excerptAr:
@@ -164,7 +164,7 @@ window.ALMAIL.posts = [
       <h2>كيفية التقديم</h2>
       <p>أرسل خطاب نية موجزًا، وخطاب القيد أو القبول، وملخّصًا للتكاليف إلى لجنة التعليم.
       تُراجَع الطلبات في أكتوبر وتُرسَل القرارات قبل نهاية الشهر نفسه.</p>
-      <p>الأسئلة مرحَّب بها في أي وقت عبر <a href="contact.html">صفحة التواصل</a>.</p>
+      <p>الأسئلة مرحَّب بها في أي وقت عبر <a href="/contact/">صفحة التواصل</a>.</p>
     `,
   },
   {
@@ -369,7 +369,7 @@ window.ALMAIL.posts = [
 
       <h2>Contribute</h2>
       <p>Corrections are as valuable as contributions. If something here is wrong, say so
-      through the <a href="contact.html">contact page</a> and it will be changed.</p>
+      through the <a href="/contact/">contact page</a> and it will be changed.</p>
     `,
     titleAr: "لماذا نحفظ سجلًّا",
     excerptAr:
@@ -397,7 +397,7 @@ window.ALMAIL.posts = [
 
       <h2>ساهِم</h2>
       <p>التصحيحات لا تقلّ قيمةً عن الإضافات. إن كان هنا خطأ، فأخبرنا عبر
-      <a href="contact.html">صفحة التواصل</a> وسيُصحَّح.</p>
+      <a href="/contact/">صفحة التواصل</a> وسيُصحَّح.</p>
     `,
   },
 ];
