@@ -19,7 +19,7 @@
   <link rel="preload" href="/assets/fonts/reem-kufi-latin.woff2?v=99554d52" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/plex-arabic-400-latin.woff2?v=9ed8dcb0" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="/assets/css/site.css?v=b207df9e">
+  <link rel="stylesheet" href="/assets/css/site.css?v=aa39d9a3">
 
   <!-- Resolve theme AND language before first paint, so neither ever flashes.
        data-i18n-pending hides translatable text for the frame between this
@@ -178,22 +178,13 @@
             </div>
           </div>
 
-          <!-- Standing figures -->
-          <div class="reveal lg:col-span-4" data-reveal-delay="320">
-            <dl class="grid grid-cols-3 gap-px border border-line bg-line lg:grid-cols-1">
-              <div class="bg-canvas p-5 lg:p-6">
-                <dt class="eyebrow" data-i18n="home.statMembers">Members listed</dt>
-                <dd class="font-display mt-2 text-3xl font-semibold">8</dd>
-              </div>
-              <div class="bg-canvas p-5 lg:p-6">
-                <dt class="eyebrow" data-i18n="home.statYears">Years recorded</dt>
-                <dd class="font-display mt-2 text-3xl font-semibold">88</dd>
-              </div>
-              <div class="bg-canvas p-5 lg:p-6">
-                <dt class="eyebrow" data-i18n="home.statImages">Images archived</dt>
-                <dd class="font-display mt-2 text-3xl font-semibold">1,400</dd>
-              </div>
-            </dl>
+          <!-- The family mark. The eight-point khatim that sets the section
+               ornaments and the hero tessellation, standing here at full size.
+               Decorative, so it is hidden from assistive tech. -->
+          <div class="reveal flex justify-center lg:col-span-4" data-reveal-delay="320" aria-hidden="true">
+            <svg class="hero-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M6 6h12v12H6z"></path><path d="M12 2l10 10-10 10L2 12z"></path>
+            </svg>
           </div>
 
         </div>
@@ -414,7 +405,7 @@
 
   <!-- Content data first, then behaviour. `defer` keeps execution order. -->
   <script src="/content/posts.js?v=d7f5df20" defer></script>
-  <script src="/content/i18n.js?v=aab8ef2a" defer></script>
+  <script src="/content/i18n.js?v=aa2a46ba" defer></script>
   <script src="/assets/js/i18n.js?v=5e52d576" defer></script>
   <script src="/assets/js/site.js?v=c6057e78" defer></script>
   <script src="/assets/js/blog.js?v=6e2121e2" defer></script>
