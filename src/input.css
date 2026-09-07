@@ -367,14 +367,31 @@
     @apply h-px max-w-32 flex-1 bg-line-2;
   }
 
-  /* The same star standing alone at full size in the hero. It shares the
-     ornament's 24-unit viewBox and paths exactly, so the two are one motif at
-     two sizes. The stroke is in viewBox units and so scales with the mark
-     rather than thinning as it grows. Decorative — always pair with
-     aria-hidden. */
-  .hero-mark {
-    @apply h-36 w-36 text-accent sm:h-44 sm:w-44 lg:h-56 lg:w-56;
-    stroke-width: 0.32;
+  /* The same star run very small and unbroken along the foot of the masthead —
+     the ornamental rule a paper of the period set beneath its nameplate.
+
+     The tile carries the printer's ornament's own proportions: the square is a
+     fifth wider than the diamond's half-diagonal, so its corners push past the
+     diamond's edges and the eight points show. It is redrawn on an 80-unit grid
+     whose diamond touches all four tile edges, so neighbouring stars share
+     their vertices and the band reads as one continuous lattice rather than a
+     row of separate marks.
+
+     Used as a MASK, not an image, so the line takes the theme's own token and
+     inverts with the rest of the page. */
+  .header-band {
+    --band-tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%23fff' stroke-width='5'%3E%3Cpath d='M16 16h48v48H16z'/%3E%3Cpath d='M40 0 80 40 40 80 0 40z'/%3E%3C/svg%3E");
+
+    height: 15px;
+    background-color: var(--c-accent);
+    -webkit-mask-image: var(--band-tile);
+    mask-image: var(--band-tile);
+    -webkit-mask-size: 15px 15px;
+    mask-size: 15px 15px;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+    -webkit-mask-position: center;
+    mask-position: center;
   }
 
   /* --- Typography --------------------------------------------------------- */

@@ -19,7 +19,7 @@
   <link rel="preload" href="/assets/fonts/reem-kufi-latin.woff2?v=99554d52" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/plex-arabic-400-latin.woff2?v=9ed8dcb0" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="/assets/css/site.css?v=aa39d9a3">
+  <link rel="stylesheet" href="/assets/css/site.css?v=c363beda">
 
   <!-- Resolve theme AND language before first paint, so neither ever flashes.
        data-i18n-pending hides translatable text for the frame between this
@@ -147,6 +147,12 @@
         <a class="nav-link py-3.5 text-[15px] font-medium" href="/contact/" data-i18n="nav.contactUs">Contact us</a>
       </nav>
     </div>
+
+    <!-- ------------------------------------------------------ ornament band -->
+    <!-- Full-bleed, so it runs the width of the page like a printed border.
+         Last child, so it stays at the foot of the masthead when the mobile
+         section list opens above it. Decorative. -->
+    <div class="header-band" aria-hidden="true"></div>
   </header>
   <!-- @endpartial -->
 
@@ -161,9 +167,11 @@
       <div class="geo-pattern pointer-events-none absolute inset-0" aria-hidden="true"></div>
 
       <div class="container-x relative">
-        <div class="grid items-end gap-14 py-24 sm:py-32 lg:grid-cols-12 lg:py-40">
+        <div class="py-24 sm:py-32 lg:py-40">
 
-          <div class="lg:col-span-8">
+          <!-- Two thirds of the measure — the width the eight of twelve
+               columns gave this text when the figures sat beside it. -->
+          <div class="lg:w-2/3">
             <p class="eyebrow reveal" data-i18n="home.heroEyebrow"><span class="ar-lead" lang="ar" dir="rtl">الكويت</span>Kuwait City &nbsp;·&nbsp; Est. record since 1938</p>
             <h1 class="display-1 reveal mt-7" data-reveal-delay="80" data-i18n="home.heroTitle">
               The Almail<br>Family Portal
@@ -176,15 +184,6 @@
               <a href="/directory/" class="btn-primary" data-i18n="home.ctaDirectory">Browse the directory</a>
               <a href="/heritage/" class="btn-outline" data-i18n="home.ctaHeritage">Our heritage</a>
             </div>
-          </div>
-
-          <!-- The family mark. The eight-point khatim that sets the section
-               ornaments and the hero tessellation, standing here at full size.
-               Decorative, so it is hidden from assistive tech. -->
-          <div class="reveal flex justify-center lg:col-span-4" data-reveal-delay="320" aria-hidden="true">
-            <svg class="hero-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M6 6h12v12H6z"></path><path d="M12 2l10 10-10 10L2 12z"></path>
-            </svg>
           </div>
 
         </div>
