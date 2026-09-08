@@ -564,30 +564,32 @@
   }
   .reveal.is-visible { opacity: 1; transform: none; }
 
-  /* The homepage banner. Its own cream is #fcf3e8 against the page's #fbf2e6 —
-     a one-point difference, so the edges of the image disappear into the page
-     and it needs no framing. Served as WebP (26 KB) with the PNG left as the
-     fallback for anything that cannot read image-set. */
+  /* The homepage banner. Light and dark mode each have their own custom
+     photograph. Served as WebP with the JPG left as the fallback for anything
+     that cannot read image-set. */
   .hero-banner {
-    background-image: url("../img/AlmailFamilyBack.png");
+    background-image: url("../img/AlmailFamilyBackLightMode.jpg");
     background-image: image-set(
-      url("../img/AlmailFamilyBack.webp") type("image/webp"),
-      url("../img/AlmailFamilyBack.png") type("image/png"));
+      url("../img/AlmailFamilyBackLightMode.webp") type("image/webp"),
+      url("../img/AlmailFamilyBackLightMode.jpg") type("image/jpeg"));
     background-repeat: no-repeat;
     background-position: center bottom;
     background-size: cover;
   }
-  /* Narrow screens: cover would crop away both palms and leave only the empty
-     middle, so let the whole banner sit along the bottom instead. */
+  /* Narrow screens: cover would crop away both sides, so let the whole banner
+     sit along the bottom instead. */
   @media (max-width: 767px) {
     .hero-banner { background-size: 100% auto; }
   }
-  /* One treatment at a time. The banner carries the hero in light; the star
-     tessellation would only clutter it, so it steps aside and takes over at
-     night, where a cream photograph has no place. */
+  /* One treatment at a time. The banner carries the hero in both themes now,
+     each with its own photograph, so the star tessellation steps aside. */
   .hero-banner .geo-pattern { display: none; }
-  [data-theme="dark"] .hero-banner { background-image: none; }
-  [data-theme="dark"] .hero-banner .geo-pattern { display: block; }
+  [data-theme="dark"] .hero-banner {
+    background-image: url("../img/AlmailFamilyBackDarkMode.jpg");
+    background-image: image-set(
+      url("../img/AlmailFamilyBackDarkMode.webp") type("image/webp"),
+      url("../img/AlmailFamilyBackDarkMode.jpg") type("image/jpeg"));
+  }
 
   /* Hairline eight-point star tessellation (khatim) behind the hero.
      The tile is used as a MASK, not an image, so the line colour is the theme's
