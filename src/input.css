@@ -564,32 +564,62 @@
   }
   .reveal.is-visible { opacity: 1; transform: none; }
 
-  /* The homepage banner. Light and dark mode each have their own custom
-     photograph. Served as WebP with the JPG left as the fallback for anything
-     that cannot read image-set. */
-  .hero-banner {
-    background-image: url("../img/AlmailFamilyBackLightMode.jpg");
-    background-image: image-set(
-      url("../img/AlmailFamilyBackLightMode.webp") type("image/webp"),
-      url("../img/AlmailFamilyBackLightMode.jpg") type("image/jpeg"));
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    background-size: cover;
+  /* --- THE KUWAIT PANORAMA ------------------------------------------------
+     Eight landmarks — Failaka, Mubarakiya, Al-Seif, the Grand Mosque, Kuwait
+     Towers, the Opera House, Tareq Rajab and Al Shaheed Park — drawn for this
+     site in assets/img/kuwait-skyline.svg.
+
+     The drawing is used as a MASK, never as a picture. The colour you see is
+     the gradient declared here; the panorama only decides where that gradient
+     shows. Every stop is a theme token, so the one file re-tints itself for the
+     night edition instead of needing a second drawing — oxblood at the foot,
+     cooling up through the rule greys, gone by the top. */
+  .skyline {
+    --skyline-art: url("../img/kuwait-skyline.svg");
+    background-image: linear-gradient(
+      to top,
+      var(--c-accent) 0%,
+      var(--c-line-2) 44%,
+      var(--c-line) 70%,
+      transparent 100%);
+    -webkit-mask-image: var(--skyline-art);
+    mask-image: var(--skyline-art);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center bottom;
+    mask-position: center bottom;
   }
-  /* Narrow screens: cover would crop away both sides, so let the whole banner
-     sit along the bottom instead. */
-  @media (max-width: 767px) {
-    .hero-banner { background-size: 100% auto; }
+
+  /* In the hero it runs the full width of the page and stands on the banner's
+     bottom edge. The aspect-ratio is the drawing's own, so nothing distorts at
+     any width, and every landmark stays in frame down to the narrowest phone. */
+  .skyline-hero {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    aspect-ratio: 2400 / 400;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    opacity: 0.9;
   }
-  /* One treatment at a time. The banner carries the hero in both themes now,
-     each with its own photograph, so the star tessellation steps aside. */
-  .hero-banner .geo-pattern { display: none; }
-  [data-theme="dark"] .hero-banner {
-    background-image: url("../img/AlmailFamilyBackDarkMode.jpg");
-    background-image: image-set(
-      url("../img/AlmailFamilyBackDarkMode.webp") type("image/webp"),
-      url("../img/AlmailFamilyBackDarkMode.jpg") type("image/jpeg"));
+
+  /* In the footer it is the same panorama held small and centred, closing every
+     page the way the hero opens the first. Sizing the mask by its HEIGHT
+     (auto 100%) keeps the proportions honest; the min() stops it outrunning a
+     narrow screen. */
+  .skyline-footer {
+    height: min(104px, 15vw);
+    -webkit-mask-size: auto 100%;
+    mask-size: auto 100%;
+    opacity: 0.55;
   }
+  [data-theme="dark"] .skyline-footer { opacity: 0.7; }
+
+  /* The star tessellation now sits behind the panorama in BOTH editions: it
+     fades in from the top, the skyline rises from the bottom, and they meet in
+     the middle of the banner without either crowding the other. */
+  .hero-banner .geo-pattern { display: block; opacity: 0.55; }
+  [data-theme="dark"] .hero-banner .geo-pattern { opacity: 0.75; }
 
   /* Hairline eight-point star tessellation (khatim) behind the hero.
      The tile is used as a MASK, not an image, so the line colour is the theme's

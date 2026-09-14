@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 400" fill="#fff" fill-rule="nonzero">
+<!--
+  ===========================================================================
+  THE KUWAIT PANORAMA — eight landmarks set on one horizon
+  ===========================================================================
+  Drawn for this site, not traced from a photograph. The shapes are cut the way
+  a period printer cut a lino block: flat silhouettes, no modelling, openings
+  knocked clean through so the ground shows behind them.
+
+  It is used as a MASK (see .skyline in src/input.css), never as a picture, so
+  nothing here carries colour — only alpha. The gradient that fills these forms
+  is a CSS background sitting underneath, which is what lets the whole panorama
+  re-tint itself for light and dark without a second file.
+
+  Left to right, oldest to newest:
+    1. Failaka Island        — the Hellenistic columns of Ikaros
+    2. Souq Al-Mubarakiya    — arcade and wind tower
+    3. Al-Seif Palace        — the clock tower and its tiled dome
+    4. The Grand Mosque      — the great dome and minaret
+    5. Kuwait Towers         — two spheres, one spire
+    6. Kuwait Opera House    — the shell roofs of the Cultural Centre
+    7. Tareq Rajab Museum    — a courtyard house front
+    8. Al Shaheed Park       — the memorial arch among the trees
+
+  Horizon sits at y=398. Everything stands on it.
+  ===========================================================================
+-->
+
+<!-- ============================================ 1. FAILAKA ISLAND (x 36–304) -->
+<g id="failaka">
+  <!-- the island itself, a long low bank -->
+  <path d="M36 398 Q 96 374 168 371 Q 244 368 304 398 Z"/>
+  <!-- two standing columns of the Ikaros temple, carrying a broken architrave -->
+  <path d="M84 278 h88 v12 h-88 z"/>
+  <path d="M88 290 h32 v10 h-32 z"/>
+  <path d="M97 300 h14 v64 h-14 z"/>
+  <path d="M90 364 h28 v8 h-28 z"/>
+  <path d="M133 290 h32 v10 h-32 z"/>
+  <path d="M142 300 h14 v64 h-14 z"/>
+  <path d="M135 364 h28 v8 h-28 z"/>
+  <!-- a third column, snapped off at the shaft -->
+  <path d="M187 326 h14 v38 h-14 z"/>
+  <path d="M180 364 h28 v8 h-28 z"/>
+  <!-- date palm -->
+  <path d="M246 372 q 4 -40 10 -72 l 8 2 q -6 32 -10 70 z"/>
+  <path d="M260 300 q -30 4 -48 22 q 16 -28 48 -30 z"/>
+  <path d="M260 300 q -26 -10 -36 -34 q 22 20 38 28 z"/>
+  <path d="M260 300 q -2 -24 8 -40 q 4 24 2 38 z"/>
+  <path d="M260 300 q 22 -18 46 -22 q -26 14 -40 28 z"/>
+  <path d="M260 300 q 30 2 48 18 q -24 -12 -48 -6 z"/>
+  <path d="M260 300 q 22 12 28 34 q -16 -20 -32 -26 z"/>
+</g>
+
+<!-- ====================================== 2. SOUQ AL-MUBARAKIYA (x 326–592) -->
+<g id="mubarakiya">
+  <!-- crenellated parapet over the market roof -->
+  <path d="M330 320 h12 v10 h-12 z M357 320 h12 v10 h-12 z M384 320 h12 v10 h-12 z
+           M411 320 h12 v10 h-12 z M438 320 h12 v10 h-12 z M465 320 h12 v10 h-12 z
+           M492 320 h12 v10 h-12 z M519 320 h12 v10 h-12 z"/>
+  <!-- roof band -->
+  <path d="M326 330 h220 v14 h-220 z"/>
+  <!-- five piers -->
+  <path d="M332 344 h16 v54 h-16 z"/>
+  <path d="M382 344 h16 v54 h-16 z"/>
+  <path d="M432 344 h16 v54 h-16 z"/>
+  <path d="M482 344 h16 v54 h-16 z"/>
+  <path d="M532 344 h14 v54 h-14 z"/>
+  <!-- the spandrels between them: solid above, arch cut beneath -->
+  <path d="M348 372 L348 344 L382 344 L382 372 Q 365 340 348 372 Z"/>
+  <path d="M398 372 L398 344 L432 344 L432 372 Q 415 340 398 372 Z"/>
+  <path d="M448 372 L448 344 L482 344 L482 372 Q 465 340 448 372 Z"/>
+  <path d="M498 372 L498 344 L532 344 L532 372 Q 515 340 498 372 Z"/>
+  <!-- wind tower (badgir), how the souq breathed before electricity -->
+  <path d="M548 268 h8 v12 h-8 z M560 268 h8 v12 h-8 z M572 268 h8 v12 h-8 z M584 268 h8 v12 h-8 z"/>
+  <path d="M546 280 h46 v10 h-46 z"/>
+  <path d="M552 290 h34 v108 h-34 z"/>
+</g>
+
+<!-- =========================================== 3. AL-SEIF PALACE (x 602–862) -->
+<g id="seif">
+  <!-- the sea-front arcade -->
+  <path d="M602 350 h142 v12 h-142 z"/>
+  <path d="M608 362 h14 v36 h-14 z"/>
+  <path d="M648 362 h14 v36 h-14 z"/>
+  <path d="M688 362 h14 v36 h-14 z"/>
+  <path d="M728 362 h14 v36 h-14 z"/>
+  <path d="M622 384 L622 362 L648 362 L648 384 Q 635 360 622 384 Z"/>
+  <path d="M662 384 L662 362 L688 362 L688 384 Q 675 360 662 384 Z"/>
+  <path d="M702 384 L702 362 L728 362 L728 384 Q 715 360 702 384 Z"/>
+  <!-- clock tower. The face is knocked clean through the shaft. -->
+  <path fill-rule="evenodd" d="M756 250 h62 v148 h-62 z
+           M787 288 m -19 0 a 19 19 0 1 0 38 0 a 19 19 0 1 0 -38 0 z"/>
+  <path d="M744 386 h86 v12 h-86 z"/>
+  <!-- the tiled ogee dome and its finial -->
+  <path d="M748 250 h78 v10 h-78 z"/>
+  <path d="M754 250 C 754 214, 768 196, 787 182 C 806 196, 820 214, 820 250 Z"/>
+  <path d="M785 162 h4 v22 h-4 z"/>
+  <circle cx="787" cy="159" r="5"/>
+  <!-- low wing to the right -->
+  <path d="M826 360 h36 v38 h-36 z"/>
+</g>
+
+<!-- ============================================ 4. THE GRAND MOSQUE (x 886–1176) -->
+<g id="grand-mosque">
+  <!-- prayer hall, with five arched openings cut through the wall -->
+  <path fill-rule="evenodd" d="M886 330 h230 v68 h-230 z
+    M903 398 L903 370 Q 916 342 929 370 L929 398 Z
+    M946 398 L946 370 Q 959 342 972 370 L972 398 Z
+    M989 398 L989 370 Q 1002 342 1015 370 L1015 398 Z
+    M1032 398 L1032 370 Q 1045 342 1058 370 L1058 398 Z
+    M1075 398 L1075 370 Q 1088 342 1101 370 L1101 398 Z"/>
+  <!-- flanking half-domes -->
+  <path d="M910 330 C 910 310, 918 298, 928 294 C 938 298, 946 310, 946 330 Z"/>
+  <path d="M1056 330 C 1056 310, 1064 298, 1074 294 C 1084 298, 1092 310, 1092 330 Z"/>
+  <!-- the great dome on its drum -->
+  <path d="M956 310 h90 v22 h-90 z"/>
+  <path d="M952 310 C 952 254, 974 224, 1001 214 C 1028 224, 1050 254, 1050 310 Z"/>
+  <path d="M999 192 h4 v24 h-4 z"/>
+  <circle cx="1001" cy="187" r="5"/>
+  <!-- crescent -->
+  <path fill-rule="evenodd" d="M1001 170 m -9 0 a 9 9 0 1 0 18 0 a 9 9 0 1 0 -18 0 z
+           M1005 167 m -7.5 0 a 7.5 7.5 0 1 0 15 0 a 7.5 7.5 0 1 0 -15 0 z"/>
+  <!-- minaret -->
+  <path d="M1140 180 h26 v206 h-26 z"/>
+  <path d="M1132 252 h42 v9 h-42 z"/>
+  <path d="M1132 206 h42 v9 h-42 z"/>
+  <path d="M1146 150 h14 v32 h-14 z"/>
+  <path d="M1142 150 C 1142 134, 1148 126, 1153 121 C 1158 126, 1164 134, 1164 150 Z"/>
+  <path d="M1151 103 h4 v19 h-4 z"/>
+  <path d="M1132 386 h42 v12 h-42 z"/>
+</g>
+
+<!-- ============================================= 5. KUWAIT TOWERS (x 1270–1480) -->
+<g id="kuwait-towers">
+  <!-- shared podium -->
+  <path d="M1270 386 h210 v12 h-210 z"/>
+  <!-- main tower: two spheres on a tapering spire -->
+  <path d="M1289 398 L1301 210 L1304 98 L1308 98 L1311 210 L1323 398 Z"/>
+  <circle cx="1306" cy="262" r="46"/>
+  <circle cx="1306" cy="168" r="26"/>
+  <!-- second tower: one sphere -->
+  <path d="M1378 398 L1388 240 L1390 178 L1394 178 L1396 240 L1406 398 Z"/>
+  <circle cx="1392" cy="292" r="34"/>
+  <!-- third tower: the plain spire that carries the floodlights -->
+  <path d="M1444 398 L1452 250 L1454 196 L1458 196 L1460 250 L1468 398 Z"/>
+</g>
+
+<!-- ======================================== 6. KUWAIT OPERA HOUSE (x 1544–1844) -->
+<g id="opera-house">
+  <!-- The glazed podium the three roofs sit on. Its mullions are cut straight
+       through, so the base reads as glass rather than another block of wall. -->
+  <path fill-rule="evenodd" d="M1544 360 h300 v38 h-300 z
+    M1556 370 h8 v22 h-8 z M1576 370 h8 v22 h-8 z M1596 370 h8 v22 h-8 z
+    M1616 370 h8 v22 h-8 z M1636 370 h8 v22 h-8 z M1656 370 h8 v22 h-8 z
+    M1676 370 h8 v22 h-8 z M1696 370 h8 v22 h-8 z M1716 370 h8 v22 h-8 z
+    M1736 370 h8 v22 h-8 z M1756 370 h8 v22 h-8 z M1776 370 h8 v22 h-8 z
+    M1796 370 h8 v22 h-8 z M1816 370 h8 v22 h-8 z"/>
+  <!-- Three roofs, held apart so each keeps its own outline against the sky. -->
+  <path d="M1552 360 C 1554 318, 1572 302, 1594 298 C 1616 302, 1634 318, 1636 360 Z"/>
+  <!-- the great roof, with the geometric lights of its cladding cut through -->
+  <path fill-rule="evenodd" d="M1644 360 C 1646 306, 1668 268, 1699 262 C 1730 268, 1752 306, 1754 360 Z
+    M1699 291 l 7 9 l -7 9 l -7 -9 z
+    M1683 313 l 7 9 l -7 9 l -7 -9 z
+    M1715 313 l 7 9 l -7 9 l -7 -9 z
+    M1699 335 l 7 9 l -7 9 l -7 -9 z"/>
+  <path d="M1762 360 C 1764 320, 1782 308, 1802 304 C 1822 308, 1840 320, 1842 360 Z"/>
+</g>
+
+<!-- ======================================= 7. TAREQ RAJAB MUSEUM (x 1876–2056) -->
+<g id="tareq-rajab">
+  <!-- parapet -->
+  <path d="M1878 316 h12 v10 h-12 z M1900 316 h12 v10 h-12 z M1922 316 h12 v10 h-12 z
+           M1944 316 h12 v10 h-12 z M1966 316 h12 v10 h-12 z M1988 316 h12 v10 h-12 z
+           M2010 316 h12 v10 h-12 z M2032 316 h12 v10 h-12 z"/>
+  <!-- the house front: arched door and two shuttered windows cut through -->
+  <path fill-rule="evenodd" d="M1876 326 h180 v72 h-180 z
+    M1950 398 L1950 360 Q 1966 336 1982 360 L1982 398 Z
+    M1902 352 h20 v20 h-20 z
+    M2010 352 h20 v20 h-20 z"/>
+  <!-- roof room -->
+  <path d="M1998 294 h34 v32 h-34 z"/>
+  <path d="M2000 284 h8 v10 h-8 z M2012 284 h8 v10 h-8 z M2024 284 h8 v10 h-8 z"/>
+</g>
+
+<!-- ========================================= 8. AL SHAHEED PARK (x 2090–2370) -->
+<g id="shaheed-park">
+  <!-- the park's raised ground -->
+  <path d="M2090 398 Q 2150 380 2230 378 Q 2310 376 2370 398 Z"/>
+  <!-- the memorial arch, cut as a ring -->
+  <path d="M2160 378 L2160 342 Q 2196 306 2232 342 L2232 378 L2214 378 L2214 350
+           Q 2196 330 2178 350 L2178 378 Z"/>
+  <!-- trees -->
+  <path d="M2117 344 h6 v34 h-6 z"/>
+  <ellipse cx="2120" cy="326" rx="24" ry="22"/>
+  <path d="M2267 336 h7 v42 h-7 z"/>
+  <ellipse cx="2270" cy="314" rx="30" ry="26"/>
+  <path d="M2327 350 h6 v28 h-6 z"/>
+  <ellipse cx="2330" cy="332" rx="22" ry="20"/>
+</g>
+
+<!-- the horizon everything stands on -->
+<path d="M0 396 h2400 v4 h-2400 z"/>
+</svg>
