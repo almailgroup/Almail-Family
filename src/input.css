@@ -579,8 +579,10 @@
     background-image: linear-gradient(
       to top,
       var(--c-accent) 0%,
-      var(--c-line-2) 44%,
-      var(--c-line) 70%,
+      var(--c-accent) 14%,
+      var(--c-line-2) 48%,
+      var(--c-line) 76%,
+      color-mix(in srgb, var(--c-line) 45%, transparent) 89%,
       transparent 100%);
     -webkit-mask-image: var(--skyline-art);
     mask-image: var(--skyline-art);
@@ -597,7 +599,7 @@
     position: absolute;
     inset-inline: 0;
     bottom: 0;
-    aspect-ratio: 2400 / 400;
+    aspect-ratio: 2400 / 460;   /* must track the viewBox in the SVG */
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     opacity: 0.9;
