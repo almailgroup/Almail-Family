@@ -153,6 +153,17 @@
   --c-invert:  #fbf2e6; /* paper, on solid ink             */
   --c-accent:  #7d2b28; /* oxblood — rules, marks, marginalia */
   --grain:     0.055;   /* strength of the paper grain     */
+
+  /* GILDING — the panorama only. Gold reads as metal because it has a RANGE:
+     an antique bronze down in the shadow, true gold through the middle, a
+     sheen where the light catches it, and champagne at the top. One flat
+     yellow reads as paint, which is the whole trap with gold. Named by
+     POSITION in the gradient, not by lightness, so the night edition can run
+     the values the other way and keep the same ramp. */
+  --c-gild-foot:  #4f3809; /* antique bronze, in shadow at the waterline */
+  --c-gild-body:  #a8842a; /* true gold, through the body of the city    */
+  --c-gild-sheen: #dcc06a; /* where the light catches, high up           */
+  --c-gild-crest: #ecdcb4; /* champagne, before it goes                  */
 }
 
 /* Inverted monochrome. Applied by assets/js/site.js via data-theme="dark". */
@@ -192,6 +203,13 @@
   --c-invert:  #14120f;
   --c-accent:  #cc6a5f; /* oxblood lifted until it reads on the dark */
   --grain:     0.03;    /* less: noise on a dark ground reads as haze */
+
+  /* At night the gilding runs the other way: it must GLOW up off the dark
+     stock, so the brightest gold sits at the foot and burns out to nothing. */
+  --c-gild-foot:  #f2d98f;
+  --c-gild-body:  #c0a049;
+  --c-gild-sheen: #866c2e;
+  --c-gild-crest: #4a3c1e;
 }
 
 /* -----------------------------------------------------------------------------
@@ -572,17 +590,23 @@
      The drawing is used as a MASK, never as a picture. The colour you see is
      the gradient declared here; the panorama only decides where that gradient
      shows. Every stop is a theme token, so the one file re-tints itself for the
-     night edition instead of needing a second drawing — oxblood at the foot,
-     cooling up through the rule greys, gone by the top. */
+     night edition instead of needing a second drawing.
+
+     The stops are seated against the DRAWING, not the box. The city stands on
+     a quay at 15% of the height, so that is where the deepest bronze has to
+     sit — run it to 0% instead and the whole ramp is spent on the water while
+     the buildings get nothing but pale yellow. The sheen sits high, where the
+     sun would actually catch, and the feet stay in shadow. */
   .skyline {
     --skyline-art: url("../img/kuwait-skyline.svg");
     background-image: linear-gradient(
       to top,
-      var(--c-accent) 0%,
-      var(--c-accent) 14%,
-      var(--c-line-2) 48%,
-      var(--c-line) 76%,
-      color-mix(in srgb, var(--c-line) 45%, transparent) 89%,
+      var(--c-gild-foot) 0%,
+      var(--c-gild-foot) 16%,
+      var(--c-gild-body) 42%,
+      var(--c-gild-sheen) 64%,
+      var(--c-gild-crest) 84%,
+      color-mix(in srgb, var(--c-gild-crest) 40%, transparent) 93%,
       transparent 100%);
     -webkit-mask-image: var(--skyline-art);
     mask-image: var(--skyline-art);
@@ -613,9 +637,9 @@
     height: min(104px, 15vw);
     -webkit-mask-size: auto 100%;
     mask-size: auto 100%;
-    opacity: 0.55;
+    opacity: 0.72;
   }
-  [data-theme="dark"] .skyline-footer { opacity: 0.7; }
+  [data-theme="dark"] .skyline-footer { opacity: 0.8; }
 
   /* The star tessellation now sits behind the panorama in BOTH editions: it
      fades in from the top, the skyline rises from the bottom, and they meet in

@@ -34,7 +34,7 @@ random.seed(1938)              # the year in the masthead; keeps builds identica
 # The tonal scale. Alpha composites over itself, so LINE over MASS reads as the
 # darkest note available and HATCH over MASS lands halfway between.
 FAR = 0.21                     # the modern city behind the monuments
-MASS = 0.62                    # the body of a building
+MASS = 0.68                    # the body of a building
 HATCH = 0.34                   # shading laid into a mass
 LINE = 1.00                    # outlines, ribs, mullions, the burin
 
@@ -233,8 +233,9 @@ def mubarakiya():
     o.append(ink(f"M324 {QUAY - 78}H572", 1.7))
     for i in range(11):                                     # stepped parapet
         px = 330 + i * 22
-        o.append(box(px, QUAY - 90, 13, 12, MASS))
-        o.append(box(px + 3, QUAY - 96, 7, 6, MASS))
+        j = (0, 2, 1, 0, 1, 2, 0, 1, 0, 2, 1)[i]            # hand-set, not stamped
+        o.append(box(px, QUAY - 90 - j, 13, 12 + j, MASS))
+        o.append(box(px + 3, QUAY - 96 - j, 7, 6, MASS))
     o.append(box(392, QUAY - 104, 108, 8, MASS * 0.8))      # shade over the lane
     o += vhatch(392, QUAY - 104, 108, 8, 9, 0.9, HATCH * 0.6)
 
@@ -462,8 +463,9 @@ def tareq_rajab():
 
     for i in range(9):                                      # stepped merlons
         px = x0 + 4 + i * 21
-        o.append(box(px, QUAY - 108, 14, 12, MASS))
-        o.append(box(px + 4, QUAY - 116, 6, 8, MASS))
+        j = (1, 0, 2, 0, 1, 2, 0, 1, 0)[i]
+        o.append(box(px, QUAY - 108 - j, 14, 12 + j, MASS))
+        o.append(box(px + 4, QUAY - 116 - j, 6, 8, MASS))
     o.append(box(2018, QUAY - 146, 44, 38, MASS))           # the roof room
     o += hhatch(2018, QUAY - 146, 44, 38, 11, 0.85, HATCH * 0.4)
     for i in range(4):
@@ -509,9 +511,27 @@ def backdrop():
         top = QUAY - h
         o.append(box(x, top, w, h, FAR))
         o.append(ink(f"M{x:.0f} {top:.0f}h{w:.0f}", 1.2, FAR * 1.5))
-        if random.random() < 0.30:                          # a slender one
-            o.append(box(x + w * 0.30, top - random.randint(24, 72), w * 0.4, 72, FAR))
-        for gy in range(int(top) + 12, int(QUAY) - 10, 16):  # lit floors
+
+        # Every tower gets its own crown. A row of identical flat-topped boxes
+        # is the thing that gives a drawn skyline away as filler.
+        crown = random.random()
+        if crown < 0.22:                                    # a setback stage
+            sw, sh = w * 0.62, random.randint(26, 58)
+            o.append(box(x + (w - sw) / 2, top - sh, sw, sh, FAR))
+            o.append(ink(f"M{x + (w - sw) / 2:.0f} {top - sh:.0f}h{sw:.0f}", 1.1, FAR * 1.5))
+        elif crown < 0.40:                                  # stepped back twice
+            for k, (fw, fh) in enumerate(((0.70, 30), (0.44, 24))):
+                sw = w * fw
+                top -= fh
+                o.append(box(x + (w - sw) / 2, top, sw, fh, FAR))
+        elif crown < 0.54:                                  # a pitched cap
+            o.append(fil(f"M{x:.0f} {top:.0f}L{x + w / 2:.0f} {top - 26:.0f}"
+                         f"L{x + w:.0f} {top:.0f}Z", FAR))
+            top -= 26
+        elif crown < 0.66:                                  # a mast
+            o.append(ink(f"M{x + w / 2:.0f} {top:.0f}v{-random.randint(30, 66)}", 1.4, FAR * 1.6))
+
+        for gy in range(int(QUAY) - 18, int(QUAY - h) + 10, -16):   # lit floors
             o.append(ink(f"M{x + 5:.0f} {gy}H{x + w - 5:.0f}", 1.0, FAR * 0.85))
         x += w + random.choice((8, 14, 22, 30))
     return o
@@ -529,10 +549,29 @@ def water():
     for x in range(0, W, 26):                       # steps down to the water
         o.append(ink(f"M{x} {QUAY - 7}V{QUAY}", 1.0, HATCH * 0.5))
     o.append(ink(f"M0 {QUAY}H{W}", 2.0, LINE * 0.85))
+
+    # The bay taking the city back. Vertical strokes fall directly under each
+    # mass, broken and fading as they run toward the viewer; the ripple lines
+    # then cross them. Reflection is what makes a waterfront read as water
+    # rather than as an empty band under the drawing.
+    for x0, x1, strength in SPANS:
+        x = x0
+        while x < x1:
+            depth = (H - QUAY) * random.uniform(0.35, 0.95)
+            y = QUAY + 3
+            while y < QUAY + depth:
+                seg = random.uniform(4, 11)
+                t = (y - QUAY) / (H - QUAY)
+                op = LINE * 0.30 * strength * (1 - t) ** 1.6
+                if op > 0.012:
+                    o.append(ink(f"M{x:.1f} {y:.1f}v{seg:.1f}", 1.1, op))
+                y += seg + random.uniform(3.5, 9)
+            x += random.uniform(7, 13)
+
     y = QUAY + 7
     while y < H - 2:
         t = (y - QUAY) / (H - QUAY)
-        op = LINE * 0.34 * (1 - t) ** 1.5
+        op = LINE * 0.30 * (1 - t) ** 1.5
         x = random.randint(-40, 30)
         while x < W:
             seg = random.randint(40, 230)
@@ -543,13 +582,39 @@ def water():
 
 
 # ----------------------------------------------------------------- assemble
+#
+# AERIAL PERSPECTIVE. The eye is standing opposite the Towers and the Mosque,
+# so those carry full weight and everything falls away toward the edges of the
+# plate. Drawing all eight at one strength is what made the first version read
+# as eight objects in a row rather than one view; a quarter of a stop between
+# neighbours is enough to give the panorama a centre and a pair of wings.
+#
+# The same number sets how hard each mass comes back off the water.
+#            name            x0    x1    tone
+PLATE = (("failaka",         28,  306, 0.80),
+         ("mubarakiya",     324,  592, 0.88),
+         ("seif",           604,  884, 0.95),
+         ("grand-mosque",   896, 1240, 1.00),
+         ("kuwait-towers", 1256, 1502, 1.00),
+         ("opera-house",   1536, 1860, 0.95),
+         ("tareq-rajab",   1876, 2080, 0.88),
+         ("shaheed-park",  2096, 2384, 0.80))
+
+SPANS = tuple((x0, x1, tone) for _, x0, x1, tone in PLATE)
+
+
 def build():
-    parts = []
-    parts.append('<g id="backdrop">' + "".join(backdrop()) + "</g>")
-    for name, fn in (("failaka", failaka), ("mubarakiya", mubarakiya), ("seif", seif),
-                     ("grand-mosque", mosque), ("kuwait-towers", towers), ("opera-house", opera),
-                     ("tareq-rajab", tareq_rajab), ("shaheed-park", shaheed)):
-        parts.append(f'<g id="{name}">' + "".join(fn()) + "</g>")
+    draw = dict(failaka=failaka, mubarakiya=mubarakiya, seif=seif, mosque=mosque,
+                towers=towers, opera=opera, tareq_rajab=tareq_rajab, shaheed=shaheed)
+    fn_for = {"failaka": "failaka", "mubarakiya": "mubarakiya", "seif": "seif",
+              "grand-mosque": "mosque", "kuwait-towers": "towers",
+              "opera-house": "opera", "tareq-rajab": "tareq_rajab",
+              "shaheed-park": "shaheed"}
+
+    parts = ['<g id="backdrop">' + "".join(backdrop()) + "</g>"]
+    for name, _x0, _x1, tone in PLATE:
+        body = "".join(draw[fn_for[name]]())
+        parts.append(f'<g id="{name}" opacity="{tone:g}">{body}</g>')
     parts.append('<g id="bay">' + "".join(water()) + "</g>")
 
     # NOTE: XML forbids a double hyphen inside a comment, so the rules below are
