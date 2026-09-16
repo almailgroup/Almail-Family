@@ -616,19 +616,6 @@
     mask-position: center bottom;
   }
 
-  /* In the hero it runs the full width of the page and stands on the banner's
-     bottom edge. The aspect-ratio is the drawing's own, so nothing distorts at
-     any width, and every landmark stays in frame down to the narrowest phone. */
-  .skyline-hero {
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    aspect-ratio: 2400 / 460;   /* must track the viewBox in the SVG */
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    opacity: 0.9;
-  }
-
   /* In the footer it is the same panorama held small and centred, closing every
      page the way the hero opens the first. Sizing the mask by its HEIGHT
      (auto 100%) keeps the proportions honest; the min() stops it outrunning a
@@ -641,23 +628,31 @@
   }
   [data-theme="dark"] .skyline-footer { opacity: 0.8; }
 
-  /* --- THE NIGHT PLATE ------------------------------------------------------
-     Dark mode swaps the drawn panorama for a photographic engraving of the bay
-     (assets/img/kuwait-skyline-dark.png): warm taupe linework on a ground that
-     is pure #000000.
+  /* --- THE PLATE ------------------------------------------------------------
+     The banner in both editions: an engraving of the bay, printed one way for
+     day and the other for night. Same frame, same 1659x948, waterlines five
+     pixels apart — so one set of geometry serves both and they land in the
+     same place when the theme is switched.
 
-     That pure black is doing real work. `mix-blend-mode: screen` keeps the
-     LIGHTER of the two layers, and screening black changes nothing at all — so
-     three quarters of this image drops straight out and only the linework is
-     left standing on the page's own stock. The file needs no alpha channel and
-     leaves no rectangle behind it, which is what would happen if the ground
-     were the near-black #14120f of the canvas rather than true black.
+     NEITHER FILE HAS AN ALPHA CHANNEL. The ground is dropped by blend mode
+     instead, which is why each plate's ground has to be a true extreme:
+
+       night   warm taupe ink on pure #000000, composited with `screen`.
+               Screen keeps the LIGHTER of two layers, and screening black
+               changes nothing, so the ground vanishes.
+       day     warm sepia ink on pure #FFFFFF, composited with `multiply`.
+               Multiply keeps the DARKER, and multiplying by white changes
+               nothing, so again the ground vanishes.
+
+     Both grounds were checked and normalised: 74.6% of the night plate is true
+     black, 73.1% of the day plate true white. Had either been merely near the
+     extreme — the canvas's own #14120f or #fbf2e6, say — the element would
+     print as a faint rectangle over the page.
 
      The frame is 1659x948 but the drawing only occupies the middle of it; the
-     empty sky above simply screens away, so the element is allowed to overrun
-     the top of the banner rather than being cropped to fit. */
+     empty sky above blends away to nothing, so the element is allowed to
+     overrun the top of the banner rather than being cropped to fit. */
   .skyline-photo {
-    display: none;
     position: absolute;
     inset-inline: 0;
     bottom: 0;
@@ -679,8 +674,8 @@
        Change the crop and that number has to be recomputed. */
     aspect-ratio: 1659 / 505;
     background-image: image-set(
-      url("../img/kuwait-skyline-dark.webp") type("image/webp"),
-      url("../img/kuwait-skyline-dark.png") type("image/png"));
+      url("../img/kuwait-skyline-light.webp") type("image/webp"),
+      url("../img/kuwait-skyline-light.png") type("image/png"));
     background-repeat: no-repeat;
     background-size: 100% auto;   /* width fills, height keeps the plate's ratio */
     background-position: center 44%;
@@ -688,7 +683,7 @@
        fixed by its padding and does not widen with the window. Capping it holds
        the waterline near four fifths of the way down at every size. */
     max-height: 640px;
-    mix-blend-mode: screen;
+    mix-blend-mode: multiply;
     /* It is a background before it is a picture. Held here the engraving sits
        behind the masthead rather than arguing with it: measured worst-case,
        the headline keeps 4.9:1 against it and the standfirst 6.1:1, both clear
@@ -696,9 +691,14 @@
     opacity: 0.45;
   }
 
-  /* One panorama at a time: the plate at night, the gilding by day. */
-  [data-theme="dark"] .skyline-photo { display: block; }
-  [data-theme="dark"] .skyline-hero { display: none; }
+  /* The night printing. Only the plate and the blend change; every scrap of
+     geometry above is shared, which is what keeps the two editions aligned. */
+  [data-theme="dark"] .skyline-photo {
+    background-image: image-set(
+      url("../img/kuwait-skyline-dark.webp") type("image/webp"),
+      url("../img/kuwait-skyline-dark.png") type("image/png"));
+    mix-blend-mode: screen;
+  }
 
   /* The star tessellation now sits behind the panorama in BOTH editions: it
      fades in from the top, the skyline rises from the bottom, and they meet in
