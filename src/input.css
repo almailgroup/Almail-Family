@@ -708,16 +708,21 @@
 
   /* Hairline eight-point star tessellation (khatim) behind the hero.
      The tile is used as a MASK, not an image, so the line colour is the theme's
-     own --c-line token and it inverts correctly in dark mode. A second mask
-     layer fades the pattern out toward the bottom. */
+     own --c-line token and it inverts correctly in dark mode.
+
+     A second mask layer fades the pattern out. It is an ellipse struck from
+     the TOP edge (50% 0%), so its vertical radius is what decides how far
+     down the banner the tessellation survives: at 46% tall and gone by 74%
+     of that, the pattern has cleared before the masthead reaches it, leaving
+     the middle of the banner open. */
   .geo-pattern {
     --geo-tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%23fff' stroke-width='1'%3E%3Cpath d='M20 20h40v40H20z'/%3E%3Cpath d='M40 0 80 40 40 80 0 40z'/%3E%3C/svg%3E");
 
     background-color: var(--c-line);
     -webkit-mask-image: var(--geo-tile),
-      radial-gradient(ellipse 85% 70% at 50% 0%, #000 12%, transparent 78%);
+      radial-gradient(ellipse 88% 46% at 50% 0%, #000 8%, transparent 74%);
     mask-image: var(--geo-tile),
-      radial-gradient(ellipse 85% 70% at 50% 0%, #000 12%, transparent 78%);
+      radial-gradient(ellipse 88% 46% at 50% 0%, #000 8%, transparent 74%);
     -webkit-mask-size: 88px 88px, cover;
     mask-size: 88px 88px, cover;
     -webkit-mask-repeat: repeat, no-repeat;
