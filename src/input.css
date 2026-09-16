@@ -641,6 +641,47 @@
   }
   [data-theme="dark"] .skyline-footer { opacity: 0.8; }
 
+  /* --- THE NIGHT PLATE ------------------------------------------------------
+     Dark mode swaps the drawn panorama for a photographic engraving of the bay
+     (assets/img/kuwait-skyline-dark.png): warm taupe linework on a ground that
+     is pure #000000.
+
+     That pure black is doing real work. `mix-blend-mode: screen` keeps the
+     LIGHTER of the two layers, and screening black changes nothing at all — so
+     three quarters of this image drops straight out and only the linework is
+     left standing on the page's own stock. The file needs no alpha channel and
+     leaves no rectangle behind it, which is what would happen if the ground
+     were the near-black #14120f of the canvas rather than true black.
+
+     The frame is 1659x948 but the drawing only occupies the middle of it; the
+     empty sky above simply screens away, so the element is allowed to overrun
+     the top of the banner rather than being cropped to fit. */
+  .skyline-photo {
+    display: none;
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    aspect-ratio: 1659 / 948;
+    background-image: image-set(
+      url("../img/kuwait-skyline-dark.webp") type("image/webp"),
+      url("../img/kuwait-skyline-dark.png") type("image/png"));
+    background-repeat: no-repeat;
+    /* The element carries the plate's own aspect-ratio, so 100% 100% fills it
+       exactly and nothing is stretched. (No background-position here: with the
+       box and the image in step it would do nothing.) */
+    background-size: 100% 100%;
+    mix-blend-mode: screen;
+    /* It is a background before it is a picture. Held here the engraving sits
+       behind the masthead rather than arguing with it: measured worst-case,
+       the headline keeps 4.9:1 against it and the standfirst 6.1:1, both clear
+       of WCAG for their sizes. */
+    opacity: 0.45;
+  }
+
+  /* One panorama at a time: the plate at night, the gilding by day. */
+  [data-theme="dark"] .skyline-photo { display: block; }
+  [data-theme="dark"] .skyline-hero { display: none; }
+
   /* The star tessellation now sits behind the panorama in BOTH editions: it
      fades in from the top, the skyline rises from the bottom, and they meet in
      the middle of the banner without either crowding the other. */
