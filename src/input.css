@@ -661,15 +661,33 @@
     position: absolute;
     inset-inline: 0;
     bottom: 0;
-    aspect-ratio: 1659 / 948;
+    /* THE FRAMING, which is the whole difficulty with this plate.
+
+       Its waterline sits at 59% of the file — dead centre, with empty sky above
+       and reflections below. Give the element the file's own 1659x948 and that
+       centre climbs as the window widens: the box takes its height from the
+       WIDTH, while the banner's height barely moves, so at 1920 the city ends
+       up behind the masthead.
+
+       So the box is a wide strip of its own instead, and the plate is moved
+       inside it. The strip shows source rows 195 to 700 — from just above the
+       spires down through the best of the reflections — which puts the
+       waterline at about 80% of the banner at 1440 AND at 1920, rather than
+       wandering with the width.
+
+       195 / (948 - 505) = 44%, which is what the background-position below is.
+       Change the crop and that number has to be recomputed. */
+    aspect-ratio: 1659 / 505;
     background-image: image-set(
       url("../img/kuwait-skyline-dark.webp") type("image/webp"),
       url("../img/kuwait-skyline-dark.png") type("image/png"));
     background-repeat: no-repeat;
-    /* The element carries the plate's own aspect-ratio, so 100% 100% fills it
-       exactly and nothing is stretched. (No background-position here: with the
-       box and the image in step it would do nothing.) */
-    background-size: 100% 100%;
+    background-size: 100% auto;   /* width fills, height keeps the plate's ratio */
+    background-position: center 44%;
+    /* Past about 2100px the strip would still outgrow the banner, which is
+       fixed by its padding and does not widen with the window. Capping it holds
+       the waterline near four fifths of the way down at every size. */
+    max-height: 640px;
     mix-blend-mode: screen;
     /* It is a background before it is a picture. Held here the engraving sits
        behind the masthead rather than arguing with it: measured worst-case,
