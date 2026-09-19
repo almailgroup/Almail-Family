@@ -245,6 +245,119 @@
     observeReveal: initReveal,
   };
 
+  /* ---------------------------------------------------------------------------
+     7. ALMAIL.lightbox — the full-screen media viewer
+     -----------------------------------------------------------------------------
+     A photograph's particulars — when it was taken, what may be done with it —
+     belong with the photograph at full size, not set as a caption underneath it
+     where they crowd the page. Open the plate and the details come with it.
+
+     Built once on first use and kept, so opening is instant afterwards. The
+     ground is dark in both editions: that is what a viewer is for, and the
+     page behind it should recede.
+
+         ALMAIL.lightbox.open({ src, alt, title, meta: [...], returnFocus: el })
+     ------------------------------------------------------------------------ */
+  ALMAIL.lightbox = (function () {
+    var overlay, imgEl, titleEl, metaEl, closeBtn;
+    var lastFocus = null;
+    var scrollbarPad = "";
+
+    function t(key, fallback) {
+      return ALMAIL.i18n ? ALMAIL.i18n.t(key, fallback) : fallback;
+    }
+
+    function build() {
+      overlay = document.createElement("div");
+      // Visibility is the `hidden` ATTRIBUTE alone — Tailwind's base makes that
+      // display:none !important, so it beats the flex below with no class
+      // juggling to fall out of step.
+      overlay.className =
+        "fixed inset-0 z-[200] flex flex-col bg-black/92 backdrop-blur-sm";
+      overlay.hidden = true;
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.innerHTML =
+        '<div class="flex justify-end p-4 sm:p-5">' +
+          '<button type="button" data-lb-close ' +
+            'class="flex h-11 w-11 items-center justify-center border border-white/25 ' +
+                   'text-white/80 transition-colors hover:border-white hover:text-white">' +
+            '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+                 'stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' +
+              '<path d="M5.5 5.5l13 13M18.5 5.5l-13 13"></path></svg>' +
+          "</button>" +
+        "</div>" +
+        '<div class="flex min-h-0 flex-1 items-center justify-center px-4 sm:px-8" data-lb-stage>' +
+          '<img data-lb-img alt="" class="max-h-full max-w-full object-contain">' +
+        "</div>" +
+        '<div class="px-6 py-6 text-center sm:px-8 sm:py-8">' +
+          '<p data-lb-title class="font-display text-[15px] font-semibold text-white"></p>' +
+          '<p data-lb-meta class="mt-2 text-[13px] leading-relaxed text-white/60"></p>' +
+        "</div>";
+      document.body.appendChild(overlay);
+
+      imgEl = overlay.querySelector("[data-lb-img]");
+      titleEl = overlay.querySelector("[data-lb-title]");
+      metaEl = overlay.querySelector("[data-lb-meta]");
+      closeBtn = overlay.querySelector("[data-lb-close]");
+
+      closeBtn.addEventListener("click", close);
+      // Clicking the ground closes; clicking the photograph itself does not.
+      overlay.addEventListener("click", function (e) {
+        if (e.target === overlay || e.target.hasAttribute("data-lb-stage")) close();
+      });
+      // The only focusable thing inside is the close button, so the trap is
+      // simply: never let Tab leave it.
+      overlay.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { close(); return; }
+        if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); }
+      });
+    }
+
+    function close() {
+      if (!overlay || overlay.hidden) return;
+      overlay.hidden = true;
+      document.body.style.overflow = "";
+      document.body.style.paddingInlineEnd = scrollbarPad;
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+      lastFocus = null;
+    }
+
+    function open(opts) {
+      if (!opts || !opts.src) return;
+      if (!overlay) build();
+
+      // Where focus goes when the viewer closes. Taken from the caller rather
+      // than from document.activeElement: a viewer opened from anything but a
+      // real mouse click (a keyboard shortcut, a script) would otherwise send
+      // focus back to <body> and lose the reader's place.
+      lastFocus = opts.returnFocus || document.activeElement;
+      imgEl.src = opts.src;
+      imgEl.alt = opts.alt || "";
+      titleEl.textContent = opts.title || "";
+      titleEl.hidden = !opts.title;
+
+      var meta = (opts.meta || []).filter(Boolean);
+      metaEl.textContent = meta.join("  ·  ");
+      metaEl.hidden = !meta.length;
+
+      closeBtn.setAttribute("aria-label", t("media.close", "Close"));
+      overlay.setAttribute("aria-label", opts.title || t("media.viewer", "Photograph"));
+
+      // Hold the page still behind the viewer, without the width jumping as the
+      // scrollbar goes.
+      var gap = window.innerWidth - document.documentElement.clientWidth;
+      scrollbarPad = document.body.style.paddingInlineEnd || "";
+      if (gap > 0) document.body.style.paddingInlineEnd = gap + "px";
+      document.body.style.overflow = "hidden";
+
+      overlay.hidden = false;
+      closeBtn.focus();
+    }
+
+    return { open: open, close: close };
+  })();
+
   /* ------------------------------------------------------------------------ */
   function init() {
     initTheme();

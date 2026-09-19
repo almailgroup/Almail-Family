@@ -33,13 +33,34 @@
   }
 
   /* The portrait, large. Falls back to the monogram plate when no photograph
-     has been supplied, in the same 3:4 frame so the panel keeps its shape. */
+     has been supplied, in the same 3:4 frame so the panel keeps its shape.
+
+     With a photograph it is a BUTTON, not an image: it opens the full-screen
+     viewer, so it has to be reachable by keyboard and announce what it does.
+     The particulars of the plate travel with it into the viewer rather than
+     being set underneath here. */
   function portrait(member) {
     if (member.photo) {
       return (
-        '<img src="' + u.escape(member.photo) + '" ' +
-        'alt="' + u.escape(i18n.field(member, "name")) + '" ' +
-        'class="aspect-[3/4] w-full border border-line object-cover">'
+        '<button type="button" data-open-photo ' +
+          'class="group/photo relative block w-full cursor-zoom-in border border-line" ' +
+          'aria-label="' + u.escape(
+            t("member.viewPhoto", "View photograph full screen") + " — " +
+            i18n.field(member, "name")) + '">' +
+          '<img src="' + u.escape(member.photo) + '" ' +
+            'alt="' + u.escape(i18n.field(member, "name")) + '" ' +
+            'class="aspect-[3/4] w-full object-cover">' +
+          /* The magnifier, as a reference work marks an enlargeable plate. */
+          '<span class="absolute bottom-3 end-3 grid h-9 w-9 place-items-center ' +
+                 'bg-ink/75 text-invert opacity-0 transition-opacity ' +
+                 'group-hover/photo:opacity-100 group-focus-visible/photo:opacity-100" ' +
+                 'aria-hidden="true">' +
+            '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+                 'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+              '<circle cx="11" cy="11" r="7"></circle>' +
+              '<path d="M16.5 16.5L21 21M11 8v6M8 11h6"></path></svg>' +
+          "</span>" +
+        "</button>"
       );
     }
     return (
@@ -109,19 +130,6 @@
           '<aside class="lg:col-span-4">' +
             '<figure class="reveal">' +
               portrait(member) +
-              '<figcaption class="meta mt-3 leading-relaxed">' +
-                u.escape(name) +
-                /* Provenance under the plate, the way an archive labels one:
-                   when it was taken, and what may be done with it. Each half
-                   appears only if it is known. */
-                (member.photoDate
-                  ? '<br><span>' + u.escape(u.formatDate(member.photoDate)) + "</span>"
-                  : "") +
-                (member.photoRights
-                  ? (member.photoDate ? ' <span aria-hidden="true">·</span> ' : "<br>") +
-                    "<span>" + u.escape(i18n.field(member, "photoRights")) + "</span>"
-                  : "") +
-              "</figcaption>" +
             "</figure>" +
             '<dl class="mt-8 border-b border-line">' +
               fact(t("member.role", "Role"), i18n.field(member, "role")) +
@@ -154,6 +162,23 @@
             u.escape(t("post.copy", "Copy link")) + "</button>" +
         "</div>" +
       "</div>";
+
+    /* The plate, and its particulars, at full size ------------------------- */
+    var photoBtn = host.querySelector("[data-open-photo]");
+    if (photoBtn && ALMAIL.lightbox) {
+      photoBtn.addEventListener("click", function () {
+        ALMAIL.lightbox.open({
+          src: member.photo,
+          alt: name,
+          title: name,
+          meta: [
+            member.photoDate ? u.formatDate(member.photoDate) : "",
+            i18n.field(member, "photoRights"),
+          ],
+          returnFocus: photoBtn,
+        });
+      });
+    }
 
     var copyBtn = host.querySelector("[data-copy-link]");
     if (copyBtn) {
