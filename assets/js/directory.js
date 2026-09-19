@@ -58,16 +58,22 @@
     );
   }
 
-  /* Portrait: real photo when supplied, otherwise a monogram plate. */
+  /* Portrait: real photo when supplied, otherwise a monogram plate.
+
+     The frame is 3:4 — a portrait, the shape a photographer hands you, rather
+     than the square a grid would rather have. Photographs are supplied at 3:4,
+     so object-cover has nothing to crop and the face arrives whole. The
+     monogram takes the same frame, so a card with a photograph and a card
+     without still line up. */
   function portrait(member) {
     if (member.photo) {
       return (
         '<img src="' + u.escape(member.photo) + '" alt="' + u.escape(i18n.field(member, "name")) + '" loading="lazy" ' +
-        'class="h-16 w-16 shrink-0 border border-line object-cover">'
+        'class="aspect-[3/4] w-20 shrink-0 border border-line object-cover">'
       );
     }
     return (
-      '<span class="grid h-16 w-16 shrink-0 place-items-center border border-line bg-surface ' +
+      '<span class="grid aspect-[3/4] w-20 shrink-0 place-items-center border border-line bg-surface ' +
       'font-display text-lg font-semibold tracking-tight" aria-hidden="true">' +
         u.initials(member.name) +
       "</span>"

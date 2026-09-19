@@ -41,7 +41,7 @@ window.ALMAIL.members = [
     role: "Family member",
     branch: "Almail Family",
     bio: "Profile to be completed.",
-    // photo: "/assets/img/members/mansour-abdulreda-almail.jpg",
+    photo: "/assets/img/members/Mansour_Abdulreda_Almail.png",
     // location: "Kuwait City, Kuwait",
     // links: { email: "" },
     nameAr: "منصور عبدالرضا الميل",
