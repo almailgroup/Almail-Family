@@ -30,12 +30,13 @@
         </button>
       </div>
 
-      <a href="/home/" class="group flex items-center gap-2.5 justify-self-center sm:gap-3"
+      <!-- The mark stands alone up here: the sails ARE the family name, so the
+           nameplate is not missing a word. The link keeps its aria-label, which
+           is what a screen reader announces in place of the removed wordmark. -->
+      <a href="/home/" class="flex items-center justify-self-center transition-opacity
+                              hover:opacity-65"
          data-i18n-attr="aria-label:nav.home.aria" aria-label="Almail Family — home">
-        <span class="brand-mark h-9 text-ink transition-opacity group-hover:opacity-65
-                     sm:h-10" aria-hidden="true"></span>
-        <span class="wordmark font-display text-[15px] font-semibold uppercase tracking-[0.26em]
-                     sm:text-[17px]" data-i18n="brand.family">Almail</span>
+        <span class="brand-mark h-11 text-ink sm:h-12" aria-hidden="true"></span>
       </a>
 
       <div class="flex items-center justify-self-end gap-1 sm:gap-2">
