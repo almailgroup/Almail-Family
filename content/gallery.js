@@ -14,8 +14,16 @@
                         looked for under /pictures/ and 404s.
    caption  (required)  What the picture shows.
    captionAr(optional)  The same in Arabic.
-   date     (optional)  "1963" or "c. 1960s" — shown under the caption.
+   date     (optional)  "1963" or "c. 1960s".
    credit   (optional)  Who took it, or where it came from.
+
+   Arabic twins: captionAr, dateAr, creditAr. Leave one out and the English
+   shows in both languages.
+
+   The caption shows on the card, because it says what the picture is. The date
+   and the credit do not: they appear with the picture when it is opened full
+   screen, which is where a reader looks for them and where they do not stack
+   three lines deep under every thumbnail.
 
    The gallery is deliberately empty: it is waiting for the family's own
    photographs rather than shipping stand-ins that would have to be deleted.

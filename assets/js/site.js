@@ -256,12 +256,19 @@
      ground is dark in both editions: that is what a viewer is for, and the
      page behind it should recede.
 
+     One plate:
          ALMAIL.lightbox.open({ src, alt, title, meta: [...], returnFocus: el })
+
+     A set, which gains arrows, a counter and the arrow keys. `group` is an
+     array of the same objects; `index` says which one to open on:
+         ALMAIL.lightbox.open({ group: [...], index: 3, returnFocus: el })
      ------------------------------------------------------------------------ */
   ALMAIL.lightbox = (function () {
-    var overlay, imgEl, titleEl, metaEl, closeBtn;
+    var overlay, imgEl, titleEl, metaEl, closeBtn, prevBtn, nextBtn, countEl, navWrap;
     var lastFocus = null;
     var scrollbarPad = "";
+    var group = [];
+    var at = 0;
 
     function t(key, fallback) {
       return ALMAIL.i18n ? ALMAIL.i18n.t(key, fallback) : fallback;
@@ -278,7 +285,8 @@
       overlay.setAttribute("role", "dialog");
       overlay.setAttribute("aria-modal", "true");
       overlay.innerHTML =
-        '<div class="flex justify-end p-4 sm:p-5">' +
+        '<div class="flex items-center justify-between gap-4 p-4 sm:p-5">' +
+          '<p data-lb-count class="text-[13px] tabular-nums text-white/55"></p>' +
           '<button type="button" data-lb-close ' +
             'class="flex h-11 w-11 items-center justify-center border border-white/25 ' +
                    'text-white/80 transition-colors hover:border-white hover:text-white">' +
@@ -287,8 +295,30 @@
               '<path d="M5.5 5.5l13 13M18.5 5.5l-13 13"></path></svg>' +
           "</button>" +
         "</div>" +
-        '<div class="flex min-h-0 flex-1 items-center justify-center px-4 sm:px-8" data-lb-stage>' +
+        '<div class="relative flex min-h-0 flex-1 items-center justify-center px-4 sm:px-8" data-lb-stage>' +
           '<img data-lb-img alt="" class="max-h-full max-w-full object-contain">' +
+          /* Positioned with logical start/end, so in Arabic they mirror and
+             "previous" stays on the side the reader came from. */
+          '<div data-lb-nav hidden>' +
+            '<button type="button" data-lb-prev ' +
+              'class="absolute start-2 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center ' +
+                     'border border-white/25 text-white/80 transition-colors ' +
+                     'hover:border-white hover:text-white sm:start-4">' +
+              '<svg class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" ' +
+                   'stroke="currentColor" stroke-width="1.5" stroke-linecap="round" ' +
+                   'stroke-linejoin="round" aria-hidden="true">' +
+                '<path d="M15 5l-7 7 7 7"></path></svg>' +
+            "</button>" +
+            '<button type="button" data-lb-next ' +
+              'class="absolute end-2 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center ' +
+                     'border border-white/25 text-white/80 transition-colors ' +
+                     'hover:border-white hover:text-white sm:end-4">' +
+              '<svg class="h-5 w-5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" ' +
+                   'stroke="currentColor" stroke-width="1.5" stroke-linecap="round" ' +
+                   'stroke-linejoin="round" aria-hidden="true">' +
+                '<path d="M9 5l7 7-7 7"></path></svg>' +
+            "</button>" +
+          "</div>" +
         "</div>" +
         '<div class="px-6 py-6 text-center sm:px-8 sm:py-8">' +
           '<p data-lb-title class="font-display text-[15px] font-semibold text-white"></p>' +
@@ -300,8 +330,14 @@
       titleEl = overlay.querySelector("[data-lb-title]");
       metaEl = overlay.querySelector("[data-lb-meta]");
       closeBtn = overlay.querySelector("[data-lb-close]");
+      prevBtn = overlay.querySelector("[data-lb-prev]");
+      nextBtn = overlay.querySelector("[data-lb-next]");
+      countEl = overlay.querySelector("[data-lb-count]");
+      navWrap = overlay.querySelector("[data-lb-nav]");
 
       closeBtn.addEventListener("click", close);
+      prevBtn.addEventListener("click", function () { step(-1); });
+      nextBtn.addEventListener("click", function () { step(1); });
       // Clicking the ground closes; clicking the photograph itself does not.
       overlay.addEventListener("click", function (e) {
         if (e.target === overlay || e.target.hasAttribute("data-lb-stage")) close();
@@ -310,8 +346,41 @@
       // simply: never let Tab leave it.
       overlay.addEventListener("keydown", function (e) {
         if (e.key === "Escape") { close(); return; }
-        if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); }
+        if (group.length > 1) {
+          // The arrows follow what the reader SEES: in Arabic the next plate
+          // sits to the left, so the left arrow advances.
+          var rtl = document.documentElement.getAttribute("dir") === "rtl";
+          if (e.key === "ArrowRight") { e.preventDefault(); step(rtl ? -1 : 1); return; }
+          if (e.key === "ArrowLeft") { e.preventDefault(); step(rtl ? 1 : -1); return; }
+        }
+        if (e.key === "Tab") {
+          // Keep focus inside: cycle across whatever is actually on show.
+          var stops = [closeBtn].concat(
+            group.length > 1 ? [prevBtn, nextBtn] : []);
+          var i = stops.indexOf(document.activeElement);
+          e.preventDefault();
+          stops[(i + (e.shiftKey ? -1 : 1) + stops.length) % stops.length].focus();
+        }
       });
+    }
+
+    /** Paint one plate and its particulars. */
+    function show(item) {
+      imgEl.src = item.src;
+      imgEl.alt = item.alt || item.title || "";
+      titleEl.textContent = item.title || "";
+      titleEl.hidden = !item.title;
+      var meta = (item.meta || []).filter(Boolean);
+      metaEl.textContent = meta.join("  ·  ");
+      metaEl.hidden = !meta.length;
+    }
+
+    /** Move within the set, wrapping at either end. */
+    function step(by) {
+      if (group.length < 2) return;
+      at = (at + by + group.length) % group.length;
+      show(group[at]);
+      countEl.textContent = (at + 1) + " / " + group.length;
     }
 
     function close() {
@@ -324,7 +393,12 @@
     }
 
     function open(opts) {
-      if (!opts || !opts.src) return;
+      if (!opts) return;
+      // A set, or a single plate treated as a set of one.
+      group = (opts.group && opts.group.length) ? opts.group : (opts.src ? [opts] : []);
+      if (!group.length) return;
+      at = Math.min(Math.max(opts.index || 0, 0), group.length - 1);
+
       if (!overlay) build();
 
       // Where focus goes when the viewer closes. Taken from the caller rather
@@ -332,17 +406,18 @@
       // real mouse click (a keyboard shortcut, a script) would otherwise send
       // focus back to <body> and lose the reader's place.
       lastFocus = opts.returnFocus || document.activeElement;
-      imgEl.src = opts.src;
-      imgEl.alt = opts.alt || "";
-      titleEl.textContent = opts.title || "";
-      titleEl.hidden = !opts.title;
 
-      var meta = (opts.meta || []).filter(Boolean);
-      metaEl.textContent = meta.join("  ·  ");
-      metaEl.hidden = !meta.length;
+      show(group[at]);
+
+      var many = group.length > 1;
+      navWrap.hidden = !many;
+      countEl.textContent = many ? (at + 1) + " / " + group.length : "";
+      prevBtn.setAttribute("aria-label", t("media.prev", "Previous picture"));
+      nextBtn.setAttribute("aria-label", t("media.next", "Next picture"));
 
       closeBtn.setAttribute("aria-label", t("media.close", "Close"));
-      overlay.setAttribute("aria-label", opts.title || t("media.viewer", "Photograph"));
+      overlay.setAttribute("aria-label",
+        group[at].title || t("media.viewer", "Photograph"));
 
       // Hold the page still behind the viewer, without the width jumping as the
       // scrollbar goes.
