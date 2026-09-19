@@ -207,6 +207,40 @@
       return new URLSearchParams(location.search).get(key);
     },
 
+    /** A contact/social icon link, shared by the directory and the profile.
+        Icons are drawn inline so the page makes no extra requests;
+        `fill: true` marks a solid glyph (brand marks), the rest are stroked. */
+    iconLink: (function () {
+      var ICONS = {
+        email: { d: '<path d="M3 6.5h18v11H3zM3 7l9 6 9-6"></path>' },
+        linkedin: { fill: true, d: '<path d="M5 3.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5zM3.4 8.9h3.2V20.5H3.4zM9.1 8.9h3.06v1.58h.04c.43-.8 1.48-1.65 3.05-1.65 3.26 0 3.86 2.1 3.86 4.84V20.5h-3.2v-5.2c0-1.24-.02-2.83-1.75-2.83-1.75 0-2.02 1.35-2.02 2.74V20.5H9.1z"></path>' },
+        x: { fill: true, d: '<path d="M17.53 3h2.94l-6.42 7.34L21.6 21h-5.9l-4.63-6.05L5.78 21H2.83l6.87-7.85L2.4 3h6.05l4.18 5.53zm-1.03 16.2h1.63L7.6 4.71H5.85z"></path>' },
+        instagram: { d: '<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"></rect><circle cx="12" cy="12" r="3.6"></circle><circle cx="17.2" cy="6.8" r="0.9"></circle>' },
+        website: { d: '<circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12h17M12 3.5c2.2 2.4 3.3 5.4 3.3 8.5s-1.1 6.1-3.3 8.5c-2.2-2.4-3.3-5.4-3.3-8.5s1.1-6.1 3.3-8.5z"></path>' },
+      };
+      var LABELS = {
+        email: "Email", linkedin: "LinkedIn", x: "X", instagram: "Instagram", website: "Website",
+      };
+      return function (kind, value, name) {
+        var icon = ICONS[kind];
+        if (!icon) return "";
+        var esc = ALMAIL.utils.escape;
+        var label = ALMAIL.i18n.t("link." + kind, LABELS[kind]);
+        var href = kind === "email" ? "mailto:" + value : value;
+        var paint = icon.fill
+          ? 'fill="currentColor"'
+          : 'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"';
+        return (
+          '<a href="' + esc(href) + '" ' +
+          'aria-label="' + esc(label + " — " + name) + '" ' +
+          'class="flex h-9 w-9 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">' +
+            '<svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" ' + paint + ' aria-hidden="true">' +
+            icon.d + "</svg>" +
+          "</a>"
+        );
+      };
+    })(),
+
     /** Re-run the reveal observer over freshly injected markup. */
     observeReveal: initReveal,
   };

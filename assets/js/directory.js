@@ -11,53 +11,6 @@
   var i18n = ALMAIL.i18n;
   var t = i18n.t;
 
-  /* Social / contact icons, drawn inline so the page makes no extra requests.
-     `fill: true` marks a solid glyph (brand marks); the rest are stroked. */
-  var ICONS = {
-    email: {
-      d: '<path d="M3 6.5h18v11H3zM3 7l9 6 9-6"></path>',
-    },
-    linkedin: {
-      fill: true,
-      d: '<path d="M5 3.5a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5zM3.4 8.9h3.2V20.5H3.4zM9.1 8.9h3.06v1.58h.04c.43-.8 1.48-1.65 3.05-1.65 3.26 0 3.86 2.1 3.86 4.84V20.5h-3.2v-5.2c0-1.24-.02-2.83-1.75-2.83-1.75 0-2.02 1.35-2.02 2.74V20.5H9.1z"></path>',
-    },
-    x: {
-      fill: true,
-      d: '<path d="M17.53 3h2.94l-6.42 7.34L21.6 21h-5.9l-4.63-6.05L5.78 21H2.83l6.87-7.85L2.4 3h6.05l4.18 5.53zm-1.03 16.2h1.63L7.6 4.71H5.85z"></path>',
-    },
-    instagram: {
-      d: '<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"></rect><circle cx="12" cy="12" r="3.6"></circle><circle cx="17.2" cy="6.8" r="0.9"></circle>',
-    },
-    website: {
-      d: '<circle cx="12" cy="12" r="8.5"></circle><path d="M3.5 12h17M12 3.5c2.2 2.4 3.3 5.4 3.3 8.5s-1.1 6.1-3.3 8.5c-2.2-2.4-3.3-5.4-3.3-8.5s1.1-6.1 3.3-8.5z"></path>',
-    },
-  };
-
-  var LABELS = {
-    email: "Email", linkedin: "LinkedIn", x: "X", instagram: "Instagram", website: "Website",
-  };
-
-  function linkLabel(kind) {
-    return t("link." + kind, LABELS[kind]);
-  }
-
-  function iconLink(kind, value, name) {
-    var icon = ICONS[kind];
-    if (!icon) return "";
-    var href = kind === "email" ? "mailto:" + value : value;
-    var paint = icon.fill
-      ? 'fill="currentColor"'
-      : 'fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"';
-    return (
-      '<a href="' + u.escape(href) + '" ' +
-      'aria-label="' + u.escape(linkLabel(kind) + " — " + name) + '" ' +
-      'class="flex h-9 w-9 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">' +
-        '<svg class="h-[15px] w-[15px]" viewBox="0 0 24 24" ' + paint + ' aria-hidden="true">' +
-        icon.d + "</svg>" +
-      "</a>"
-    );
-  }
-
   /* Portrait: real photo when supplied, otherwise a monogram plate.
 
      The frame is 3:4 — a portrait, the shape a photographer hands you, rather
@@ -69,31 +22,41 @@
     if (member.photo) {
       return (
         '<img src="' + u.escape(member.photo) + '" alt="' + u.escape(i18n.field(member, "name")) + '" loading="lazy" ' +
-        'class="aspect-[3/4] w-20 shrink-0 border border-line object-cover">'
+        'class="aspect-[3/4] w-28 shrink-0 border border-line object-cover">'
       );
     }
     return (
-      '<span class="grid aspect-[3/4] w-20 shrink-0 place-items-center border border-line bg-surface ' +
+      '<span class="grid aspect-[3/4] w-28 shrink-0 place-items-center border border-line bg-surface ' +
       'font-display text-lg font-semibold tracking-tight" aria-hidden="true">' +
         u.initials(member.name) +
       "</span>"
     );
   }
 
+  /* The whole card opens the profile.
+
+     Done with a "stretched link": the name is the real anchor and its ::after
+     covers the card. Wrapping the <article> in an <a> instead would nest the
+     contact icons inside it, which is invalid HTML and makes them unreachable
+     — so those are lifted back above the overlay with relative z-10. */
   function card(member, index) {
     var links = member.links || {};
     var linkHtml = Object.keys(links)
-      .map(function (k) { return iconLink(k, links[k], member.name); })
+      .map(function (k) { return u.iconLink(k, links[k], member.name); })
       .join("");
+    var href = "/member/?id=" + encodeURIComponent(member.id);
 
     return (
-      '<article class="card card-hover flex flex-col p-6 sm:p-7 reveal" data-reveal-delay="' + (index % 3) * 70 + '">' +
+      '<article class="card card-hover group flex flex-col p-6 sm:p-7 reveal" data-reveal-delay="' + (index % 3) * 70 + '">' +
         '<div class="flex items-start gap-5">' +
           portrait(member) +
-          "<div>" +
+          '<div class="min-w-0">' +
             '<h3 class="display-3"' + i18n.markup(member, "name") + ">" +
-              u.escape(i18n.field(member, "name")) + "</h3>" +
-            '<p class="mt-1 text-[15px] text-ink-2"' + i18n.markup(member, "role") + ">" +
+              '<a href="' + href + '" class="after:absolute after:inset-0 ' +
+                'group-hover:text-accent transition-colors">' +
+                u.escape(i18n.field(member, "name")) +
+              "</a></h3>" +
+            '<p class="mt-2 text-[15px] text-ink-2"' + i18n.markup(member, "role") + ">" +
               u.escape(i18n.field(member, "role")) + "</p>" +
             (member.location
               ? '<p class="meta mt-1"' + i18n.markup(member, "location") + ">" +
@@ -105,7 +68,11 @@
           u.escape(i18n.field(member, "bio")) + "</p>" +
         '<div class="mt-auto flex items-center justify-between gap-4 pt-7">' +
           '<span class="tag">' + u.escape(i18n.field(member, "branch")) + "</span>" +
-          (linkHtml ? '<div class="flex gap-2">' + linkHtml + "</div>" : "") +
+          (linkHtml
+            ? '<div class="relative z-10 flex gap-2">' + linkHtml + "</div>"
+            : '<span class="meta group-hover:text-accent transition-colors">' +
+                u.escape(t("directory.readMore", "Read more")) +
+                ' <span class="rtl:rotate-180 inline-block">&rarr;</span></span>') +
         "</div>" +
       "</article>"
     );

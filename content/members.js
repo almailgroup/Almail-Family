@@ -42,11 +42,22 @@ window.ALMAIL.members = [
     branch: "Almail Family",
     bio: "Profile to be completed.",
     photo: "/assets/img/members/Mansour_Abdulreda_Almail.png",
+    // born: "1948",
+    // died: "2021",
     // location: "Kuwait City, Kuwait",
     // links: { email: "" },
+
+    // The long biography shown at /member/?id=mansour-abdulreda-almail.
+    // Trusted HTML, like a post's body: <p>, <h2>, <ul>, <blockquote> and so on
+    // all work. Give the opening paragraph class="lede" for the larger
+    // standfirst. Leave `story` out entirely and the page falls back to `bio`.
+    story:
+      "<p class=\"lede\">Profile to be completed.</p>",
+
     nameAr: "منصور عبدالرضا الميل",
     roleAr: "من أفراد العائلة",
     branchAr: "عائلة الميل",
     bioAr: "سيتم استكمال الملف.",
+    storyAr: "<p class=\"lede\">سيتم استكمال الملف.</p>",
   },
 ];
