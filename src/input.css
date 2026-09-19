@@ -609,6 +609,40 @@
     mask-size: contain;
   }
 
+  /* --- THE NAMEPLATE, CONDENSING -----------------------------------------
+     The mark opens the page at full size and comes down to a running-head
+     size as you read on — the way a masthead gives way to a running head
+     once you are past the front of a section.
+
+     --np-t is the only thing that moves: 0 at the top of the page, 1 once
+     the nameplate is fully condensed. site.js writes it on every animation
+     frame while the page scrolls, and the two heights below are read off it,
+     so the row and the mark stay in step by construction. Everything else —
+     the easing, the distance it takes — lives in the script.
+
+     The heights are stated as a pair each, not a transition: driving them
+     from the scroll position is what makes the motion track the reader's
+     hand rather than run on its own clock. */
+  .nameplate {
+    --np-t: 0;
+    --np-row: 6rem;         /* 96px at the top of the page  */
+    --np-row-end: 3.75rem;  /* 60px once condensed          */
+    --np-mark: 3.5rem;      /* 56px                         */
+    --np-mark-end: 2.25rem; /* 36px                         */
+    height: calc(var(--np-row) + (var(--np-row-end) - var(--np-row)) * var(--np-t));
+  }
+  @media (min-width: 40rem) {
+    .nameplate {
+      --np-row: 7.5rem;       /* 120px */
+      --np-row-end: 4.25rem;  /*  68px */
+      --np-mark: 4.75rem;     /*  76px */
+      --np-mark-end: 2.5rem;  /*  40px */
+    }
+  }
+  .nameplate .brand-mark {
+    height: calc(var(--np-mark) + (var(--np-mark-end) - var(--np-mark)) * var(--np-t));
+  }
+
   /* --- THE KUWAIT PANORAMA ------------------------------------------------
      Eight landmarks — Failaka, Mubarakiya, Al-Seif, the Grand Mosque, Kuwait
      Towers, the Opera House, Tareq Rajab and Al Shaheed Park — drawn for this
@@ -806,6 +840,10 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  /* site.js already leaves the nameplate alone under this setting; this is
+     the belt to that pair of braces, in case the preference is turned on
+     after the page has loaded and --np-t has already been written. */
+  .nameplate { --np-t: 0 !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;

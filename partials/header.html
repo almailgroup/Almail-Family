@@ -14,7 +14,9 @@
 
   <!-- ---------------------------------------------------------- nameplate -->
   <div class="container-x">
-    <div class="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4 sm:h-[4.5rem]">
+    <!-- The height of this row and of the mark inside it are both read off
+         --np-t, which site.js writes from the scroll position. -->
+    <div class="nameplate grid grid-cols-[1fr_auto_1fr] items-center gap-4" data-nameplate>
 
       <div class="flex items-center justify-self-start">
         <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu"
@@ -36,7 +38,7 @@
       <a href="/home/" class="flex items-center justify-self-center transition-opacity
                               hover:opacity-65"
          data-i18n-attr="aria-label:nav.home.aria" aria-label="Almail Family — home">
-        <span class="brand-mark h-11 text-ink sm:h-12" aria-hidden="true"></span>
+        <span class="brand-mark text-ink" aria-hidden="true"></span>
       </a>
 
       <div class="flex items-center justify-self-end gap-1 sm:gap-2">

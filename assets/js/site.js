@@ -7,9 +7,11 @@
      1. Theme (light / inverted dark — still strictly monochrome)
      2. Mobile menu
      3. Active navigation state
-     4. Reveal-on-scroll
-     5. Footer year
-     6. ALMAIL.utils — small helpers shared by the page-specific scripts
+     4. The condensing nameplate
+     5. Reveal-on-scroll
+     6. Footer year
+     7. ALMAIL.utils — small helpers shared by the page-specific scripts
+     8. ALMAIL.lightbox — the full-screen media viewer
    ========================================================================== */
 
 (function () {
@@ -117,7 +119,71 @@
   }
 
   /* ---------------------------------------------------------------------------
-     4. Reveal-on-scroll
+     4. The condensing nameplate
+     The mark opens large and comes down to a running-head size as the page
+     scrolls. All this does is write --np-t on the nameplate row: 0 at the top
+     of the page, 1 once it is fully condensed. The two heights that follow
+     from it are declared in the stylesheet (.nameplate), so the row and the
+     mark can never drift apart.
+
+     Driven from the scroll position rather than by a CSS transition, so the
+     motion tracks the reader's hand instead of running on its own clock: stop
+     halfway down and the mark stops halfway down with you.
+
+     RANGE is deliberately generous. The header is in flow, so every pixel the
+     row loses pulls the page up by that same pixel; spread that over enough
+     scroll and it reads as the header settling, spread it over 60px and the
+     page appears to lurch out from under the reader.
+     ------------------------------------------------------------------------ */
+  var NAMEPLATE_RANGE = 260;
+
+  function initNameplate() {
+    var row = document.querySelector("[data-nameplate]");
+    if (!row) return;
+
+    /* Reduced motion: the nameplate simply stays open. Nothing is written, so
+       the stylesheet's --np-t: 0 stands. */
+    if (window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var queued = false;
+    var last = -1;
+
+    function apply() {
+      queued = false;
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var p = y / NAMEPLATE_RANGE;
+      p = p < 0 ? 0 : p > 1 ? 1 : p;
+
+      /* Smoothstep. Its slope is zero at both ends, which matters here for a
+         reason beyond looks: the slope IS how fast the page is pulled upward
+         on top of the scroll itself, so easing in from rest keeps the first
+         few pixels of scroll honest, and easing out keeps the last few from
+         snapping. */
+      var t = p * p * (3 - 2 * p);
+
+      t = Math.round(t * 1000) / 1000;   // no sub-thousandth style writes
+      if (t === last) return;
+      last = t;
+      row.style.setProperty("--np-t", t);
+    }
+
+    function onScroll() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(apply);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    /* A reload restores the scroll position before this runs, so settle the
+       nameplate to where the page actually is rather than to the top. */
+    apply();
+  }
+
+  /* ---------------------------------------------------------------------------
+     5. Reveal-on-scroll
      Elements with class="reveal" fade up once, in document order.
      Add data-reveal-delay="120" (ms) to stagger.
      ------------------------------------------------------------------------ */
@@ -146,7 +212,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     5. Footer year
+     6. Footer year
      ------------------------------------------------------------------------ */
   function initYear() {
     document.querySelectorAll("[data-year]").forEach(function (el) {
@@ -155,7 +221,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     6. Shared helpers
+     7. Shared helpers
      ------------------------------------------------------------------------ */
   ALMAIL.utils = {
     /** Escape a string for safe insertion into HTML. */
@@ -246,7 +312,7 @@
   };
 
   /* ---------------------------------------------------------------------------
-     7. ALMAIL.lightbox — the full-screen media viewer
+     8. ALMAIL.lightbox — the full-screen media viewer
      -----------------------------------------------------------------------------
      A photograph's particulars — when it was taken, what may be done with it —
      belong with the photograph at full size, not set as a caption underneath it
@@ -438,6 +504,7 @@
     initTheme();
     initMenu();
     initActiveNav();
+    initNameplate();
     initReveal();
     initYear();
 
