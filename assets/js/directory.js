@@ -22,12 +22,12 @@
     if (member.photo) {
       return (
         '<img src="' + u.escape(member.photo) + '" alt="' + u.escape(i18n.field(member, "name")) + '" loading="lazy" ' +
-        'class="aspect-[3/4] w-28 shrink-0 border border-line object-cover">'
+        'class="aspect-[3/4] w-full border border-line object-cover">'
       );
     }
     return (
-      '<span class="grid aspect-[3/4] w-28 shrink-0 place-items-center border border-line bg-surface ' +
-      'font-display text-lg font-semibold tracking-tight" aria-hidden="true">' +
+      '<span class="grid aspect-[3/4] w-full place-items-center border border-line bg-surface ' +
+      'font-display text-4xl font-semibold tracking-tight" aria-hidden="true">' +
         u.initials(member.name) +
       "</span>"
     );
@@ -48,21 +48,23 @@
 
     return (
       '<article class="card card-hover group flex flex-col p-6 sm:p-7 reveal" data-reveal-delay="' + (index % 3) * 70 + '">' +
-        '<div class="flex items-start gap-5">' +
-          portrait(member) +
-          '<div class="min-w-0">' +
-            '<h3 class="display-3"' + i18n.markup(member, "name") + ">" +
-              '<a href="' + href + '" class="after:absolute after:inset-0 ' +
-                'group-hover:text-accent transition-colors">' +
-                u.escape(i18n.field(member, "name")) +
-              "</a></h3>" +
-            '<p class="mt-2 text-[15px] text-ink-2"' + i18n.markup(member, "role") + ">" +
-              u.escape(i18n.field(member, "role")) + "</p>" +
-            (member.location
+        /* The portrait leads, full card width. It is the thing a reader
+           recognises first; beside a column of text it was furniture. */
+        portrait(member) +
+        '<div class="mt-6">' +
+          '<h3 class="display-3"' + i18n.markup(member, "name") + ">" +
+            '<a href="' + href + '" class="after:absolute after:inset-0 ' +
+              'group-hover:text-accent transition-colors">' +
+              u.escape(i18n.field(member, "name")) +
+            "</a></h3>" +
+          '<p class="mt-2 text-[15px] text-ink-2"' + i18n.markup(member, "role") + ">" +
+            u.escape(i18n.field(member, "role")) + "</p>" +
+          (member.years
+            ? '<p class="meta mt-1">' + u.escape(member.years) + "</p>"
+            : member.location
               ? '<p class="meta mt-1"' + i18n.markup(member, "location") + ">" +
                 u.escape(i18n.field(member, "location")) + "</p>"
               : "") +
-          "</div>" +
         "</div>" +
         '<p class="mt-6 text-[15px] leading-relaxed text-ink-2"' + i18n.markup(member, "bio") + ">" +
           u.escape(i18n.field(member, "bio")) + "</p>" +
@@ -136,7 +138,10 @@
       // Search both languages, so an Arabic query finds an untranslated entry too.
       return [
         m.name, m.nameAr, m.role, m.roleAr, m.location, m.locationAr,
-        m.bio, m.bioAr, m.branch, m.branchAr,
+        m.bio, m.bioAr, m.branch, m.branchAr, m.years,
+        // the long biography too, with its tags taken out
+        String(m.story || "").replace(/<[^>]*>/g, " "),
+        String(m.storyAr || "").replace(/<[^>]*>/g, " "),
       ].join(" ").toLowerCase().indexOf(state.query) !== -1;
     }
 

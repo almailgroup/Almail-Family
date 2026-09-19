@@ -109,8 +109,18 @@
           '<aside class="lg:col-span-4">' +
             '<figure class="reveal">' +
               portrait(member) +
-              '<figcaption class="meta mt-3">' +
+              '<figcaption class="meta mt-3 leading-relaxed">' +
                 u.escape(name) +
+                /* Provenance under the plate, the way an archive labels one:
+                   when it was taken, and what may be done with it. Each half
+                   appears only if it is known. */
+                (member.photoDate
+                  ? '<br><span>' + u.escape(u.formatDate(member.photoDate)) + "</span>"
+                  : "") +
+                (member.photoRights
+                  ? (member.photoDate ? ' <span aria-hidden="true">·</span> ' : "<br>") +
+                    "<span>" + u.escape(i18n.field(member, "photoRights")) + "</span>"
+                  : "") +
               "</figcaption>" +
             "</figure>" +
             '<dl class="mt-8 border-b border-line">' +
