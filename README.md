@@ -23,7 +23,6 @@ Almail-Family/
 ├── pictures/index.html     The picture archive
 ├── resources/index.html    Sources and references
 ├── family-tree/index.html  The generations
-├── location/index.html     Where to find the family house
 ├── contact/index.html      Contact form + details
 ├── 404.html                Not-found page
 │
