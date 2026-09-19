@@ -23,7 +23,9 @@
    date      (required)  ISO date "YYYY-MM-DD".
    author    (required)  Display name.
    excerpt   (required)  1–2 sentences shown on cards and in search results.
-   image     (optional)  Path to a cover image, e.g. "assets/img/majlis.jpg".
+   image     (optional)  Cover image, e.g. "/assets/img/majlis.jpg". MUST start
+                         with a slash: pages live at /blog/ and /post/, so a
+                         relative path is looked for under those and 404s.
                          Omit it and a clean monogram placeholder is drawn instead.
    featured  (optional)  true → eligible for the large homepage feature slot.
    body      (required)  The article itself, as HTML.

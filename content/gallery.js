@@ -9,7 +9,9 @@
 
    FIELD REFERENCE
    ---------------
-   src      (required)  e.g. "assets/img/harbour-1963.jpg"
+   src      (required)  e.g. "/assets/img/harbour-1963.jpg" — MUST start with a
+                        slash: pages live at /pictures/, so a relative path is
+                        looked for under /pictures/ and 404s.
    caption  (required)  What the picture shows.
    captionAr(optional)  The same in Arabic.
    date     (optional)  "1963" or "c. 1960s" — shown under the caption.
