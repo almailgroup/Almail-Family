@@ -582,6 +582,33 @@
   }
   .reveal.is-visible { opacity: 1; transform: none; }
 
+  /* --- THE FAMILY MARK ----------------------------------------------------
+     The Almail logo — a boom dhow whose sails are the family name in Arabic,
+     in assets/img/logo.svg.
+
+     Carried as a MASK rather than an <img>, for the same reason the panorama
+     is: a mask reads the alpha channel only, so the colour comes from the
+     page. `currentColor` means the mark simply inherits the ink of whatever
+     it sits in, which is what lets the one file serve both the day and the
+     night edition instead of needing a second drawing. Give it a height in
+     the markup; the aspect ratio finds its width.
+
+     It is never mirrored in Arabic: the sails ARE the name, and a flipped
+     logotype is a misspelling. */
+  .brand-mark {
+    --brand-art: url("../img/logo.svg");
+    aspect-ratio: 2528 / 2294;
+    background-color: currentColor;
+    -webkit-mask-image: var(--brand-art);
+    mask-image: var(--brand-art);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
   /* --- THE KUWAIT PANORAMA ------------------------------------------------
      Eight landmarks — Failaka, Mubarakiya, Al-Seif, the Grand Mosque, Kuwait
      Towers, the Opera House, Tareq Rajab and Al Shaheed Park — drawn for this
