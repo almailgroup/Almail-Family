@@ -19,7 +19,7 @@
   <link rel="preload" href="/assets/fonts/reem-kufi-latin.woff2?v=99554d52" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/plex-arabic-400-latin.woff2?v=9ed8dcb0" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="/assets/css/site.css?v=bfec82c8">
+  <link rel="stylesheet" href="/assets/css/site.css?v=3dc56cd0">
 
   <!-- Resolve theme AND language before first paint, so neither ever flashes.
        data-i18n-pending hides translatable text for the frame between this
@@ -61,8 +61,14 @@
        ========================================================================= -->
   <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
 
+  <!-- Opaque, and deliberately not frosted. The bar was bg-canvas/90 with a
+       backdrop blur, which costs a re-blur of everything behind it on every
+       scrolled frame — the most expensive thing on the page — and returned a
+       mean of 0.63/255 for it, because 90% opacity leaves almost nothing to
+       blur. Solid is cheaper, and text passing beneath no longer ghosts
+       through at a tenth. -->
   <header id="site-header"
-          class="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas/90 backdrop-blur-md
+          class="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas
                  after:absolute after:inset-x-0 after:top-full after:mt-px after:border-t
                  after:border-ink">
 
@@ -300,7 +306,7 @@
   <script src="/content/members.js?v=2404da60" defer></script>
   <script src="/content/i18n.js?v=f614d74f" defer></script>
   <script src="/assets/js/i18n.js?v=5e52d576" defer></script>
-  <script src="/assets/js/site.js?v=c76b957d" defer></script>
+  <script src="/assets/js/site.js?v=a6e5b2ec" defer></script>
   <script src="/assets/js/directory.js?v=f5c0c850" defer></script>
 </body>
 </html>

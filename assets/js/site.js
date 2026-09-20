@@ -121,67 +121,52 @@
   /* ---------------------------------------------------------------------------
      4. The condensing nameplate
      The mark opens large and comes down to a running-head size as the page
-     scrolls. All this writes is --np-t on the header: 0 at the top of the
-     page, 1 once fully condensed. What that number moves — the header riding
-     up, the mark scaling down — is arithmetic in the stylesheet, and both of
-     them are transforms, so no frame of this costs a layout or a repaint.
+     scrolls. All this writes is --np-t on the mark: 0 at the top of the page,
+     1 once condensed. The stylesheet turns that into a scale. Nothing else
+     on the page moves — not the header, not a single box's size — so no
+     frame of this costs a layout.
 
      THE VALUE IS NOT READ STRAIGHT OFF THE SCROLL POSITION. It chases it.
 
      A mouse wheel does not scroll smoothly — it arrives in notches of about
      100px — so binding size directly to position made the mark fall in three
-     visible steps, the largest of them 19.9px inside one animation frame,
-     with a backwards wobble where the browser's own wheel animation
-     overshoots. Measured, not guessed. A trackpad hides it; a wheel cannot.
+     visible steps, the largest 19.9px inside one animation frame, with a
+     backwards wobble where the browser's own wheel animation overshoots.
+     Measured, not guessed. A trackpad hides it; a wheel cannot.
 
      So each frame moves the value a fraction of the way toward the one the
      scroll position asks for. A notch becomes a glide of a few hundred
-     milliseconds, and the mark still ends up wherever the reader stopped —
-     it just takes the short way round rather than teleporting. The fraction
-     comes from the real elapsed time, so the motion lasts the same number of
-     milliseconds at 60Hz and at 120Hz.
+     milliseconds, and the mark still ends up wherever the reader stopped.
+     The fraction comes from the real elapsed time, so the motion lasts the
+     same number of milliseconds at 60Hz and at 120Hz.
      ------------------------------------------------------------------------ */
   var NAMEPLATE_RANGE = 260;   // px of scroll from fully open to fully condensed
   var NAMEPLATE_CHASE = 150;   // ms time constant of the chase
 
   function initNameplate() {
-    var header = document.getElementById("site-header");
-    if (!header || !header.querySelector("[data-nameplate]")) return;
+    var mark = document.querySelector("[data-nameplate] .brand-mark");
+    if (!mark) return;
 
-    /* Reduced motion: the nameplate simply stays open. Nothing is written, so
-       the stylesheet's --np-t: 0 stands. */
+    /* Reduced motion: the mark simply stays open. Nothing is written, so the
+       stylesheet's --np-t: 0 stands. */
     if (window.matchMedia &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    var mark = header.querySelector(".brand-mark");
     var current = 0;      // what is on screen
     var running = false;
     var lastTs = 0;
-    var lift = 0;         // px the header rides up when fully condensed
 
-    /* The stylesheet owns the distance, and changes it at the breakpoint.
-       Read rather than duplicated — but read on resize only, never in a
-       frame, because asking for a computed style forces a style recalc. */
-    function measure() {
-      var v = parseFloat(getComputedStyle(header).getPropertyValue("--np-lift"));
-      lift = v > 0 ? v : 1;
-    }
-
-    /* Where the scroll position says the nameplate ought to be. Smoothstep,
-       for ends that leave and arrive at rest rather than with a corner. */
-    function target(y) {
+    /* Where the scroll position says the mark ought to be. Smoothstep, for
+       ends that leave and arrive at rest rather than with a corner. */
+    function target() {
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
       var p = y / NAMEPLATE_RANGE;
       p = p < 0 ? 0 : p > 1 ? 1 : p;
       return p * p * (3 - 2 * p);
     }
 
-    /* Written on both elements rather than once on an ancestor: --np-t is
-       registered as non-inheriting, so this touches these two and nothing
-       else. Inherited, it invalidated the whole header subtree every frame. */
     function write(t) {
-      var v = Math.round(t * 10000) / 10000;
-      header.style.setProperty("--np-t", v);
-      if (mark) mark.style.setProperty("--np-t", v);
+      mark.style.setProperty("--np-t", Math.round(t * 10000) / 10000);
     }
 
     function frame(ts) {
@@ -191,23 +176,8 @@
          or the mark snaps to its target the moment the tab is looked at. */
       if (dt > 64) dt = 64;
 
-      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-      var goal = target(y);
-
-      /* The header may never ride up further than the page has scrolled, or a
-         band of bare canvas opens between it and the content that is meant to
-         be passing underneath. In ordinary scrolling this is never close to
-         binding — at the top of the range the ceiling sits five times above
-         the target. It exists for the fling back to the top, where the chase
-         would otherwise still be holding the header up over a page that has
-         already arrived. */
-      var ceiling = y / lift;
-      if (goal > ceiling) goal = ceiling;
-
-      /* Exponential chase, expressed through elapsed time rather than as a
-         fixed fraction per frame. */
+      var goal = target();
       current += (goal - current) * (1 - Math.exp(-dt / NAMEPLATE_CHASE));
-      if (current > ceiling) current = ceiling;
 
       /* Close enough to be indistinguishable: land exactly and stop, so the
          page is not holding an animation frame open for the rest of the
@@ -232,14 +202,10 @@
     }
 
     window.addEventListener("scroll", start, { passive: true });
-    window.addEventListener("resize", function () { measure(); start(); },
-                            { passive: true });
 
     /* A reload restores the scroll position before this runs. Start already
-       settled there — the nameplate should not be seen collapsing on load. */
-    measure();
-    var y0 = window.pageYOffset || document.documentElement.scrollTop || 0;
-    current = Math.min(target(y0), y0 / lift);
+       settled there — the mark should not be seen collapsing on load. */
+    current = target();
     write(current);
   }
 

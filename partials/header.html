@@ -7,8 +7,14 @@
      ========================================================================= -->
 <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
 
+<!-- Opaque, and deliberately not frosted. The bar was bg-canvas/90 with a
+     backdrop blur, which costs a re-blur of everything behind it on every
+     scrolled frame — the most expensive thing on the page — and returned a
+     mean of 0.63/255 for it, because 90% opacity leaves almost nothing to
+     blur. Solid is cheaper, and text passing beneath no longer ghosts
+     through at a tenth. -->
 <header id="site-header"
-        class="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas/90 backdrop-blur-md
+        class="sticky top-0 z-50 border-b-[3px] border-ink bg-canvas
                after:absolute after:inset-x-0 after:top-full after:mt-px after:border-t
                after:border-ink">
 
