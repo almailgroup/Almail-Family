@@ -33,7 +33,7 @@ window.ALMAIL = window.ALMAIL || {};
 
 window.ALMAIL.gallery = [
   // {
-  //   src: "assets/img/harbour-1963.jpg",
+  //   src: "/assets/img/harbour-1963.jpg",
   //   caption: "The old harbour front",
   //   captionAr: "واجهة الميناء القديم",
   //   date: "c. 1963",
