@@ -2,15 +2,17 @@
   "name": "almail-family",
   "version": "1.0.0",
   "private": true,
-  "description": "The Almail Family — a minimal, monochrome family portal, directory and blog.",
+  "description": "The Almail Family \u2014 a minimal, monochrome family portal, directory and blog.",
   "scripts": {
     "partials": "node scripts/build-partials.mjs",
     "css": "tailwindcss -i ./src/input.css -o ./assets/css/site.css --minify",
     "css:watch": "tailwindcss -i ./src/input.css -o ./assets/css/site.css --watch",
-    "build": "npm run partials && npm run css && npm run stamp",
-    "dev": "npm run partials && npm run stamp && npm run css:watch",
+    "build": "npm run partials && npm run seo && npm run sitemap && npm run css && npm run stamp",
+    "dev": "npm run partials && npm run seo && npm run stamp && npm run css:watch",
     "serve": "npx --yes serve . -l 3000",
-    "stamp": "node scripts/stamp-assets.mjs"
+    "stamp": "node scripts/stamp-assets.mjs",
+    "seo": "node scripts/build-seo.mjs",
+    "sitemap": "node scripts/build-sitemap.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

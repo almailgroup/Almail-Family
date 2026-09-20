@@ -1,0 +1,9 @@
+# The Almail Family — almailfamily.com
+# Everything here is meant to be found. The pages that are not — the 404 and
+# the /home/ redirect that survives for old links — say so themselves with a
+# noindex tag, which is the stronger signal and the one kept in one place.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://almailfamily.com/sitemap.xml
