@@ -122,20 +122,39 @@
      4. The condensing nameplate
      The mark opens large and comes down to a running-head size as the page
      scrolls. All this does is write --np-t on the nameplate row: 0 at the top
-     of the page, 1 once it is fully condensed. The two heights that follow
-     from it are declared in the stylesheet (.nameplate), so the row and the
-     mark can never drift apart.
+     of the page, 1 once it is fully condensed. The heights that follow from it
+     are declared in the stylesheet (.nameplate), so the row and the mark can
+     never drift apart.
 
-     Driven from the scroll position rather than by a CSS transition, so the
-     motion tracks the reader's hand instead of running on its own clock: stop
-     halfway down and the mark stops halfway down with you.
+     THE VALUE IS NOT READ STRAIGHT OFF THE SCROLL POSITION. It chases it.
 
-     RANGE is deliberately generous. The header is in flow, so every pixel the
-     row loses pulls the page up by that same pixel; spread that over enough
-     scroll and it reads as the header settling, spread it over 60px and the
-     page appears to lurch out from under the reader.
+     That distinction is the whole of this section. A mouse wheel does not
+     scroll smoothly — it arrives in notches of about 100px — so binding size
+     directly to position makes the mark fall in three visible steps, the
+     largest of them nearly 20px in a single frame, with a backwards wobble
+     where the browser's own wheel animation overshoots. Measured, not
+     guessed. A trackpad hides it; a wheel cannot.
+
+     So each frame moves the current value a fraction of the way toward the
+     one the scroll position asks for. A 100px notch becomes a glide of a few
+     hundred milliseconds instead of a jump, and the mark still ends up
+     wherever the reader stopped — it just takes the short way round rather
+     than teleporting. The fraction is derived from the real elapsed time, so
+     the motion is identical at 60Hz and at 120Hz.
+
+     RANGE is deliberately generous, and there is a second reason for that
+     beyond taste. The header is in flow, so the row losing height shortens
+     everything above the reader — and the browser's scroll anchoring answers
+     by quietly reducing scrollY to hold the visible content still. Measured:
+     content stays put to within a pixel, and roughly a fifth of each wheel
+     notch is given back. That is a loop, since the position this function
+     reads is the position its own effect just moved. Over a short range it
+     would be a fight; over 260px, with the chase smoothing the value, it is
+     a rounding error — verified monotone, no growth against the scroll, and
+     no oscillation, under both wheel notches and slow continuous scrolling.
      ------------------------------------------------------------------------ */
-  var NAMEPLATE_RANGE = 260;
+  var NAMEPLATE_RANGE = 260;   // px of scroll from fully open to fully condensed
+  var NAMEPLATE_CHASE = 200;   // ms time constant of the chase
 
   function initNameplate() {
     var row = document.querySelector("[data-nameplate]");
@@ -146,40 +165,69 @@
     if (window.matchMedia &&
         window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    var queued = false;
-    var last = -1;
+    var current = 0;      // what is on screen
+    var running = false;
+    var lastTs = 0;
 
-    function apply() {
-      queued = false;
+    /* Where the scroll position says the nameplate ought to be. Smoothstep:
+       its slope is zero at both ends, which matters here for a reason beyond
+       looks — the slope IS how fast the page is pulled upward on top of the
+       scroll itself, so easing in from rest keeps the first few pixels of
+       scroll honest, and easing out keeps the last few from snapping. */
+    function target() {
       var y = window.pageYOffset || document.documentElement.scrollTop || 0;
       var p = y / NAMEPLATE_RANGE;
       p = p < 0 ? 0 : p > 1 ? 1 : p;
-
-      /* Smoothstep. Its slope is zero at both ends, which matters here for a
-         reason beyond looks: the slope IS how fast the page is pulled upward
-         on top of the scroll itself, so easing in from rest keeps the first
-         few pixels of scroll honest, and easing out keeps the last few from
-         snapping. */
-      var t = p * p * (3 - 2 * p);
-
-      t = Math.round(t * 1000) / 1000;   // no sub-thousandth style writes
-      if (t === last) return;
-      last = t;
-      row.style.setProperty("--np-t", t);
+      return p * p * (3 - 2 * p);
     }
 
-    function onScroll() {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(apply);
+    function write(t) {
+      row.style.setProperty("--np-t", Math.round(t * 10000) / 10000);
     }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    function frame(ts) {
+      var dt = lastTs ? ts - lastTs : 16.7;
+      lastTs = ts;
+      /* A tab that was in the background hands back one enormous dt. Cap it,
+         or the mark snaps to its target the moment the tab is looked at. */
+      if (dt > 64) dt = 64;
 
-    /* A reload restores the scroll position before this runs, so settle the
-       nameplate to where the page actually is rather than to the top. */
-    apply();
+      var goal = target();
+
+      /* Exponential chase. Expressed through the elapsed time rather than as
+         a fixed fraction per frame, so a 120Hz display eases over the same
+         number of milliseconds as a 60Hz one instead of twice as fast. */
+      current += (goal - current) * (1 - Math.exp(-dt / NAMEPLATE_CHASE));
+
+      /* Close enough to be indistinguishable: land exactly and stop, so the
+         page is not holding an animation frame open for the rest of the
+         reader's visit. */
+      if (Math.abs(goal - current) < 0.0004) {
+        current = goal;
+        write(current);
+        running = false;
+        lastTs = 0;
+        return;
+      }
+
+      write(current);
+      requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      lastTs = 0;
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener("scroll", start, { passive: true });
+    window.addEventListener("resize", start, { passive: true });
+
+    /* A reload restores the scroll position before this runs. Start already
+       settled there — the nameplate should not be seen collapsing on load. */
+    current = target();
+    write(current);
   }
 
   /* ---------------------------------------------------------------------------
