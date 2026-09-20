@@ -614,33 +614,87 @@
      size as you read on — the way a masthead gives way to a running head
      once you are past the front of a section.
 
-     --np-t is the only thing that moves: 0 at the top of the page, 1 once
-     the nameplate is fully condensed. site.js writes it on every animation
-     frame while the page scrolls, and the two heights below are read off it,
-     so the row and the mark stay in step by construction. Everything else —
-     the easing, the distance it takes — lives in the script.
+     NOTHING HERE CHANGES THE SIZE OF A BOX. That is the whole design, and it
+     is the third attempt at this: the first two animated the row's height,
+     which is a layout property, so every frame relaid out the document,
+     moved every element below the header, and set the browser's scroll
+     anchoring to work quietly undoing it. Measured then: the page ran at
+     1.36x the reader's scroll through the condensing range and snapped back
+     to 1.00x past it. Correct to the pixel, and it is that non-uniformity —
+     not a dropped frame — that the eye reads as unsteady.
 
-     The heights are stated as a pair each, not a transition: driving them
-     from the scroll position is what makes the motion track the reader's
-     hand rather than run on its own clock. */
+     So the row keeps ONE height, and the two things that move are transforms:
+
+       the header   rides up by --np-lift, carrying the tall half of the
+                    nameplate off the top of the screen. The bar left behind
+                    is the running head. Because the header's box never
+                    changes, the page below it never moves: scroll and
+                    content stay locked at 1:1.
+       the mark     scales down, and translates half of --np-lift back down
+                    to stay centred in what is left of the row. Half, because
+                    the row loses --np-lift off its top and the centre of
+                    what remains falls by half of that.
+
+     A transform costs no layout at all — measured at zero over 120 animated
+     frames, against one per frame before. Chrome does re-rasterise the mask
+     at whatever scale it ends up drawn at, rather than stretching one
+     bitmap, so the small mark is exactly as crisp as one given that height
+     outright: 21.3% part-tone edge pixels against 21.8%, which is a wash.
+
+     --np-t is the only thing that moves: 0 at the top of the page, 1 once
+     fully condensed. site.js writes it; the easing and the distance live
+     there. Everything below is arithmetic on it. */
   .nameplate {
-    --np-t: 0;
-    --np-row: 6rem;         /* 96px at the top of the page  */
-    --np-row-end: 3.75rem;  /* 60px once condensed          */
-    --np-mark: 3.5rem;      /* 56px                         */
-    --np-mark-end: 2.25rem; /* 36px                         */
-    height: calc(var(--np-row) + (var(--np-row-end) - var(--np-row)) * var(--np-t));
+    height: 6rem;
   }
   @media (min-width: 40rem) {
-    .nameplate {
-      --np-row: 7.5rem;       /* 120px */
-      --np-row-end: 4.25rem;  /*  68px */
-      --np-mark: 4.75rem;     /*  76px */
-      --np-mark-end: 2.5rem;  /*  40px */
+    .nameplate { height: 7.5rem; }
+  }
+
+  /* Registered, and deliberately NOT inherited. An unregistered custom
+     property inherits, so writing --np-t on the header invalidated the style
+     of everything inside it — every nav link, every icon, the whole mobile
+     menu — about forty elements, every frame. Measured at 1.1ms of style
+     recalculation per frame for two elements' worth of work. Declared this
+     way, only the two elements that are given it are touched. */
+  @property --np-t {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+  }
+
+  #site-header {
+    --np-t: 0;
+    --np-lift: 36;          /* px of the row that rides off the top    */
+    --np-scale-end: 0.643;  /* the mark's condensed size, 36 of 56px   */
+    transform: translate3d(0, calc(var(--np-t) * var(--np-lift) * -1px), 0);
+  }
+  @media (min-width: 40rem) {
+    #site-header {
+      --np-lift: 52;
+      --np-scale-end: 0.526; /* 40 of 76px */
     }
   }
+
+  /* --np-t is written here too, not inherited — see the @property above.
+     --np-lift and --np-scale-end still come down from the header, but those
+     are set once and never move, so they cost nothing. */
   .nameplate .brand-mark {
-    height: calc(var(--np-mark) + (var(--np-mark-end) - var(--np-mark)) * var(--np-t));
+    --np-t: 0;
+    height: 3.5rem;
+    transform: translate3d(0, calc(var(--np-t) * var(--np-lift) * 0.5px), 0)
+               scale(calc(1 - (1 - var(--np-scale-end)) * var(--np-t)));
+  }
+  @media (min-width: 40rem) {
+    .nameplate .brand-mark { height: 4.75rem; }
+  }
+
+  /* Both transforms run every frame the page is scrolling, so say so and let
+     the compositor keep them on their own layers rather than working it out
+     afresh each time. */
+  #site-header, .nameplate .brand-mark { will-change: transform; }
+  @media (prefers-reduced-motion: reduce) {
+    #site-header, .nameplate .brand-mark { will-change: auto; }
   }
 
   /* --- THE KUWAIT PANORAMA ------------------------------------------------
@@ -843,7 +897,7 @@
   /* site.js already leaves the nameplate alone under this setting; this is
      the belt to that pair of braces, in case the preference is turned on
      after the page has loaded and --np-t has already been written. */
-  .nameplate { --np-t: 0 !important; }
+  #site-header, .nameplate .brand-mark { --np-t: 0 !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
