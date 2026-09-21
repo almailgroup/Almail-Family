@@ -53,7 +53,7 @@
     /* Cover ---------------------------------------------------------------- */
     var cover = post.image
       ? '<figure class="mt-12 border border-line">' +
-          '<img src="' + u.escape(post.image) + '" alt="" class="w-full">' +
+          '<img src="' + u.escape(post.image) + '" alt="" width="1600" height="1000" class="w-full">' +
         "</figure>"
       : "";
 

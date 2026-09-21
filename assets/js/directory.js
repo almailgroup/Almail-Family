@@ -22,6 +22,7 @@
     if (member.photo) {
       return (
         '<img src="' + u.escape(member.photo) + '" alt="' + u.escape(i18n.field(member, "name")) + '" loading="lazy" ' +
+        'width="900" height="1200" ' +
         'class="aspect-[3/4] w-full border border-line object-cover">'
       );
     }

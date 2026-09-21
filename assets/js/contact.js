@@ -14,8 +14,22 @@
 (function () {
   "use strict";
 
-  var ENDPOINT = "";                            // ← paste your form endpoint here
-  var FALLBACK_EMAIL = "family@almail.example"; // ← used when ENDPOINT is empty
+  /* SET ONE OF THESE AND THE FORM STARTS WORKING. Both are empty, so at the
+     moment it cannot deliver anything, and it says so rather than pretending.
+
+       ENDPOINT       a form service's POST address (Formspree, Basin, a
+                      Worker of your own). Used in preference when set.
+       CONTACT_EMAIL  the family's real address. With no ENDPOINT the form
+                      opens the visitor's mail app with the message ready;
+                      it is also what the "send it directly" line offers when
+                      a submission fails.
+
+     CONTACT_EMAIL held family@almail.example until now — .example is a
+     reserved domain that can never receive mail, so every message sent that
+     way went nowhere, silently. An empty string is the honest version of
+     not having set it. */
+  var ENDPOINT = "";
+  var CONTACT_EMAIL = "";
 
   /* Validation rules, one per field name. Return an error string or "". */
   var t = ALMAIL.i18n.t;
@@ -106,11 +120,21 @@
       };
 
       /* No endpoint configured → hand off to the visitor's mail client. */
+      /* Neither route configured: say so plainly. Opening a mail app
+         addressed to nobody, or posting into the void, both look like
+         success to the person who just wrote to you. */
+      if (!ENDPOINT && !CONTACT_EMAIL) {
+        say(t("contact.unconfigured",
+          "This form is not connected yet, so your message was not sent. " +
+          "Please get in touch with the family council directly."), "error");
+        return;
+      }
+
       if (!ENDPOINT) {
         var body =
           data.message + "\n\n—\n" + data.name + "\n" + data.email;
         window.location.href =
-          "mailto:" + FALLBACK_EMAIL +
+          "mailto:" + CONTACT_EMAIL +
           "?subject=" + encodeURIComponent("[" + data.subject + "] " + data.name) +
           "&body=" + encodeURIComponent(body);
         say(t("contact.mailto", "Opening your email app with the message ready to send."));
@@ -134,7 +158,7 @@
         .catch(function () {
           say(t("contact.failed",
             "Something went wrong sending your message. Please email us directly at {email}.",
-            { email: FALLBACK_EMAIL }), "error");
+            { email: CONTACT_EMAIL }), "error");
         })
         .finally(function () {
           submit.disabled = false;

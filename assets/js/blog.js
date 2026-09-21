@@ -31,6 +31,7 @@
       return (
         '<div class="' + ratio + ' overflow-hidden border-b border-line bg-surface">' +
           '<img src="' + u.escape(post.image) + '" alt="" loading="lazy" ' +
+               'width="1600" height="1000" ' +
                'class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]">' +
         "</div>"
       );

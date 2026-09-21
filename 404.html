@@ -25,7 +25,7 @@
   <link rel="preload" href="/assets/fonts/reem-kufi-latin.woff2?v=99554d52" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/plex-arabic-400-latin.woff2?v=9ed8dcb0" as="font" type="font/woff2" crossorigin>
 
-  <link rel="stylesheet" href="/assets/css/site.css?v=410af2e4">
+  <link rel="stylesheet" href="/assets/css/site.css?v=7cd0e6a8">
 
   <!-- Resolve theme AND language before first paint, so neither ever flashes.
        data-i18n-pending hides translatable text for the frame between this
@@ -208,7 +208,7 @@
                   data-i18n="brand.family">Almail</span>
           </a>
           <p class="mt-6 max-w-sm text-[15px] leading-relaxed text-ink-2" data-i18n="footer.about">
-            The private portal of the Almail family — a record of our people, our history
+            The record of the Almail family — our people, our history
             and the work we do together. Kuwait City, Kuwait.
           </p>
         </div>
@@ -230,24 +230,19 @@
         <div class="md:col-span-4">
           <h2 class="eyebrow" data-i18n="footer.reach">Reach us</h2>
           <ul class="mt-5 space-y-3 text-[15px] text-ink-2">
-            <li><a class="link-underline" href="mailto:family@almail.example">family@almail.example</a></li>
+            <!-- TO PUT A REAL ADDRESS HERE, replace this line with
+                   <li><a class="link-underline" href="mailto:you@example.com">you@example.com</a></li>
+                 and set CONTACT_EMAIL in assets/js/contact.js to the same
+                 address. Until then this points at the contact page, because a
+                 dead mailto: is worse than no address at all —
+                 family@almail.example was a reserved example domain that can
+                 never receive mail. -->
+            <li><a class="link-underline" href="/contact/" data-i18n="nav.contactUs">Contact us</a></li>
             <li data-i18n="footer.address">Kuwait City, State of Kuwait</li>
           </ul>
-          <div class="mt-6 flex gap-2">
-            <a href="#" data-i18n-attr="aria-label:link.instagram" aria-label="Instagram"
-               class="flex h-10 w-10 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <rect x="3" y="3" width="18" height="18" rx="5"></rect>
-                <circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
-              </svg>
-            </a>
-            <a href="#" data-i18n-attr="aria-label:link.linkedin" aria-label="LinkedIn"
-               class="flex h-10 w-10 items-center justify-center border border-line-2 transition-colors hover:border-ink hover:bg-ink hover:text-invert">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M4.98 3.5A2.5 2.5 0 1 0 5 8.5a2.5 2.5 0 0 0 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.05c.53-.95 1.83-1.95 3.76-1.95 4.02 0 4.76 2.5 4.76 5.76V21h-4v-5.2c0-1.24-.02-2.84-1.86-2.84-1.86 0-2.15 1.36-2.15 2.75V21h-4z"></path>
-              </svg>
-            </a>
-          </div>
+          <!-- The Instagram and LinkedIn buttons that stood here linked to
+               href="#". An icon that goes nowhere reads worse than none, so
+               they are out until there are accounts to point them at. -->
         </div>
       </div>
 
@@ -259,7 +254,7 @@
   </footer>
   <!-- @endpartial -->
 
-  <script src="/content/i18n.js?v=f614d74f" defer></script>
+  <script src="/content/i18n.js?v=4edea7f3" defer></script>
   <script src="/assets/js/i18n.js?v=5e52d576" defer></script>
   <script src="/assets/js/site.js?v=b0e588dc" defer></script>
 </body>

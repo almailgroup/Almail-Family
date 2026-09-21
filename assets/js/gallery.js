@@ -25,6 +25,7 @@
           'aria-label="' + u.escape(t("gallery.view", "View full screen") + " — " + caption) + '">' +
           '<span class="block aspect-[4/3] overflow-hidden">' +
             '<img src="' + u.escape(item.src) + '" alt="' + u.escape(caption) + '" loading="lazy" ' +
+                 'width="1200" height="900" ' +
                  'class="h-full w-full object-cover transition-transform duration-700 ' +
                         'group-hover/pic:scale-[1.03]">' +
           "</span>" +

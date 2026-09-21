@@ -47,7 +47,7 @@
           'aria-label="' + u.escape(
             t("member.viewPhoto", "View photograph full screen") + " — " +
             i18n.field(member, "name")) + '">' +
-          '<img src="' + u.escape(member.photo) + '" ' +
+          '<img src="' + u.escape(member.photo) + '" width="900" height="1200" ' +
             'alt="' + u.escape(i18n.field(member, "name")) + '" ' +
             'class="aspect-[3/4] w-full object-cover">' +
           /* The magnifier, as a reference work marks an enlargeable plate. */

@@ -789,9 +789,15 @@
        195 / (948 - 505) = 44%, which is what the background-position below is.
        Change the crop and that number has to be recomputed. */
     aspect-ratio: 1659 / 505;
+    /* WebP only. The PNG twins that stood beside these were 955KB and
+       1134KB against 168KB and 138KB, about half the whole repository, and
+       no browser released since 2020 ever fetched one — image-set hands
+       every current engine the WebP. Kept, they were 2.1MB of ballast in
+       every clone and every deploy to serve a decorative banner to Safari 13.
+       The plate is decoration: where it cannot be shown the geometric
+       tessellation behind it carries the banner on its own. */
     background-image: image-set(
-      url("../img/kuwait-skyline-light.webp") type("image/webp"),
-      url("../img/kuwait-skyline-light.png") type("image/png"));
+      url("../img/kuwait-skyline-light.webp") type("image/webp"));
     background-repeat: no-repeat;
     background-size: 100% auto;   /* width fills, height keeps the plate's ratio */
     background-position: center 44%;
@@ -811,8 +817,7 @@
      geometry above is shared, which is what keeps the two editions aligned. */
   [data-theme="dark"] .skyline-photo {
     background-image: image-set(
-      url("../img/kuwait-skyline-dark.webp") type("image/webp"),
-      url("../img/kuwait-skyline-dark.png") type("image/png"));
+      url("../img/kuwait-skyline-dark.webp") type("image/webp"));
     mix-blend-mode: screen;
   }
 
@@ -890,6 +895,54 @@
    and i18n.js applying the Arabic. Only ever set for Arabic, and only by that
    script — so with JavaScript disabled nothing is hidden. */
 :root[data-i18n-pending] [data-i18n] { visibility: hidden; }
+
+/* --- PRINT ------------------------------------------------------------------
+   A family history is a thing people print: a page about a grandfather, the
+   timeline, a profile to put in a folder. On paper the screen's furniture is
+   noise and the screen's colours are a waste of ink, so:
+
+     gone        the sticky nameplate, the section bar, the footer, the
+                 skyline, every button and the share row — none of it can be
+                 clicked on paper.
+     ink         forced to black on white whichever theme the reader had on,
+                 because a dark page prints as a black rectangle.
+     links       the URL is printed after the link text, since a printed
+                 underline points nowhere. Only for real addresses: the
+                 in-page ones would just add noise.
+     breaks      headings stay with the text under them, and a card or a
+                 timeline entry is not split across two sheets.
+   -------------------------------------------------------------------------- */
+@media print {
+  :root, :root[data-theme="dark"] {
+    --c-canvas: #ffffff; --c-surface: #ffffff;
+    --c-ink: #000000;    --c-ink-2: #1a1a1a;
+    --c-line: #bbbbbb;   --c-line-2: #dddddd;
+  }
+  html, body { background: #fff !important; }
+
+  #site-header, footer, .skyline, .skip-link,
+  [data-theme-toggle], [data-lang-toggle], [data-menu-toggle],
+  [data-copy-link], .btn-primary, .btn-outline, .btn-icon, .btn-ghost,
+  #lightbox { display: none !important; }
+
+  /* The reveal effect leaves elements at opacity 0 until they scroll into
+     view, and nothing scrolls on paper. */
+  .js .reveal { opacity: 1 !important; transform: none !important; }
+
+  main { padding-top: 0 !important; }
+  .container-x { max-width: none; padding-inline: 0; }
+
+  a[href^="http"]::after,
+  a[href^="mailto:"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+
+  h1, h2, h3 { break-after: avoid-page; }
+  article, figure, li, .card { break-inside: avoid-page; }
+  img { max-width: 100% !important; }
+}
 
 /* Respect users who ask for less motion. */
 @media (prefers-reduced-motion: reduce) {
