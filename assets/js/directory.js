@@ -44,7 +44,7 @@
     var linkHtml = Object.keys(links)
       .map(function (k) { return u.iconLink(k, links[k], member.name); })
       .join("");
-    var href = "/member/?id=" + encodeURIComponent(member.id);
+    var href = "/member/" + encodeURIComponent(member.id) + "/";
 
     return (
       '<article class="card card-hover group flex flex-col p-6 sm:p-7 reveal" data-reveal-delay="' + (index % 3) * 70 + '">' +

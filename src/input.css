@@ -574,13 +574,18 @@
       Driven by IntersectionObserver in assets/js/site.js.
    -------------------------------------------------------------------------- */
 @layer utilities {
-  .reveal {
+  /* Scoped to .js — set on <html> before first paint by the snippet in every
+     page's head. JavaScript is what removes the starting state, so without it
+     the effect must never begin: the content is in the HTML now, and hiding
+     it from a reader whose scripting is off would be the one way to make
+     pre-rendering pointless. */
+  .js .reveal {
     opacity: 0;
     transform: translateY(14px);
     transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .reveal.is-visible { opacity: 1; transform: none; }
+  .js .reveal.is-visible { opacity: 1; transform: none; }
 
   /* --- THE FAMILY MARK ----------------------------------------------------
      The Almail logo — a boom dhow whose sails are the family name in Arabic,
@@ -889,7 +894,7 @@
 /* Respect users who ask for less motion. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
   /* site.js already leaves the nameplate alone under this setting; this is
      the belt to that pair of braces, in case the preference is turned on
      after the page has loaded and --np-t has already been written. */

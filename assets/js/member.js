@@ -88,7 +88,7 @@
     if (!host) return;
 
     var members = (window.ALMAIL && ALMAIL.members) || [];
-    var id = u.param("id");
+    var id = u.param("id") || u.slug("member");
     var member = members.filter(function (m) { return m.id === id; })[0];
 
     if (!member) {

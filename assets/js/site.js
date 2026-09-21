@@ -334,6 +334,21 @@
       return new URLSearchParams(location.search).get(key);
     },
 
+    /** The last path segment, for pages that live at their own address.
+        An article is served from /post/<slug>/ and a person from
+        /member/<id>/ — real URLs, each with its own title and its own text
+        in the HTML, which is what a crawler and a chat app's link preview
+        can read. The older /post/?p=<slug> form still works and still wins
+        when both are given, so nothing already shared goes stale.
+
+        `under` is the section directory, so /post/ itself — the bare
+        template with no article chosen — correctly yields nothing. */
+    slug: function (under) {
+      var parts = location.pathname.split("/").filter(Boolean);
+      var i = parts.indexOf(under);
+      return i >= 0 && parts.length > i + 1 ? decodeURIComponent(parts[i + 1]) : null;
+    },
+
     /** A contact/social icon link, shared by the directory and the profile.
         Icons are drawn inline so the page makes no extra requests;
         `fill: true` marks a solid glyph (brand marks), the rest are stroked. */

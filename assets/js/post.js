@@ -32,7 +32,7 @@
     if (!host) return;
 
     var posts = u.sortedPosts();
-    var slug = u.param("p");
+    var slug = u.param("p") || u.slug("post");
     var index = posts.findIndex(function (p) { return p.slug === slug; });
 
     if (index === -1) {
@@ -61,7 +61,7 @@
     function pager(post, label, align) {
       if (!post) return '<div class="hidden sm:block"></div>';
       return (
-        '<a href="/post/?p=' + encodeURIComponent(post.slug) + '" ' +
+        '<a href="/post/' + encodeURIComponent(post.slug) + '/" ' +
         'class="group block p-6 sm:p-8 ' + align + '">' +
           '<span class="eyebrow">' + u.escape(label) + "</span>" +
           '<span class="display-3 mt-3 block"' + i18n.markup(post, "title") + ">" +
