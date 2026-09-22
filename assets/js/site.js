@@ -418,6 +418,11 @@
 
     function build() {
       overlay = document.createElement("div");
+      /* Named so the stylesheet can reach it: the print rules hide it, and the
+         touch rules stop a swipe that runs out of picture from scrolling the
+         page underneath. Both are #lightbox, and neither matched anything
+         while this was an anonymous div. */
+      overlay.id = "lightbox";
       // Visibility is the `hidden` ATTRIBUTE alone — Tailwind's base makes that
       // display:none !important, so it beats the flex below with no class
       // juggling to fall out of step.
@@ -504,6 +509,42 @@
           stops[(i + (e.shiftKey ? -1 : 1) + stops.length) % stops.length].focus();
         }
       });
+
+      /* Swipe, because on a phone that is how everyone expects to move
+         between pictures — the arrows are there, but nobody reaches for a
+         44px button when the plate fills the screen.
+
+         Deliberately plain pointer events rather than a gesture library.
+         The rules: one finger only (two is a pinch-zoom, which must be left
+         alone), mostly sideways rather than up-and-down, and far enough to
+         be a swipe rather than a wobble while tapping. The direction is
+         mirrored in Arabic for the same reason the arrow keys are — the
+         next picture lies to the left when the page runs right to left. */
+      var SWIPE_MIN = 45;     // px travelled before it counts
+      var SWIPE_SLOPE = 1.2;  // how much more horizontal than vertical
+      var startX = 0, startY = 0, tracking = false;
+
+      overlay.addEventListener("pointerdown", function (e) {
+        if (!e.isPrimary || group.length < 2) { tracking = false; return; }
+        tracking = true;
+        startX = e.clientX;
+        startY = e.clientY;
+      }, { passive: true });
+
+      overlay.addEventListener("pointerup", function (e) {
+        if (!tracking) return;
+        tracking = false;
+        var dx = e.clientX - startX;
+        var dy = e.clientY - startY;
+        if (Math.abs(dx) < SWIPE_MIN) return;
+        if (Math.abs(dx) < Math.abs(dy) * SWIPE_SLOPE) return;
+        var rtl = document.documentElement.getAttribute("dir") === "rtl";
+        /* Dragging left pulls the next picture in from the right. */
+        step((dx < 0 ? 1 : -1) * (rtl ? -1 : 1));
+      }, { passive: true });
+
+      overlay.addEventListener("pointercancel", function () { tracking = false; },
+                               { passive: true });
     }
 
     /** Paint one plate and its particulars. */

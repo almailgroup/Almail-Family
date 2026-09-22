@@ -896,6 +896,114 @@
    script — so with JavaScript disabled nothing is hidden. */
 :root[data-i18n-pending] [data-i18n] { visibility: hidden; }
 
+/* The viewer sits over a page that is still scrollable underneath. Without
+   this, a swipe that runs out of picture keeps going and scrolls the page
+   behind it — and on iOS, drags the whole viewport with the rubber-band. */
+#lightbox {
+  overscroll-behavior: contain;
+  touch-action: pan-y pinch-zoom;
+}
+
+/* --- TOUCH ------------------------------------------------------------------
+   Keyed on (pointer: coarse) rather than a width, because the question is not
+   how wide the screen is but what is doing the pointing. A phone in landscape
+   is wide and still driven by a thumb; a narrow desktop window is not.
+
+   Nothing here changes the look on a mouse-driven screen. What it changes on a
+   touch one, measured on an iPhone 14 viewport before and after:
+
+     fields       15px -> 16px. Below 16px, iOS Safari ZOOMS THE PAGE when a
+                  field takes focus, and does not zoom back out. It was doing
+                  that on all four contact fields and both search boxes: tap to
+                  type, and the site is suddenly magnified and scrolled
+                  sideways. This is the single most valuable line in the file.
+     hit areas    44px minimum, which is Apple's and the WCAG figure. The
+                  section bar, the footer's navigation, the filter chips and
+                  the theme and language buttons were all between 20px and
+                  40px tall — thumbs are about 45px wide, and a 23px target
+                  is a target you miss.
+     small type   the 10px tags and 11px eyebrows go up a step. They are set
+                  in an uppercase display face with wide tracking, which holds
+                  at 10px on a desktop monitor read at arm's length and does
+                  not on a phone.
+
+   The growth is in PADDING, not font size, so nothing shifts on the page
+   except the space around it.
+   -------------------------------------------------------------------------- */
+@media (pointer: coarse) {
+  /* Never below 16px, or iOS zooms on focus. */
+  input, select, textarea { font-size: 16px; }
+
+  /* A comfortable minimum for a thumb. inline-flex + centring so the extra
+     height is padding around the text rather than text sitting at the top. */
+  .section-link,
+  .chip,
+  .btn, .btn-primary, .btn-outline, .btn-ghost, .btn-icon,
+  footer nav a,
+  footer .link-underline {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .btn-icon { min-width: 44px; justify-content: center; }
+  .chip { padding-inline: 1.1rem; }
+
+  /* The footer's two-column link list: the rows were 23px apart in a 44px
+     target, so the targets overlapped. Give the grid the room instead. */
+  footer nav ul { row-gap: 0.25rem; }
+
+  /* A short word makes a narrow target however tall it is — "News" was 38px
+     across. Padding widens the hit area and the negative margin takes the
+     space back, so the text does not move a pixel. */
+  footer nav a { padding-inline: 0.375rem; margin-inline: -0.375rem; }
+
+  /* Everything else in the footer, the brand mark among it. */
+  footer a { min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* Standalone links — "← All posts", "visit the journal", the section
+     actions — are targets and get the height. A link inside running text is
+     not: it is part of a sentence, and growing it would tear holes in the
+     line around it. WCAG exempts those for exactly that reason, so they opt
+     back out. Scoped to main, which leaves the footer's list to the rule
+     above. */
+  a.link-underline { min-height: 44px; }
+  main p a.link-underline,
+  main li a.link-underline,
+  .article-body a.link-underline { min-height: 0; }
+
+  .tag { font-size: 11.5px; }
+  .eyebrow { font-size: 12px; }
+
+  /* Suppress the double-tap-to-zoom wait some engines still apply to
+     anything clickable, so a tap registers at once. */
+  a, button, [role="button"], input, select, textarea, summary {
+    touch-action: manipulation;
+  }
+}
+
+/* --- THE NOTCH --------------------------------------------------------------
+   Portrait is unaffected — the inset is zero there. In landscape on a phone
+   with a notch or a rounded corner, the safe area is inset by around 45px and
+   without this the first characters of every line sit under the camera
+   housing. max() keeps the existing padding wherever the inset is smaller,
+   which is everywhere else. */
+.container-x {
+  padding-inline: max(1.25rem, env(safe-area-inset-left))
+                  max(1.25rem, env(safe-area-inset-right));
+}
+@media (min-width: 40rem) {
+  .container-x {
+    padding-inline: max(2rem, env(safe-area-inset-left))
+                    max(2rem, env(safe-area-inset-right));
+  }
+}
+@media (min-width: 64rem) {
+  .container-x {
+    padding-inline: max(2.5rem, env(safe-area-inset-left))
+                    max(2.5rem, env(safe-area-inset-right));
+  }
+}
+
 /* --- PRINT ------------------------------------------------------------------
    A family history is a thing people print: a page about a grandfather, the
    timeline, a profile to put in a folder. On paper the screen's furniture is
