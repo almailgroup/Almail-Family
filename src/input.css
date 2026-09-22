@@ -821,6 +821,33 @@
     mix-blend-mode: screen;
   }
 
+  /* --- THE PLATE, FOR A PHONE ----------------------------------------------
+     The full plates are 1659px wide and, being already-compressed WebP, are
+     the only things on this site gzip cannot help: 168KB and 138KB on the
+     wire, whatever else is done. On a 390px screen that is between four and
+     nine times the pixels anyone can see.
+
+     So below 40rem the same engravings are served at 1000px — 54KB and 44KB,
+     around 114KB less on a phone's first visit to the homepage. A 390px
+     viewport at 3x asks for 1170 device pixels against the 1000 supplied,
+     an upscale of 1.17 on a soft engraving printed at 45% opacity behind a
+     geometric screen. It is not visible; the download is.
+
+     No geometry is repeated here on purpose. The small plates are the same
+     1659:948 proportion, and every number in the rules above — the aspect
+     ratio, background-size: 100% auto, the 44% waterline — is a proportion
+     rather than a length, so all of it carries over untouched. */
+  @media (max-width: 40rem) {
+    .skyline-photo {
+      background-image: image-set(
+        url("../img/kuwait-skyline-light-sm.webp") type("image/webp"));
+    }
+    [data-theme="dark"] .skyline-photo {
+      background-image: image-set(
+        url("../img/kuwait-skyline-dark-sm.webp") type("image/webp"));
+    }
+  }
+
   /* The star tessellation now sits behind the panorama in BOTH editions: it
      fades in from the top, the skyline rises from the bottom, and they meet in
      the middle of the banner without either crowding the other. */
