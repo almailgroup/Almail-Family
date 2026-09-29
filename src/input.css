@@ -218,6 +218,14 @@
      neighbours, and a browser falling back mid-word because one letter is
      missing from the first font breaks the joins inside the word. */
   --font-arabic: "Noto Arabic UI";
+
+  /* Tells the browser which way this page is lit, so the furniture IT draws
+     follows: the dropdown the contact form's subject select opens, the
+     scrollbar, the caret, the overscroll gutter, form control chrome. Without
+     it a dark page opens a white list over itself. Declared per theme rather
+     than as "light dark", because the reader's choice here is the site's
+     toggle and not the operating system's setting. */
+  color-scheme: light;
 }
 :root[lang="ar"] {
   --font-arabic: "Noto Sans Arabic";
@@ -228,6 +236,7 @@
    goes muddy and swallows the cream), and each surface is a clear step above the
    last so panels separate without needing a shadow. */
 [data-theme="dark"] {
+  color-scheme: dark;
   --c-canvas:  #14120f; /* the stock                         */
   --c-surface: #1c1916; /* panels, lifted a clear step       */
   --c-sunken:  #232019; /* the quote band, deeper still      */
@@ -280,6 +289,12 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* The same stock as the body, and not only for tidiness. Rubber-band past
+       the top or the bottom on a phone and what shows in the overrun is the
+       ROOT's background, not the body's. Unset, that is the browser's own
+       white — a white flash at both ends of every overscroll of a page whose
+       stock is nearly black. */
+    background-color: var(--c-canvas);
   }
 
   body {

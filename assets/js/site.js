@@ -35,6 +35,17 @@
   function setTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* private mode */ }
+
+    /* Carry the new stock up into the phone's own chrome, so the bar the URL
+       sits in turns with the page instead of staying the browser's grey.
+       Read from the token rather than written out again here: one source for
+       the colour, and a palette change cannot leave this behind. */
+    var tc = document.querySelector('meta[name="theme-color"]');
+    if (tc) {
+      var stock = getComputedStyle(document.documentElement)
+        .getPropertyValue("--c-canvas").trim();
+      if (stock) tc.setAttribute("content", stock);
+    }
     document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
       btn.setAttribute("aria-label", theme === "dark"
         ? t("theme.toLight", "Switch to light theme")
