@@ -685,8 +685,19 @@
      there is body text to cross — and for every page-length after it the
      bar is perfectly still. Lengthen this and the edge keeps sweeping into
      the part of the page people actually read. */
+  /* The row translates back down by HALF the lift, which is what keeps its
+     contents centred in the band that is left: the row loses --np-lift off
+     its top, so the middle of what remains falls by half of that.
+
+     ON THE ROW, not on the mark. It was on the mark alone, and the mark duly
+     stayed centred while the hamburger, the language button and the theme
+     button — which got no such correction — rode up with the header and
+     ended against the top edge of the bar. Everything in the row has to move
+     together; only the mark's SIZE is its own business. */
   .nameplate {
+    --np-t: 0;
     height: 6rem;
+    transform: translate3d(0, calc(var(--np-t) * var(--np-lift) * 0.5px), 0);
   }
   @media (min-width: 40rem) {
     .nameplate { height: 7.5rem; }
@@ -719,8 +730,7 @@
     --np-t: 0;
     --np-scale-end: 0.643;  /* the condensed size: 36 of 56px */
     height: 3.5rem;
-    transform: translate3d(0, calc(var(--np-t) * var(--np-lift) * 0.5px), 0)
-               scale(calc(1 - (1 - var(--np-scale-end)) * var(--np-t)));
+    transform: scale(calc(1 - (1 - var(--np-scale-end)) * var(--np-t)));
   }
   @media (min-width: 40rem) {
     .nameplate .brand-mark {
@@ -729,9 +739,9 @@
     }
   }
 
-  #site-header, .nameplate .brand-mark { will-change: transform; }
+  #site-header, .nameplate, .nameplate .brand-mark { will-change: transform; }
   @media (prefers-reduced-motion: reduce) {
-    #site-header, .nameplate .brand-mark { will-change: auto; }
+    #site-header, .nameplate, .nameplate .brand-mark { will-change: auto; }
   }
 
   /* --- THE KUWAIT PANORAMA ------------------------------------------------
@@ -1122,7 +1132,7 @@
   /* site.js already leaves the nameplate alone under this setting; this is
      the belt to that pair of braces, in case the preference is turned on
      after the page has loaded and --np-t has already been written. */
-  #site-header, .nameplate .brand-mark { --np-t: 0 !important; }
+  #site-header, .nameplate, .nameplate .brand-mark { --np-t: 0 !important; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;

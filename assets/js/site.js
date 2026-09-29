@@ -150,8 +150,9 @@
 
   function initNameplate() {
     var header = document.getElementById("site-header");
-    var mark = header && header.querySelector("[data-nameplate] .brand-mark");
-    if (!header || !mark) return;
+    var row = header && header.querySelector("[data-nameplate]");
+    var mark = row && row.querySelector(".brand-mark");
+    if (!header || !row || !mark) return;
 
     /* Reduced motion: the nameplate simply stays open. Nothing is written,
        so the stylesheet's --np-t: 0 stands. */
@@ -185,6 +186,7 @@
     function write(t) {
       var v = Math.round(t * 10000) / 10000;
       header.style.setProperty("--np-t", v);
+      row.style.setProperty("--np-t", v);
       mark.style.setProperty("--np-t", v);
     }
 
