@@ -39,7 +39,14 @@ async function pages(dir = root, base = "") {
 
 const missing = new Map();
 for (const rel of await pages()) {
-  const html = (await readFile(join(root, rel), "utf8"))
+  /* The BODY only. A page's <head> carries Arabic too — the bilingual <title>
+     and the og:title beside it — and none of it is ever drawn with the page's
+     fonts: a tab and a search result are painted by the browser and by Google
+     in their own. Counting those would grow the cut to serve text no webfont
+     ever touches. */
+  const full = await readFile(join(root, rel), "utf8");
+  const body = full.slice(Math.max(0, full.indexOf("<body")));
+  const html = body
     .replace(/<script[\s\S]*?<\/script>/g, "")
     .replace(/<style[\s\S]*?<\/style>/g, "");
   for (const ch of html) {

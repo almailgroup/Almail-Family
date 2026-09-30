@@ -35,6 +35,11 @@ for path in glob.glob(os.path.join(ROOT, "**", "*.html"), recursive=True):
     if "node_modules" in path or os.sep + "partials" + os.sep in path:
         continue
     html = open(path, encoding="utf-8").read()
+    # The BODY only. The <head> carries Arabic as well — the bilingual title
+    # and the og:title beside it — but a tab and a search result are drawn by
+    # the browser and by Google in their own fonts, never in the page's, so
+    # including them would grow the cut for text no webfont ever renders.
+    html = html[max(0, html.find("<body")):]
     # Arabic inside <script> is content/i18n.js data for the Arabic edition,
     # which is served by the full face, not this cut.
     html = re.sub(r"<script.*?</script>", "", html, flags=re.S)

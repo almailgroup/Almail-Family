@@ -24,7 +24,11 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://almailfamily.com";
-const NAME = "The Almail Family";
+/* The site's NAME, which is not the homepage's TITLE. The title is what a
+   tab and a search result print in full, it is bilingual, and it lives in
+   index.html. This is the short name Google prints on the line above the
+   link — and a name is no place for a pipe. */
+const NAME = "Almail family";
 const CARD = SITE + "/assets/img/share-card.png";
 const CARD_ALT = "The Almail family mark — a dhow whose sails are the family name in Arabic";
 
@@ -51,7 +55,7 @@ function jsonLd(canonical, description) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: NAME,
-    alternateName: ["Almail Family", "Almail", "عائلة الميل"],
+    alternateName: ["عائلة الميل", "The Almail Family", "Almail Family", "Almail"],
     url: SITE + "/",
     description,
     inLanguage: ["en", "ar"],
